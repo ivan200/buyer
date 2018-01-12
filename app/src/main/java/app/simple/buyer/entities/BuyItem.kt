@@ -12,20 +12,20 @@ open class BuyItem : RealmObject() {
     //Уникальный id
     @PrimaryKey
     @Required
-    private var id: Long? = null
+    var id: Long? = null
 
     //id суперкатегории, куда она относится
-    private var superID: Long? = null
+    var superID: Long? = null
 
     //Название
-    private var name: String? = null
+    var name: String? = null
 
     //Сколько раз добавлялась, или популярность
-    private var populatity = 0L
+    var populatity = 0L
 
     //Цена (Последняя, что была введена)
-    private var price = 0.0f
+    var price = 0.0f
 
     //Количество (Последняее, что было введено)
-    private var count = 1L
+    var count = 1L
 }

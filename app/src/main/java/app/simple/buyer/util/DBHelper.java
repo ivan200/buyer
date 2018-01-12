@@ -17,6 +17,6 @@ public class DBHelper {
     }
 
     public static Realm getRealm(){
-        return Realm.getInstance(realmConfiguration);
+        return Realm.getInstance(getRealmConfiguration());
     }
 }

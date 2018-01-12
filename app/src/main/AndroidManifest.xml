@@ -23,9 +23,8 @@
         <activity android:name=".AddItemActivity"
                   android:configChanges="orientation|screenSize"
                   android:label="@string/title_add_item_activity"
-                  android:theme="@style/AppTheme.NoActionBar"/>
-
-
+                  android:theme="@style/noAnimTheme"
+            />
     </application>
 
 </manifest>
