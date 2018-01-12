@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">buyer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+
+    <string name="crash_message">Что-то пошло не так! Пожалуйста, отправьте отчёт об ошибке разработчику!</string>
+
+    <string name="title_add_item_activity">Добавление продукта</string>
+</resources>

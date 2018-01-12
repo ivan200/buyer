@@ -1,0 +1,55 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="margin_half">8dp</dimen>
+    <dimen name="margin_default">16dp</dimen>
+    <dimen name="margin_double">32dp</dimen>
+    <dimen name="margin_icon_inside">12dp</dimen>
+    <dimen name="margin_minus_default">-16dp</dimen>
+    <dimen name="margin_grid">3dp</dimen>
+
+    <dimen name="height_status_bar">24dp</dimen>
+    <dimen name="height_toolbar">56dp</dimen>
+    <dimen name="height_toolbar_landscape">48dp</dimen>
+
+    <dimen name="size_icon">24dp</dimen>
+    <dimen name="size_avatar">40dp</dimen>
+    <dimen name="size_icon_big">64dp</dimen>
+    <dimen name="size_icon_big2">96dp</dimen>
+
+    <dimen name="size_icon_bounding">56dp</dimen>
+    <dimen name="size_icon_clickable_area">48dp</dimen>
+    <dimen name="size_double_icon_clickable_area">96dp</dimen>
+
+    <!-- Область клика иконки - 48, данная разница нужна чтобы получить общий размер в 56 -->
+    <dimen name="margin_icon_bounding">3dp</dimen>
+
+    <dimen name="margin_list_item_text_left">72dp</dimen>
+    <dimen name="height_list_item_two_line">72dp</dimen>
+    <dimen name="height_list_item_one_line">64dp</dimen>
+    <dimen name="height_subheader">48dp</dimen>
+
+    <!-- https://material.io/guidelines/style/typography.html#typography-styles -->
+    <dimen name="text_display">34sp</dimen>
+    <dimen name="text_headline">24sp</dimen>
+    <dimen name="text_title">20sp</dimen>
+    <dimen name="text_list_item_default">16sp</dimen>
+    <dimen name="text_list_item_secondary">14sp</dimen>
+    <dimen name="text_input_hint">13sp</dimen>
+    <dimen name="text_button">14sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_subheader">14sp</dimen>
+
+    <dimen name="button_corner_radius">2dp</dimen>
+    <dimen name="button_height">36dp</dimen>
+    <dimen name="button_touchable_height">48dp</dimen>
+    <dimen name="button_minimum_width">88dp</dimen>
+    <dimen name="button_text_padding">16dp</dimen>
+
+
+</resources>
