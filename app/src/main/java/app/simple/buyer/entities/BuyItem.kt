@@ -8,6 +8,7 @@ import io.realm.annotations.Required
  * Created by Zakharovi on 10.01.2018.
  */
 
+//Вещь, которую можно купить
 open class BuyItem : RealmObject() {
     //Уникальный id
     @PrimaryKey
@@ -23,7 +24,7 @@ open class BuyItem : RealmObject() {
     //Сколько раз добавлялась, или популярность
     var populatity = 0L
 
-    //Цена (Последняя, что была введена)
+    //Цена (Последняя, что была введена), запоминается
     var price = 0.0f
 
     //Количество (Последняее, что было введено)

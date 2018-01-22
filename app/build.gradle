@@ -7,11 +7,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion sdkVersion
+    buildToolsVersion buildTools
     defaultConfig {
         applicationId "app.simple.buyer"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion sdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -31,26 +32,33 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //kotlin
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    //appcompat
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    implementation "com.android.support.constraint:constraint-layout:1.0.2"
+
+    //realm
+    implementation "io.realm:android-adapters:2.1.1"
 
     //Logging
-    implementation 'ch.acra:acra:4.9.2'
+    implementation "ch.acra:acra:4.9.2"
 
     //streams under java 8
-    implementation 'com.annimon:stream:1.1.8'
+    implementation "com.annimon:stream:1.1.8"
 
     //rx for background
-    implementation 'io.reactivex:rxjava:1.2.5'
-    implementation 'io.reactivex:rxandroid:1.2.1'
+    implementation "io.reactivex:rxjava:1.2.5"
+    implementation "io.reactivex:rxandroid:1.2.1"
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    //tests
+    testImplementation "junit:junit:4.12"
+    androidTestImplementation "com.android.support.test:runner:1.0.1"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.1"
 }
 
 //realm {

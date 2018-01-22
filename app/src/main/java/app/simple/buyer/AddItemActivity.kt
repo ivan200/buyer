@@ -2,14 +2,19 @@ package app.simple.buyer
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.util.DBHelper
+import app.simple.buyer.util.views.BindHolder
+import app.simple.buyer.util.views.MultiCellObject
+import app.simple.buyer.util.views.MultiCellTypeAdapter
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_add_item.*
-
-
-
+import rx.functions.Func1
+import java.util.*
 
 
 /**
@@ -30,11 +35,17 @@ class AddItemActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        var findAll = realm.where(BuyItem::class.java).findAll()
+//        val findAll = realm.where(BuyItem::class.java).findAll()
+
+
+        val count = realm.where(BuyItem::class.java).count()
+
+
+//        var equalTo = realm.where(BuyItem::class.java).equalTo("name", "ffdsfdsf").findAll()
 
         doneButton.setOnClickListener {
-            var item = BuyItem()
-            item.id = findAll.count().toLong() + 1
+            val item = BuyItem()
+            item.id = count + 1
             item.name = editText.text.toString()
 
             realm.beginTransaction()
@@ -43,8 +54,20 @@ class AddItemActivity : AppCompatActivity() {
 
             editText.setText("")
         }
-    }
 
+        val listItems = ArrayList<MultiCellObject<*>>()
+        if (count > 0) {
+            listItems.add(MultiCellObject("test", Func1 { ViewHolderHeader(it) }, R.layout.cell_add_item))
+        }
+
+
+        val adapter = MultiCellTypeAdapter()
+        recyclerList.adapter = adapter
+        recyclerList.layoutManager = LinearLayoutManager(this)
+        adapter.update(listItems)
+
+        recyclerList.invalidate()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
@@ -57,7 +80,13 @@ class AddItemActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private class ViewHolderHeader internal constructor(itemView: View) : BindHolder<String>(itemView) {
+        private val title: TextView = itemView.findViewById(R.id.title)
 
+        override fun bind(obj: String) {
+            title.text = obj
+        }
+    }
 
 
 

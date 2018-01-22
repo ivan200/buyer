@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 
-
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,4 +86,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
+
+//    private fun loadCities(): List<City>? {
+//        // In this case we're loading from local assets.
+//        // NOTE: could alternatively easily load from network
+//        val stream: InputStream
+//        try {
+//            stream = assets.open("cities.json")
+//        } catch (e: IOException) {
+//            return null
+//        }
+//
+//        val gson = GsonBuilder().create()
+//
+//        val json = JsonParser().parse(InputStreamReader(stream))
+//        val cities = gson.fromJson(json, object : TypeToken<List<City>>() {
+//
+//        }.getType())
+//
+//        // Open a transaction to store items into the realm
+//        // Use copyToRealm() to convert the objects into proper RealmObjects managed by Realm.
+//        realm.beginTransaction()
+//        val realmCities = realm.copyToRealm(cities)
+//        realm.commitTransaction()
+//
+//        return ArrayList<City>(realmCities)
+//    }
+
 }
