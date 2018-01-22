@@ -7,14 +7,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import app.simple.buyer.entities.BuyItem
+import app.simple.buyer.util.AddItemRecyclerViewAdapter
 import app.simple.buyer.util.DBHelper
 import app.simple.buyer.util.views.BindHolder
-import app.simple.buyer.util.views.MultiCellObject
-import app.simple.buyer.util.views.MultiCellTypeAdapter
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_add_item.*
-import rx.functions.Func1
-import java.util.*
 
 
 /**
@@ -55,16 +52,17 @@ class AddItemActivity : AppCompatActivity() {
             editText.setText("")
         }
 
-        val listItems = ArrayList<MultiCellObject<*>>()
-        if (count > 0) {
-            listItems.add(MultiCellObject("test", Func1 { ViewHolderHeader(it) }, R.layout.cell_add_item))
-        }
+//        val listItems = ArrayList<MultiCellObject<*>>()
+//        if (count > 0) {
+//            listItems.add(MultiCellObject("test", Func1 { ViewHolderHeader(it) }, R.layout.cell_add_item))
+//        }
+//        val adapter = MultiCellTypeAdapter()
 
+        val adapter = AddItemRecyclerViewAdapter(realm.where(BuyItem::class.java).findAll())
 
-        val adapter = MultiCellTypeAdapter()
         recyclerList.adapter = adapter
         recyclerList.layoutManager = LinearLayoutManager(this)
-        adapter.update(listItems)
+//        adapter.update(listItems)
 
         recyclerList.invalidate()
     }
