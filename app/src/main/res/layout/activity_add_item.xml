@@ -55,11 +55,11 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerList"
-            android:background="@color/ColorBackgroundGrey300"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="@dimen/height_list_item_two_line"/>
+            android:paddingBottom="@dimen/height_list_item_two_line"
+            />
 
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

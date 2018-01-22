@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/ColorBackgroundGrey100"
     android:minHeight="@dimen/height_subheader"
     android:orientation="horizontal"
+    android:theme="@style/AppTheme"
     >
 
     <TextView
@@ -20,7 +20,6 @@
         android:paddingRight="@dimen/margin_default"
         android:paddingTop="@dimen/margin_half"
         android:text="Задача"
-        android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/text_list_item_default"/>
 
 </LinearLayout>
