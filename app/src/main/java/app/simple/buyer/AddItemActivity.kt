@@ -1,15 +1,16 @@
 package app.simple.buyer
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
-import android.view.View
-import android.widget.TextView
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.util.AddItemRecyclerViewAdapter
 import app.simple.buyer.util.DBHelper
-import app.simple.buyer.util.views.BindHolder
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_add_item.*
 
@@ -41,16 +42,31 @@ class AddItemActivity : AppCompatActivity() {
 //        var equalTo = realm.where(BuyItem::class.java).equalTo("name", "ffdsfdsf").findAll()
 
         doneButton.setOnClickListener {
-            val item = BuyItem()
-            item.id = count + 1
-            item.name = editText.text.toString()
-
-            realm.beginTransaction()
-            realm.copyToRealmOrUpdate(item)
-            realm.commitTransaction()
-
-            editText.setText("")
+            addItem(editText.text.toString())
+            onBackPressed()
+            overridePendingTransition(0, 0)
         }
+
+
+        editText.setOnEditorActionListener { textView, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                addItem(textView.text.toString())
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+
+        recyclerList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if(newState == RecyclerView.SCROLL_STATE_DRAGGING){
+                    if(editText.hasFocus()) {
+                        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(editText!!.windowToken, 0)
+                    }
+                }
+            }
+        })
 
 //        val listItems = ArrayList<MultiCellObject<*>>()
 //        if (count > 0) {
@@ -67,6 +83,24 @@ class AddItemActivity : AppCompatActivity() {
         recyclerList.invalidate()
     }
 
+    fun addItem(name: String?) {
+
+        var item = realm.where(BuyItem::class.java).equalTo("name", name).findFirst()
+
+        realm.beginTransaction()
+        if (item == null) {
+            item = BuyItem()
+            item.id = realm.where(BuyItem::class.java).count() + 1
+            item.name = name
+        } else {
+            item.count += 1
+        }
+        realm.copyToRealmOrUpdate(item)
+        realm.commitTransaction()
+
+        editText.setText("")
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == android.R.id.home) {
@@ -78,14 +112,14 @@ class AddItemActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private class ViewHolderHeader internal constructor(itemView: View) : BindHolder<String>(itemView) {
-        private val title: TextView = itemView.findViewById(R.id.title)
-
-        override fun bind(obj: String) {
-            title.text = obj
-        }
-    }
-
+//    private class ViewHolderHeader internal constructor(itemView: View) : BindHolder<String>(itemView) {
+//        private val title: TextView = itemView.findViewById(R.id.title)
+//
+//        override fun bind(obj: String) {
+//            title.text = obj
+//        }
+//    }
+//
 
 
 //

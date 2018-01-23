@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddItemActivity"
-                  android:configChanges="orientation|screenSize"
+                  android:configChanges="orientation"
                   android:label="@string/title_add_item_activity"
                   android:theme="@style/noAnimTheme"
             />

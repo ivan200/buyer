@@ -3,7 +3,6 @@ package app.simple.buyer
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -21,8 +20,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            val intent = Intent(this, AddItemActivity::class.java)
+            startActivityForResult(intent, AddItemActivity.ActivityCode)
+
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -61,8 +63,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_camera -> {
-                val intent = Intent(this, AddItemActivity::class.java)
-                startActivityForResult(intent, AddItemActivity.ActivityCode)
+//                val intent = Intent(this, AddItemActivity::class.java)
+//                startActivityForResult(intent, AddItemActivity.ActivityCode)
 
                 // Handle the camera action
             }

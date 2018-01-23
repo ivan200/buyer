@@ -31,6 +31,8 @@
 
                     <EditText
                         android:id="@+id/editText"
+                        android:singleLine="true"
+                        android:imeOptions="actionNext"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/margin_default"
