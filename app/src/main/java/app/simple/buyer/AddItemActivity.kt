@@ -93,7 +93,7 @@ class AddItemActivity : AppCompatActivity() {
             item.id = realm.where(BuyItem::class.java).count() + 1
             item.name = name
         } else {
-            item.count += 1
+            item.populatity =+ 1
         }
         realm.copyToRealmOrUpdate(item)
         realm.commitTransaction()

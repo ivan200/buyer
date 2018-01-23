@@ -11,7 +11,10 @@ public class DBHelper {
     private static RealmConfiguration realmConfiguration;
     private static RealmConfiguration getRealmConfiguration(){
         if(realmConfiguration == null){
-            realmConfiguration = new RealmConfiguration.Builder().build();
+            realmConfiguration = new RealmConfiguration.Builder()
+                    .schemaVersion(1)
+                    .migration(new DBMigration())
+                    .build();
         }
         return realmConfiguration;
     }

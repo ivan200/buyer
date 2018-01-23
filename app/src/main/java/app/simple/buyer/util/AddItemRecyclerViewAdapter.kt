@@ -4,8 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
-
 import app.simple.buyer.R
 import app.simple.buyer.entities.BuyItem
 import io.realm.OrderedRealmCollection
@@ -29,6 +29,7 @@ class AddItemRecyclerViewAdapter(data: OrderedRealmCollection<BuyItem>) : RealmR
         val obj = getItem(position)
         holder.buyItem = obj
         holder.title.text = obj?.name
+        holder.count.text = obj?.populatity.toString()
     }
 
     override fun getItemId(index: Int): Long {
@@ -36,8 +37,11 @@ class AddItemRecyclerViewAdapter(data: OrderedRealmCollection<BuyItem>) : RealmR
     }
 
     inner class BuyItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var title: TextView = view.findViewById(R.id.title)
+        var title: TextView = view.findViewById(R.id.tv_title)
+        var count: TextView = view.findViewById(R.id.tv_count)
+        var button_detete: ImageButton = view.findViewById(R.id.btn_detete)
         var buyItem: BuyItem? = null
+
         init {
             //            deletedCheckBox = (CheckBox) view.findViewById(R.id.checkBox);
         }

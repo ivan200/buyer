@@ -21,9 +21,6 @@ open class BuyListItem : RealmObject() {
     //id списка, в котором этот элемент
     private var listId: Long? = null
 
-    //Цена (если пользователь хочет видеть цену)
-    private var price: Float = 0.0F
-
     //Количество (если пользователь вводил)
     private var count: Long = 1
 
