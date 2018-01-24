@@ -1,4 +1,4 @@
-package app.simple.buyer.util
+package app.simple.buyer.util.crash
 
 import android.content.Context
 

@@ -1,4 +1,4 @@
-package app.simple.buyer.util;
+package app.simple.buyer.util.database;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;

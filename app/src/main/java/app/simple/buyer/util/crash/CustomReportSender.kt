@@ -1,9 +1,10 @@
-package app.simple.buyer.util
+package app.simple.buyer.util.crash
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import app.simple.buyer.Constants
+import app.simple.buyer.util.DeviceInfo
 import com.annimon.stream.ComparatorCompat
 import com.annimon.stream.Stream
 import org.acra.ReportField

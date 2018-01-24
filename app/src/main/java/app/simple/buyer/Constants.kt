@@ -9,5 +9,8 @@ interface Constants {
     companion object {
         const val REPORT_SEND_DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm:ss"
         const val CRASH_REPORT_MAIL_TO = "wilerat@gmail.com"
+
+
+        const val LOG_LEVEL = 7
     }
 }

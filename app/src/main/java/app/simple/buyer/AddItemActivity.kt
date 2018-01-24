@@ -10,7 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.util.AddItemRecyclerViewAdapter
-import app.simple.buyer.util.DBHelper
+import app.simple.buyer.util.database.DBHelper
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_add_item.*
 

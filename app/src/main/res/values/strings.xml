@@ -10,4 +10,18 @@
     <string name="crash_message">Что-то пошло не так! Пожалуйста, отправьте отчёт об ошибке разработчику!</string>
 
     <string name="title_add_item_activity">Добавление продукта</string>
+
+
+
+
+    <string name="dialog_add_list_title">Добавление списка</string>
+    <string name="dialog_add_list_hint">Название списка</string>
+    <string name="dialog_add_list_error">Данный список уже существует</string>
+
+    <string name="button_add">Добавить</string>
+
+
+
+
+
 </resources>

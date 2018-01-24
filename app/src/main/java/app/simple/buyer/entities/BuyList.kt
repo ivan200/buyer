@@ -1,6 +1,8 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.util.database.DBHelper
 import io.realm.RealmObject
+import io.realm.RealmResults
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 import java.util.*
@@ -14,21 +16,39 @@ open class BuyList : RealmObject() {
     //Уникальный id
     @PrimaryKey
     @Required
-    private var id: Long? = null
+    var id: Long? = null
 
     //Название списка
-    private var name: String? = null
+    var name: String? = null
 
     //Позиция при ручной сортировке
-    private var sortPosition: Long = 0
+    var sortPosition: Long = 0
 
     //Дата создания списка
-    private var created: Date? = null
+    var created: Date? = null
 
     //Дата модификации списка
-    private var modified: Date? = null
+    var modified: Date? = null
 
     //Сколько раз просматривался, или популярность
-    private var populatity: Long = 0
+    var populatity: Long = 0
+
+    companion object {
+        fun getAll() : RealmResults<BuyList>? {
+            return DBHelper.getRealm().where(BuyList::class.java).findAll()
+        }
+        fun getListByName(name: String) : BuyList? {
+            return DBHelper.getRealm().where(BuyList::class.java).equalTo("name", name).findFirst()
+        }
+        fun count(): Long {
+            return DBHelper.getRealm().where(BuyList::class.java).count()
+        }
+        fun addList(list: BuyList) {
+            var realm = DBHelper.getRealm()
+            realm.beginTransaction()
+            realm.copyToRealm(list)
+            realm.commitTransaction()
+        }
+    }
 }
 
