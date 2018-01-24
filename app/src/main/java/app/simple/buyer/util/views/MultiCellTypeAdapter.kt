@@ -5,7 +5,7 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import rx.functions.Func1
+import io.reactivex.functions.Function
 import java.util.*
 
 /**
@@ -15,7 +15,7 @@ import java.util.*
 //Адаптер для списка с ячейками разных типов, с которым удобно работать(мне)
 class MultiCellTypeAdapter : RecyclerView.Adapter<BindHolder<*>>() {
     private var listItems: List<MultiCellObject<*>> = ArrayList()
-    private var itemTypes = SparseArray<Func1<View, out BindHolder<*>>>()
+    private var itemTypes = SparseArray<Function<View, out BindHolder<*>>>()
 
     fun update(items: List<MultiCellObject<*>>?) {
         if (items != null) {
@@ -31,7 +31,7 @@ class MultiCellTypeAdapter : RecyclerView.Adapter<BindHolder<*>>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindHolder<*> {
-        return itemTypes.get(viewType).call(LayoutInflater.from(parent.context).inflate(viewType, parent, false))
+        return itemTypes.get(viewType).apply(LayoutInflater.from(parent.context).inflate(viewType, parent, false))
     }
 
     override fun getItemViewType(position: Int): Int {

@@ -1,12 +1,11 @@
 package app.simple.buyer.util.views
 
 import android.view.View
-
-import rx.functions.Func1
+import io.reactivex.functions.Function
 
 /**
  * Created by Zakharovi on 12.01.2018.
  */
 
-class MultiCellObject<T>(val obj: T, val onCreateHolder: Func1<View, BindHolder<T>>, val resource: Int)
+class MultiCellObject<T>(val obj: T, val onCreateHolder: Function<View, BindHolder<T>>, val resource: Int)
 

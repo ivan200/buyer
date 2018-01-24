@@ -8,6 +8,9 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
@@ -33,6 +36,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.KITKAT) {
+            nav_view.findViewById<LinearLayout>(R.id.ll_status_bar).visibility = View.GONE
+        }
+
+        var listName = nav_view.getHeaderView(0).findViewById<TextView>(R.id.tv_title)
+        listName.setOnClickListener( { v->
+            val intent = Intent(this, EditListsActivity::class.java)
+            startActivityForResult(intent, EditListsActivity.ActivityCode)
+        })
     }
 
     override fun onBackPressed() {
