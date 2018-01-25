@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_order"
+        android:title="@string/menu_sort"
+        android:icon="@drawable/ic_sort"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item
+                android:id="@+id/order_alphabet_az"
+                android:title="@string/order_alphabet_az"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/order_alphabet_za"
+                android:title="@string/order_alphabet_za"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/order_popularity_az"
+                android:title="@string/order_popularity_az"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/order_popularity_za"
+                android:title="@string/order_popularity_za"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/order_size_az"
+                android:title="@string/order_size_az"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/order_size_za"
+                android:title="@string/order_size_za"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/order_by_hand"
+                android:title="@string/order_by_hand"
+                app:showAsAction="never"
+                />
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+
+</menu>

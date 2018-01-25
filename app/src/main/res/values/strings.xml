@@ -20,8 +20,14 @@
 
     <string name="button_add">Добавить</string>
 
-
-
+    <string name="menu_sort">Сортировка</string>
+    <string name="order_alphabet_az">По алфавиту, А-Я</string>
+    <string name="order_alphabet_za">По алфавиту, Я-А</string>
+    <string name="order_popularity_az">По популярности, А-Я</string>
+    <string name="order_popularity_za">По популярности, Я-А</string>
+    <string name="order_size_az">По размеру, А-Я</string>
+    <string name="order_size_za">По размеру, Я-А</string>
+    <string name="order_by_hand">Ручная</string>
 
 
 </resources>

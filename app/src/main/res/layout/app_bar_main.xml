@@ -30,6 +30,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:tint="@color/colorWhite"
-        app:srcCompat="@drawable/ic_plus_black"/>
+        app:srcCompat="@drawable/ic_plus"/>
 
 </android.support.design.widget.CoordinatorLayout>

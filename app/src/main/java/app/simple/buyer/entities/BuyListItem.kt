@@ -45,6 +45,10 @@ open class BuyListItem : RealmObject() {
             return DBHelper.realm.where(BuyListItem::class.java).count()
         }
 
+        fun countInList(listId: Long): Long {
+            return DBHelper.realm.where(BuyListItem::class.java).equalTo("listId", listId).count()
+        }
+
         fun copyOrUpdateItem(item: BuyListItem) {
             var realm = DBHelper.realm
             realm.beginTransaction()
