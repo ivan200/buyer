@@ -16,8 +16,15 @@ import io.realm.RealmRecyclerViewAdapter
  */
 
 class EditListsRecyclerViewAdapter (data: OrderedRealmCollection<BuyList>) : RealmRecyclerViewAdapter<BuyList, EditListsRecyclerViewAdapter.BuyListViewHolder>(data, true) {
+    private var inReorderMode = false
+
     init {
         setHasStableIds(true)
+    }
+
+    fun enableReorderMode(enabled: Boolean) {
+        inReorderMode = enabled
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BuyListViewHolder {
@@ -30,6 +37,11 @@ class EditListsRecyclerViewAdapter (data: OrderedRealmCollection<BuyList>) : Rea
         holder.buyList = obj
         holder.title.text = obj?.name
         holder.count.text = obj?.populatity.toString()
+        if(inReorderMode){
+            holder.count.visibility = View.GONE
+        } else{
+            holder.count.visibility = View.VISIBLE
+        }
     }
 
     override fun getItemId(index: Int): Long {

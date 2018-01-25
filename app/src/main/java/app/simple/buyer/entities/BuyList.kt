@@ -43,19 +43,17 @@ open class BuyList : RealmObject() {
             return realm.where(BuyList::class.java).findAll().sort("sortPosition")
         }
 
-        fun orderByAlphabet(currentList: OrderedRealmCollection<BuyList> = getAll(), sortOrder: Sort) {
-            orderByField("name", currentList, sortOrder)
+        fun orderByAlphabet(sortOrder: Sort, currentList: OrderedRealmCollection<BuyList> = getAll()) {
+            orderByField("name", sortOrder)
         }
 
-        fun orderByPopularity(currentList: OrderedRealmCollection<BuyList> = getAll(), sortOrder: Sort) {
-            orderByField("populatity", currentList, sortOrder)
         }
 
         fun orderBySize(currentList: OrderedRealmCollection<BuyList> = getAll(), sortOrder: Sort) {
             realm.executeTransactionAsync {
-                val sort = currentList.sortedBy { t -> BuyListItem.countInList(t.id!!) }
+                val sort = getAllOrdered().sortedBy { l->BuyListItem.countInList(l.id!!) }
+                val indices = if(sortOrder == Sort.ASCENDING) sort.indices else sort.indices.reversed()
                 var k = 0
-                var indices = if (sortOrder == Sort.ASCENDING) sort.indices else sort.indices.reversed()
                 for (i in indices) {
                     sort[i]?.sortPosition = i.toLong()
                     k++
@@ -63,9 +61,9 @@ open class BuyList : RealmObject() {
             }
         }
 
-        private fun orderByField(fieldName: String, currentList: OrderedRealmCollection<BuyList> = getAll(), sortOrder: Sort) {
+        private fun orderByField(fieldName: String, sortOrder: Sort) {
             realm.executeTransactionAsync {
-                val sort = currentList.sort(fieldName, sortOrder)
+                val sort = getAllOrdered().sort(fieldName, sortOrder)
                 var k = 0
                 for (i in sort.indices) {
                     sort[i]?.sortPosition = i.toLong()

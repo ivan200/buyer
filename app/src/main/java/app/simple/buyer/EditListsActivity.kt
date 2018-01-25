@@ -27,6 +27,8 @@ class EditListsActivity : AppCompatActivity() {
 
     var adapter: EditListsRecyclerViewAdapter? = null
 
+    private var menu: Menu? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_lists)
@@ -72,8 +74,12 @@ class EditListsActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        this.menu = menu
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.edit_lists, menu)
+        menu.setGroupVisible(R.id.group_normal_mode, true)
+        menu.setGroupVisible(R.id.group_reorder_mode, false)
+
         return true
     }
 
@@ -84,22 +90,32 @@ class EditListsActivity : AppCompatActivity() {
                 return true
             }
             R.id.order_alphabet_az ->{
-                BuyList.orderByAlphabet(adapter?.data!!, Sort.ASCENDING)
+                BuyList.orderByAlphabet(Sort.ASCENDING)
             }
             R.id.order_alphabet_za ->{
-                BuyList.orderByAlphabet(adapter?.data!!, Sort.DESCENDING)
+                BuyList.orderByAlphabet(Sort.DESCENDING)
             }
             R.id.order_popularity_az ->{
-                BuyList.orderByPopularity(adapter?.data!!, Sort.ASCENDING)
+                BuyList.orderByPopularity(Sort.ASCENDING)
             }
             R.id.order_popularity_za ->{
-                BuyList.orderByPopularity(adapter?.data!!, Sort.DESCENDING)
+                BuyList.orderByPopularity(Sort.DESCENDING)
             }
             R.id.order_size_az ->{
                 BuyList.orderBySize(adapter?.data!!, Sort.ASCENDING)
             }
             R.id.order_size_za ->{
                 BuyList.orderBySize(adapter?.data!!, Sort.DESCENDING)
+            }
+            R.id.order_by_hand ->{
+                menu?.setGroupVisible(R.id.group_normal_mode, false)
+                menu?.setGroupVisible(R.id.group_reorder_mode, true)
+                adapter?.enableReorderMode(true)
+            }
+            R.id.action_clear ->{
+                menu?.setGroupVisible(R.id.group_reorder_mode, false)
+                menu?.setGroupVisible(R.id.group_normal_mode, true)
+                adapter?.enableReorderMode(false)
             }
 
             android.R.id.home -> {
