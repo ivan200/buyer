@@ -23,7 +23,7 @@ class AddItemActivity : AppCompatActivity() {
         const val ActivityCode = 123
     }
 
-    val realm: Realm = DBHelper.getRealm()
+    val realm: Realm = DBHelper.realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +33,6 @@ class AddItemActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 //        val findAll = realm.where(BuyItem::class.java).findAll()
-
-
-        val count = realm.where(BuyItem::class.java).count()
 
 
 //        var equalTo = realm.where(BuyItem::class.java).equalTo("name", "ffdsfdsf").findAll()
@@ -73,7 +70,7 @@ class AddItemActivity : AppCompatActivity() {
 //        }
 //        val adapter = MultiCellTypeAdapter()
 
-        val adapter = AddItemRecyclerViewAdapter(realm.where(BuyItem::class.java).findAll())
+        val adapter = AddItemRecyclerViewAdapter(BuyItem.getAll())
 
         recyclerList.adapter = adapter
         recyclerList.layoutManager = LinearLayoutManager(this)
@@ -82,21 +79,8 @@ class AddItemActivity : AppCompatActivity() {
         recyclerList.invalidate()
     }
 
-    fun addItem(name: String?) {
-
-        var item = realm.where(BuyItem::class.java).equalTo("name", name).findFirst()
-
-        realm.beginTransaction()
-        if (item == null) {
-            item = BuyItem()
-            item.id = realm.where(BuyItem::class.java).count() + 1
-            item.name = name
-        } else {
-            item.populatity =+ 1
-        }
-        realm.copyToRealmOrUpdate(item)
-        realm.commitTransaction()
-
+    fun addItem(name: String) {
+        BuyItem.addItem(name)
         editText.setText("")
     }
 

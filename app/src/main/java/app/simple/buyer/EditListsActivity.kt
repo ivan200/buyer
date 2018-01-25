@@ -4,15 +4,13 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
-import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyList
-import app.simple.buyer.util.AddItemRecyclerViewAdapter
+import app.simple.buyer.util.EditListsRecyclerViewAdapter
 import app.simple.buyer.util.database.DBHelper
 import app.simple.buyer.util.views.DialogHelper
 import io.reactivex.functions.Consumer
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_edit_lists.*
-import java.util.*
 
 /**
  * Created by Zakharovi on 23.01.2018.
@@ -23,7 +21,7 @@ class EditListsActivity : AppCompatActivity() {
         const val ActivityCode = 124
     }
 
-    val realm: Realm = DBHelper.getRealm()
+    val realm: Realm = DBHelper.realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,24 +49,19 @@ class EditListsActivity : AppCompatActivity() {
 //                    .setAction("Action", null).show()
         }
 
-        val adapter = AddItemRecyclerViewAdapter(realm.where(BuyItem::class.java).findAll())
-//        rv_edit_lists.adapter = adapter
+        val adapter = EditListsRecyclerViewAdapter(BuyList.getAll())
+        rv_edit_lists.adapter = adapter
 
         rv_edit_lists.setHasFixedSize(true)
         rv_edit_lists.layoutManager = LinearLayoutManager(this)
     }
 
     private fun addList(name: String) {
-        var listByName = BuyList.getListByName(name)
+        var listByName = BuyList.getByName(name)
         if(listByName != null){
             throw RuntimeException(baseContext.getString(R.string.dialog_add_list_error))
         } else{
-            var newList = BuyList()
-            newList.id = BuyList.count()+1
-            newList.name = name
-            newList.created = Date()
-            newList.modified = Date()
-            BuyList.addList(newList)
+            BuyList.addAsync(name)
         }
     }
 

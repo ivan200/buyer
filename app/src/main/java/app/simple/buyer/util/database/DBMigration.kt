@@ -1,24 +1,21 @@
-package app.simple.buyer.util.database;
+package app.simple.buyer.util.database
 
-import io.realm.DynamicRealm;
-import io.realm.RealmMigration;
-import io.realm.RealmSchema;
+import io.realm.DynamicRealm
+import io.realm.RealmMigration
 
 /**
  * Created by Zakharovi on 23.01.2018.
  */
 
-public class DBMigration implements RealmMigration {
-    @Override
-    public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+class DBMigration : RealmMigration {
+    override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
+        var oldVersion = oldVersion
 
-        RealmSchema schema = realm.getSchema();
-        if (oldVersion == 0) {
-            schema.get("BuyItem")
-                    .removeField("count");
-            schema.get("BuyListItem")
-                    .removeField("price");
-            oldVersion++;
+        val schema = realm.schema
+        if (oldVersion == 0L) {
+            schema.get("BuyItem")?.removeField("count")
+            schema.get("BuyListItem")?.removeField("price")
+            oldVersion++
         }
 //
 //        // DynamicRealm exposes an editable schema

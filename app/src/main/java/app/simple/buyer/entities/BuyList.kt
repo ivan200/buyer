@@ -1,6 +1,6 @@
 package app.simple.buyer.entities
 
-import app.simple.buyer.util.database.DBHelper
+import app.simple.buyer.util.database.DBHelper.realm
 import io.realm.RealmObject
 import io.realm.RealmResults
 import io.realm.annotations.PrimaryKey
@@ -34,20 +34,24 @@ open class BuyList : RealmObject() {
     var populatity: Long = 0
 
     companion object {
-        fun getAll() : RealmResults<BuyList>? {
-            return DBHelper.getRealm().where(BuyList::class.java).findAll()
+        fun getAll() : RealmResults<BuyList> {
+            return realm.where(BuyList::class.java).findAll()
         }
-        fun getListByName(name: String) : BuyList? {
-            return DBHelper.getRealm().where(BuyList::class.java).equalTo("name", name).findFirst()
+        fun getByName(name: String) : BuyList? {
+            return realm.where(BuyList::class.java).equalTo("name", name).findFirst()
         }
         fun count(): Long {
-            return DBHelper.getRealm().where(BuyList::class.java).count()
+            return realm.where(BuyList::class.java).count()
         }
-        fun addList(list: BuyList) {
-            var realm = DBHelper.getRealm()
-            realm.beginTransaction()
-            realm.copyToRealm(list)
-            realm.commitTransaction()
+        fun addAsync(name: String) {
+            var newList = BuyList()
+            newList.id = BuyList.count()+1
+            newList.name = name
+            newList.created = Date()
+            newList.modified = Date()
+            realm.executeTransactionAsync {
+                realm.copyToRealm(newList)
+            }
         }
     }
 }
