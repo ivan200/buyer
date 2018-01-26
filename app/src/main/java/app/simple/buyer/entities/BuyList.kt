@@ -23,8 +23,11 @@ open class BuyList : RealmObject() {
     //Название списка
     var name: String? = null
 
-    //Позиция при ручной сортировке
+    //Позиция при нестандартной сортировке
     var sortPosition: Long = 0
+
+    //Позиция при ручной сортировке
+    var handSortPosition: Long = 0
 
     //Дата создания списка
     var created: Date? = null
@@ -35,28 +38,56 @@ open class BuyList : RealmObject() {
     //Сколько раз просматривался, или популярность
     var populatity: Long = 0
 
+    //Скрыт список, или нет (перед удалением)
+    var isHidden: Boolean = false
+
     companion object {
+        enum class OrderType {
+            ALPHABET,
+            POPULARITY,
+            SIZE,
+            CREATED,
+            MODIFIED
+        }
+
         fun getAll() : RealmResults<BuyList> {
             return realm.where(BuyList::class.java).findAll()
         }
-        fun getAllOrdered() : RealmResults<BuyList> {
+        fun getAllOrdered() : OrderedRealmCollection<BuyList> {
             return realm.where(BuyList::class.java).findAll().sort("sortPosition")
         }
-
-        fun orderByAlphabet(sortOrder: Sort, currentList: OrderedRealmCollection<BuyList> = getAll()) {
-            orderByField("name", sortOrder)
+        fun getAllOrderedByHand() : OrderedRealmCollection<BuyList> {
+            return realm.where(BuyList::class.java).findAll().sort("handSortPosition")
         }
 
-        }
-
-        fun orderBySize(currentList: OrderedRealmCollection<BuyList> = getAll(), sortOrder: Sort) {
+        fun clearHandOrder(){
             realm.executeTransactionAsync {
-                val sort = getAllOrdered().sortedBy { l->BuyListItem.countInList(l.id!!) }
-                val indices = if(sortOrder == Sort.ASCENDING) sort.indices else sort.indices.reversed()
-                var k = 0
-                for (i in indices) {
-                    sort[i]?.sortPosition = i.toLong()
-                    k++
+                getAllOrdered().forEach { buyList -> buyList.handSortPosition = buyList.sortPosition }
+            }
+        }
+
+        fun orderBy(orderType: OrderType, sortOrder: Sort) {
+            when (orderType) {
+                OrderType.ALPHABET -> {
+                    orderByField("name", sortOrder)
+                }
+                OrderType.POPULARITY -> {
+                    orderByField("populatity", sortOrder)
+                }
+                OrderType.CREATED -> {
+                    orderByField("created", sortOrder)
+                }
+                OrderType.MODIFIED -> {
+                    orderByField("modified", sortOrder)
+                }
+                OrderType.SIZE -> {
+                    realm.executeTransactionAsync {
+                        val sort = getAllOrdered().sortedBy { l -> BuyListItem.countInList(l.id!!) }
+                        val indices = if (sortOrder == Sort.ASCENDING) sort.indices else sort.indices.reversed()
+                        for ((k, i) in indices.withIndex()) {
+                            sort[i]?.sortPosition = k.toLong()
+                        }
+                    }
                 }
             }
         }
@@ -64,10 +95,8 @@ open class BuyList : RealmObject() {
         private fun orderByField(fieldName: String, sortOrder: Sort) {
             realm.executeTransactionAsync {
                 val sort = getAllOrdered().sort(fieldName, sortOrder)
-                var k = 0
                 for (i in sort.indices) {
                     sort[i]?.sortPosition = i.toLong()
-                    k++
                 }
             }
         }

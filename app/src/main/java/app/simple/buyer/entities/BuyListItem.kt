@@ -5,6 +5,7 @@ import io.realm.RealmObject
 import io.realm.RealmResults
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
+import java.util.*
 
 /**
  * Created by Zakharovi on 10.01.2018.
@@ -35,8 +36,24 @@ open class BuyListItem : RealmObject() {
     //Позиция при ручной сортировке
     var sortPosition: Long = 0
 
+    //Позиция при ручной сортировке
+    var handSortPosition: Long = 0
+
+    //Дата модификации элемента
+    var modified: Date? = null
+
+    //Дата создания элемента
+    var created: Date? = null
 
     companion object {
+        enum class OrderType {
+            ALPHABET,
+            PRICE,
+            CATEGORY,
+            CREATED,
+            MODIFIED
+        }
+
         fun getAll(): RealmResults<BuyListItem> {
             return DBHelper.realm.where(BuyListItem::class.java).findAll()
         }

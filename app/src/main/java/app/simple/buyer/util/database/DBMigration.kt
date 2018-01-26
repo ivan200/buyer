@@ -2,6 +2,7 @@ package app.simple.buyer.util.database
 
 import io.realm.DynamicRealm
 import io.realm.RealmMigration
+import java.util.*
 
 /**
  * Created by Zakharovi on 23.01.2018.
@@ -15,6 +16,14 @@ class DBMigration : RealmMigration {
         if (oldVersion == 0L) {
             schema.get("BuyItem")?.removeField("count")
             schema.get("BuyListItem")?.removeField("price")
+            oldVersion++
+        }
+        if (oldVersion == 1L) {
+            schema.get("BuyList")?.addField("isHidden", Boolean::class.java)
+            schema.get("BuyList")?.addField("handSortPosition", Long::class.java)
+            schema.get("BuyListItem")?.addField("modified", Date::class.java)
+            schema.get("BuyListItem")?.addField("created", Date::class.java)
+            schema.get("BuyListItem")?.addField("handSortPosition", Long::class.java)
             oldVersion++
         }
 //

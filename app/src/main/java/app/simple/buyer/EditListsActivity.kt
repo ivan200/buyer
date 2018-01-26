@@ -56,9 +56,7 @@ class EditListsActivity : AppCompatActivity() {
         }
 
         adapter = EditListsRecyclerViewAdapter(BuyList.getAllOrdered())
-
         rv_edit_lists.adapter = adapter
-
         rv_edit_lists.setHasFixedSize(true)
         rv_edit_lists.layoutManager = LinearLayoutManager(this)
     }
@@ -90,22 +88,22 @@ class EditListsActivity : AppCompatActivity() {
                 return true
             }
             R.id.order_alphabet_az ->{
-                BuyList.orderByAlphabet(Sort.ASCENDING)
+                BuyList.orderBy(BuyList.Companion.OrderType.ALPHABET, Sort.ASCENDING)
             }
             R.id.order_alphabet_za ->{
-                BuyList.orderByAlphabet(Sort.DESCENDING)
+                BuyList.orderBy(BuyList.Companion.OrderType.ALPHABET, Sort.DESCENDING)
             }
             R.id.order_popularity_az ->{
-                BuyList.orderByPopularity(Sort.ASCENDING)
+                BuyList.orderBy(BuyList.Companion.OrderType.POPULARITY, Sort.ASCENDING)
             }
             R.id.order_popularity_za ->{
-                BuyList.orderByPopularity(Sort.DESCENDING)
+                BuyList.orderBy(BuyList.Companion.OrderType.POPULARITY, Sort.DESCENDING)
             }
             R.id.order_size_az ->{
-                BuyList.orderBySize(adapter?.data!!, Sort.ASCENDING)
+                BuyList.orderBy(BuyList.Companion.OrderType.SIZE, Sort.ASCENDING)
             }
             R.id.order_size_za ->{
-                BuyList.orderBySize(adapter?.data!!, Sort.DESCENDING)
+                BuyList.orderBy(BuyList.Companion.OrderType.SIZE, Sort.DESCENDING)
             }
             R.id.order_by_hand ->{
                 menu?.setGroupVisible(R.id.group_normal_mode, false)

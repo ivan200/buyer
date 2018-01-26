@@ -1,22 +1,27 @@
 package app.simple.buyer
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
+import app.simple.buyer.adapters.MainMenuRecyclerViewAdapter
+import app.simple.buyer.entities.BuyList
+import app.simple.buyer.util.crash.LogModule
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import java.text.MessageFormat
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    //    var menu_list: RecyclerView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,22 +35,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                    .setAction("Action", null).show()
         }
 
-        val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.KITKAT) {
-            nav_view.findViewById<LinearLayout>(R.id.ll_status_bar).visibility = View.GONE
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+            menu_ll_status_bar.visibility = View.GONE
+            menu_rv_list.setPadding(0, 0, 0, 0)
         }
 
-        var listName = nav_view.getHeaderView(0).findViewById<TextView>(R.id.tv_title)
-        listName.setOnClickListener( { v->
+        menu_tv_title.setOnClickListener({ v ->
             val intent = Intent(this, EditListsActivity::class.java)
             startActivityForResult(intent, EditListsActivity.ActivityCode)
         })
+
+        menu_rv_list.adapter = MainMenuRecyclerViewAdapter(BuyList.getAllOrdered())
+        menu_rv_list.setHasFixedSize(true)
+        menu_rv_list.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onBackPressed() {
@@ -100,6 +108,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        LogModule.printToLog(MessageFormat.format("PERMISSIONS onActivityResult: {0}, {1}", requestCode.toString(), resultCode.toString()))
+
+        menu_rv_list.adapter?.notifyDataSetChanged()
+
+        if (resultCode == RESULT_OK) {
+        } else {
+
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 
