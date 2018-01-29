@@ -26,6 +26,10 @@ class DBMigration : RealmMigration {
             schema.get("BuyListItem")?.addField("handSortPosition", Long::class.java)
             oldVersion++
         }
+        if (oldVersion == 2L) {
+            schema.get("BuyList")?.addField("personalOrderType", Int::class.java)
+            oldVersion++
+        }
 //
 //        // DynamicRealm exposes an editable schema
 //

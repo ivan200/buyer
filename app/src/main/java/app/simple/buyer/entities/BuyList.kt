@@ -1,10 +1,8 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.util.database.DBHelper
 import app.simple.buyer.util.database.DBHelper.realm
-import io.realm.OrderedRealmCollection
-import io.realm.RealmObject
-import io.realm.RealmResults
-import io.realm.Sort
+import io.realm.*
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 import java.util.*
@@ -41,23 +39,38 @@ open class BuyList : RealmObject() {
     //Скрыт список, или нет (перед удалением)
     var isHidden: Boolean = false
 
+    //тип персональной сортировки данного списка (обычно сортировка внутри списка распространяется на все списки)
+    var personalOrderType: Int = OrderType.NONE
+
+
+    interface OrderType {
+        companion object {
+            val NONE = 0
+            val ALPHABET = 1
+            val POPULARITY = 2
+            val SIZE = 3
+            val CREATED = 4
+            val MODIFIED = 5
+            val PRICE = 6
+            val CATEGORY = 7
+            val HAND = 8
+        }
+    }
+
+
     companion object {
-        enum class OrderType {
-            ALPHABET,
-            POPULARITY,
-            SIZE,
-            CREATED,
-            MODIFIED
+        private fun getQuery() : RealmQuery<BuyList> {
+            return DBHelper.realm.where(BuyList::class.java)
         }
 
         fun getAll() : RealmResults<BuyList> {
-            return realm.where(BuyList::class.java).findAll()
+            return getQuery().findAll()
         }
         fun getAllOrdered() : OrderedRealmCollection<BuyList> {
-            return realm.where(BuyList::class.java).findAll().sort("sortPosition")
+            return getQuery().findAll().sort("sortPosition")
         }
         fun getAllOrderedByHand() : OrderedRealmCollection<BuyList> {
-            return realm.where(BuyList::class.java).findAll().sort("handSortPosition")
+            return getQuery().findAll().sort("handSortPosition")
         }
 
         fun clearHandOrder(){
@@ -66,7 +79,7 @@ open class BuyList : RealmObject() {
             }
         }
 
-        fun orderBy(orderType: OrderType, sortOrder: Sort) {
+        fun orderBy(orderType: Int, sortOrder: Sort) {
             when (orderType) {
                 OrderType.ALPHABET -> {
                     orderByField("name", sortOrder)
@@ -92,6 +105,7 @@ open class BuyList : RealmObject() {
             }
         }
 
+        //Сортировка по одному из полей
         private fun orderByField(fieldName: String, sortOrder: Sort) {
             realm.executeTransactionAsync {
                 val sort = getAllOrdered().sort(fieldName, sortOrder)
@@ -102,10 +116,10 @@ open class BuyList : RealmObject() {
         }
 
         fun getByName(name: String) : BuyList? {
-            return realm.where(BuyList::class.java).equalTo("name", name).findFirst()
+            return getQuery().equalTo("name", name).findFirst()
         }
         fun count(): Long {
-            return realm.where(BuyList::class.java).count()
+            return getQuery().count()
         }
         fun addAsync(name: String) {
             var newList = BuyList()

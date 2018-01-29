@@ -1,8 +1,10 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.util.database.DBHelper
 import app.simple.buyer.util.database.DBHelper.realm
 import io.realm.OrderedRealmCollection
 import io.realm.RealmObject
+import io.realm.RealmQuery
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 
@@ -32,16 +34,24 @@ open class BuyItem : RealmObject() {
     var price = 0.0f
 
     companion object {
+        private fun getQuery() : RealmQuery<BuyItem> {
+            return DBHelper.realm.where(BuyItem::class.java)
+        }
+
         fun getAll(): OrderedRealmCollection<BuyItem> {
-            return realm.where(BuyItem::class.java).findAll()
+            return getQuery().findAll()
+        }
+
+        fun getByID(id: Long) : BuyItem? {
+            return getQuery().equalTo("id", id).findFirst()
         }
 
         fun getByName(name: String) : BuyItem? {
-            return realm.where(BuyItem::class.java).equalTo("name", name).findFirst()
+            return getQuery().equalTo("name", name).findFirst()
         }
 
         fun count(): Long {
-            return realm.where(BuyItem::class.java).count()
+            return getQuery().count()
         }
 
         fun addItem(name: String){

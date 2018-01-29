@@ -88,22 +88,22 @@ class EditListsActivity : AppCompatActivity() {
                 return true
             }
             R.id.order_alphabet_az ->{
-                BuyList.orderBy(BuyList.Companion.OrderType.ALPHABET, Sort.ASCENDING)
+                BuyList.orderBy(BuyList.OrderType.ALPHABET, Sort.ASCENDING)
             }
             R.id.order_alphabet_za ->{
-                BuyList.orderBy(BuyList.Companion.OrderType.ALPHABET, Sort.DESCENDING)
+                BuyList.orderBy(BuyList.OrderType.ALPHABET, Sort.DESCENDING)
             }
             R.id.order_popularity_az ->{
-                BuyList.orderBy(BuyList.Companion.OrderType.POPULARITY, Sort.ASCENDING)
+                BuyList.orderBy(BuyList.OrderType.POPULARITY, Sort.ASCENDING)
             }
             R.id.order_popularity_za ->{
-                BuyList.orderBy(BuyList.Companion.OrderType.POPULARITY, Sort.DESCENDING)
+                BuyList.orderBy(BuyList.OrderType.POPULARITY, Sort.DESCENDING)
             }
             R.id.order_size_az ->{
-                BuyList.orderBy(BuyList.Companion.OrderType.SIZE, Sort.ASCENDING)
+                BuyList.orderBy(BuyList.OrderType.SIZE, Sort.ASCENDING)
             }
             R.id.order_size_za ->{
-                BuyList.orderBy(BuyList.Companion.OrderType.SIZE, Sort.DESCENDING)
+                BuyList.orderBy(BuyList.OrderType.SIZE, Sort.DESCENDING)
             }
             R.id.order_by_hand ->{
                 menu?.setGroupVisible(R.id.group_normal_mode, false)

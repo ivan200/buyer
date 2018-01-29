@@ -2,6 +2,7 @@ package app.simple.buyer.entities
 
 import app.simple.buyer.util.database.DBHelper
 import io.realm.RealmObject
+import io.realm.RealmQuery
 import io.realm.RealmResults
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
@@ -46,24 +47,28 @@ open class BuyListItem : RealmObject() {
     var created: Date? = null
 
     companion object {
-        enum class OrderType {
-            ALPHABET,
-            PRICE,
-            CATEGORY,
-            CREATED,
-            MODIFIED
+        private fun getQuery() : RealmQuery<BuyListItem> {
+            return DBHelper.realm.where(BuyListItem::class.java)
         }
 
         fun getAll(): RealmResults<BuyListItem> {
-            return DBHelper.realm.where(BuyListItem::class.java).findAll()
+            return getQuery().findAll()
         }
 
         fun count(): Long {
-            return DBHelper.realm.where(BuyListItem::class.java).count()
+            return getQuery().count()
         }
 
         fun countInList(listId: Long): Long {
-            return DBHelper.realm.where(BuyListItem::class.java).equalTo("listId", listId).count()
+            return getQuery().equalTo("listId", listId).count()
+        }
+
+        fun price(listId: Long): Float {
+            var sumPrice = 0f
+            getQuery()
+                    .equalTo("listId", listId)
+                    .findAll().forEach { x -> x.itemId?.let { sumPrice += BuyItem.getByID(it)?.price!! } }
+            return sumPrice
         }
 
         fun copyOrUpdateItem(item: BuyListItem) {
