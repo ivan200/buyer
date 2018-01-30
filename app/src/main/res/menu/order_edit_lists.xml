@@ -34,12 +34,12 @@
                     android:title="@string/order_price"
                     app:showAsAction="never"
                     />
-                <item
-                    android:icon="@drawable/ic_order_category"
-                    android:id="@+id/item_order_category"
-                    android:title="@string/order_category"
-                    app:showAsAction="never"
-                    />
+                <!--<item-->
+                    <!--android:icon="@drawable/ic_order_category"-->
+                    <!--android:id="@+id/item_order_category"-->
+                    <!--android:title="@string/order_category"-->
+                    <!--app:showAsAction="never"-->
+                    <!--/>-->
                 <item
                     android:icon="@drawable/ic_order_create"
                     android:id="@+id/item_order_create"
@@ -57,6 +57,7 @@
                     android:id="@+id/item_order_hand"
                     android:title="@string/order_by_hand"
                     app:showAsAction="never"
+                    android:checked="true"
                     />
 
             </menu>

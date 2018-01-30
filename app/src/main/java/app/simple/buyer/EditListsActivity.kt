@@ -78,7 +78,7 @@ class EditListsActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         this.menu = menu
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.edit_lists, menu)
+        menuInflater.inflate(R.menu.order_edit_lists, menu)
         menu.setGroupVisible(R.id.group_normal_mode, true)
         menu.setGroupVisible(R.id.group_reorder_mode, false)
 
@@ -88,6 +88,13 @@ class EditListsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.item_sort_type -> {
+
+//                Sort.ASCENDING
+
+            }
+
+
 //            R.id.action_order -> {
 //                showPopupWindow(findViewById<View>(R.id.action_order))
 //            }

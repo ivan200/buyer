@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.support.v7.app.AppCompatDelegate
 import app.simple.buyer.util.crash.CustomSenderFactory
+import app.simple.buyer.util.crash.LogModule
 import io.realm.Realm
 import org.acra.ACRA
 import org.acra.ReportingInteractionMode
@@ -26,10 +27,19 @@ class BuyerApp : Application() {
         ACRA.init(this)
         Realm.init(this)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        appContext = this
+        _appContext = this
     }
 
     companion object {
-        var appContext: Context? = null
+        private var _appContext: Context? = null
+        val appContext: Context?
+        get() {
+            // Нужно учитывать, что если этот контекст будет запрашиваться из статического кода,
+            // то он может не успеть проинициализироваться
+            if(_appContext == null){
+                LogModule.printToLog("CONTEXT IS NULL")
+            }
+            return _appContext
+        }
     }
 }

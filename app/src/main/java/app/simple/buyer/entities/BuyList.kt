@@ -40,20 +40,28 @@ open class BuyList : RealmObject() {
     var isHidden: Boolean = false
 
     //тип персональной сортировки данного списка (обычно сортировка внутри списка распространяется на все списки)
-    var personalOrderType: Int = OrderType.NONE
+    var personalOrderType: Int = OrderType.UNKNOWN
 
 
     interface OrderType {
         companion object {
-            val NONE = 0
-            val ALPHABET = 1
-            val POPULARITY = 2
-            val SIZE = 3
-            val CREATED = 4
-            val MODIFIED = 5
-            val PRICE = 6
-            val CATEGORY = 7
-            val HAND = 8
+            const val UNKNOWN = 0
+            const val ALPHABET = 1
+            const val POPULARITY = 2
+            const val SIZE = 3
+            const val CREATED = 4
+            const val MODIFIED = 5
+            const val PRICE = 6
+            const val CATEGORY = 7
+            const val HAND = 8
+        }
+    }
+
+    interface SortType {
+        companion object {
+            const val UNKNOWN = 0
+            const val ASCENDING = 1
+            const val DESCENDING = 2
         }
     }
 
