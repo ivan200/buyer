@@ -1,5 +1,6 @@
 package app.simple.buyer
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,10 +10,13 @@ import app.simple.buyer.adapters.EditListsRecyclerViewAdapter
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.util.database.DBHelper
 import app.simple.buyer.util.views.DialogHelper
+import app.simple.buyer.util.views.MenuTintUtils
 import io.reactivex.functions.Consumer
 import io.realm.Realm
-import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_edit_lists.*
+
+
+
 
 /**
  * Created by Zakharovi on 23.01.2018.
@@ -78,39 +82,42 @@ class EditListsActivity : AppCompatActivity() {
         menu.setGroupVisible(R.id.group_normal_mode, true)
         menu.setGroupVisible(R.id.group_reorder_mode, false)
 
+        MenuTintUtils.tintAllIcons(menu, Color.WHITE)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
-            R.id.action_settings -> {
-                return true
-            }
-            R.id.order_alphabet_az ->{
-                BuyList.orderBy(BuyList.OrderType.ALPHABET, Sort.ASCENDING)
-            }
-            R.id.order_alphabet_za ->{
-                BuyList.orderBy(BuyList.OrderType.ALPHABET, Sort.DESCENDING)
-            }
-            R.id.order_popularity_az ->{
-                BuyList.orderBy(BuyList.OrderType.POPULARITY, Sort.ASCENDING)
-            }
-            R.id.order_popularity_za ->{
-                BuyList.orderBy(BuyList.OrderType.POPULARITY, Sort.DESCENDING)
-            }
-            R.id.order_size_az ->{
-                BuyList.orderBy(BuyList.OrderType.SIZE, Sort.ASCENDING)
-            }
-            R.id.order_size_za ->{
-                BuyList.orderBy(BuyList.OrderType.SIZE, Sort.DESCENDING)
-            }
-            R.id.order_by_hand ->{
+//            R.id.action_order -> {
+//                showPopupWindow(findViewById<View>(R.id.action_order))
+//            }
+//            R.id.action_settings -> {
+//                return true
+//            }
+//            R.id.order_alphabet ->{
+//                BuyList.orderBy(BuyList.OrderType.ALPHABET, Sort.ASCENDING)
+//            }
+//            R.id.order_alphabet ->{
+//                BuyList.orderBy(BuyList.OrderType.ALPHABET, Sort.DESCENDING)
+//            }
+//            R.id.order_popularity ->{
+//                BuyList.orderBy(BuyList.OrderType.POPULARITY, Sort.ASCENDING)
+//            }
+//            R.id.order_popularity ->{
+//                BuyList.orderBy(BuyList.OrderType.POPULARITY, Sort.DESCENDING)
+//            }
+//            R.id.order_size ->{
+//                BuyList.orderBy(BuyList.OrderType.SIZE, Sort.ASCENDING)
+//            }
+//            R.id.order_size ->{
+//                BuyList.orderBy(BuyList.OrderType.SIZE, Sort.DESCENDING)
+//            }
+            R.id.item_order_hand ->{
                 menu?.setGroupVisible(R.id.group_normal_mode, false)
                 menu?.setGroupVisible(R.id.group_reorder_mode, true)
                 adapter?.enableReorderMode(true)
             }
-            R.id.action_clear ->{
+            R.id.item_action_clear ->{
                 menu?.setGroupVisible(R.id.group_reorder_mode, false)
                 menu?.setGroupVisible(R.id.group_normal_mode, true)
                 adapter?.enableReorderMode(false)
@@ -133,5 +140,27 @@ class EditListsActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+
+
+//    fun showPopupWindow(view: View) {
+//
+//        val mPopupWindow = PopupWindow()
+//        val inflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//        val customView = inflater.inflate(R.layout.content_order_menu, null)
+//
+//        mPopupWindow.isFocusable = true
+//        mPopupWindow.width = WindowManager.LayoutParams.WRAP_CONTENT
+//        mPopupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
+//        mPopupWindow.contentView = customView
+//        mPopupWindow.setBackgroundDrawable(BitmapDrawable(resources))
+//
+//
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            mPopupWindow.elevation = 20f
+//        }
+//
+//        mPopupWindow.showAsDropDown(view, 0, 0 - view.height)
+//    }
 
 }

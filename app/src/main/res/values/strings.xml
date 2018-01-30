@@ -21,13 +21,18 @@
     <string name="button_add">Добавить</string>
 
     <string name="menu_sort">Сортировка</string>
-    <string name="order_alphabet_az">По алфавиту, А-Я</string>
-    <string name="order_alphabet_za">По алфавиту, Я-А</string>
-    <string name="order_popularity_az">По популярности, А-Я</string>
-    <string name="order_popularity_za">По популярности, Я-А</string>
-    <string name="order_size_az">По размеру, А-Я</string>
-    <string name="order_size_za">По размеру, Я-А</string>
-    <string name="order_by_hand">Ручная</string>
+
+    <string name="order_alphabet">По алфавиту</string>
+    <string name="order_popularity">По популярности</string>
+    <string name="order_size">По размеру</string>
+    <string name="order_category">По категории</string>
+    <string name="order_create">По дате создания</string>
+    <string name="order_modify">По дате изменения</string>
+    <string name="order_price">По суммарной цене</string>
+    <string name="order_by_hand">Ручная сортировка</string>
+
+    <string name="order_ascending">По возрастанию</string>
+    <string name="order_descending">По убыванию</string>
 
 
 </resources>
