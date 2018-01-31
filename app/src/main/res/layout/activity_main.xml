@@ -64,7 +64,8 @@
                             android:gravity="center_vertical"
                             android:text="Android Studio"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                            android:theme="@style/Widget.AppCompat.Spinner.DropDown.ActionBar"/>
+                            android:theme="@style/Widget.AppCompat.Spinner.DropDown.ActionBar"
+                            />
 
                     </LinearLayout>
 

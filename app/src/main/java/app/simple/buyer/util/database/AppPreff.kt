@@ -1,8 +1,10 @@
-package app.simple.buyer.util
+package app.simple.buyer.util.database
 
 import android.content.Context
 import android.content.SharedPreferences
 import app.simple.buyer.BuyerApp
+import app.simple.buyer.entities.OrderType
+import io.realm.Sort
 
 /**
  * Created by Zakharovi on 30.01.2018.
@@ -13,18 +15,18 @@ object AppPreff {
 
     var listsOrderType: Int
         get() {
-            return getPreff()?.getInt("listsOrderType", 0) ?: 0
+            return getPreff()?.getInt("listsOrderType", OrderType.CREATED) ?: OrderType.CREATED
         }
         set(value) {
             getEditor()?.putInt("listsOrderType", value)?.apply()
         }
 
-    var listsSortType: Int
+    var listsSortType: Boolean
         get() {
-            return getPreff()?.getInt("listsSortType", 0) ?: 0
+            return getPreff()?.getBoolean("listsSortType", Sort.ASCENDING.value) ?: Sort.ASCENDING.value
         }
         set(value) {
-            getEditor()?.putInt("listsSortType", value)?.apply()
+            getEditor()?.putBoolean("listsSortType", value)?.apply()
         }
 
 

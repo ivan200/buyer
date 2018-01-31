@@ -1,5 +1,6 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.util.database.AppPreff
 import app.simple.buyer.util.database.DBHelper
 import app.simple.buyer.util.database.DBHelper.realm
 import io.realm.*
@@ -40,31 +41,7 @@ open class BuyList : RealmObject() {
     var isHidden: Boolean = false
 
     //тип персональной сортировки данного списка (обычно сортировка внутри списка распространяется на все списки)
-    var personalOrderType: Int = OrderType.UNKNOWN
-
-
-    interface OrderType {
-        companion object {
-            const val UNKNOWN = 0
-            const val ALPHABET = 1
-            const val POPULARITY = 2
-            const val SIZE = 3
-            const val CREATED = 4
-            const val MODIFIED = 5
-            const val PRICE = 6
-            const val CATEGORY = 7
-            const val HAND = 8
-        }
-    }
-
-    interface SortType {
-        companion object {
-            const val UNKNOWN = 0
-            const val ASCENDING = 1
-            const val DESCENDING = 2
-        }
-    }
-
+    var personalOrderType: Int = OrderType.CREATED
 
     companion object {
         private fun getQuery() : RealmQuery<BuyList> {
@@ -87,7 +64,9 @@ open class BuyList : RealmObject() {
             }
         }
 
-        fun orderBy(orderType: Int, sortOrder: Sort) {
+        fun orderBy(orderType: Int, ascending: Boolean) {
+            AppPreff.listsOrderType = orderType
+            val sortOrder = if(ascending) Sort.ASCENDING else Sort.DESCENDING
             when (orderType) {
                 OrderType.ALPHABET -> {
                     orderByField("name", sortOrder)

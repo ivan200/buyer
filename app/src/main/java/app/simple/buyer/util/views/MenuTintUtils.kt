@@ -15,7 +15,7 @@ object MenuTintUtils {
     fun tintAllIcons(menu: Menu, color: Int) {
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
-            tintMenuItemIcon(color, item)
+            tintMenuItemIcon(item, color)
             tintShareIconIfPresent(color, item)
             if(item.hasSubMenu()){
                 tintAllIcons(item.subMenu, color)
@@ -23,7 +23,7 @@ object MenuTintUtils {
         }
     }
 
-    private fun tintMenuItemIcon(color: Int, item: MenuItem) {
+    fun tintMenuItemIcon(item: MenuItem, color: Int) {
         val drawable = item.icon
         if (drawable != null) {
             val wrapped = DrawableCompat.wrap(drawable)

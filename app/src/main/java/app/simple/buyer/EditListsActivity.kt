@@ -8,6 +8,8 @@ import android.view.Menu
 import android.view.MenuItem
 import app.simple.buyer.adapters.EditListsRecyclerViewAdapter
 import app.simple.buyer.entities.BuyList
+import app.simple.buyer.entities.OrderType
+import app.simple.buyer.util.database.AppPreff
 import app.simple.buyer.util.database.DBHelper
 import app.simple.buyer.util.views.DialogHelper
 import app.simple.buyer.util.views.MenuTintUtils
@@ -86,43 +88,58 @@ class EditListsActivity : AppCompatActivity() {
         return true
     }
 
+    fun checkItem(item: MenuItem, menu: Menu){
+        for (i in 0 until menu.size()) {
+            val menuItem = menu.getItem(i)!!
+            menuItem.isCheckable = (menuItem.itemId == item.itemId)
+            menuItem.isChecked = (menuItem.itemId == item.itemId)
+            if(menuItem.hasSubMenu()){
+                checkItem(item, menuItem.subMenu)
+            }
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_sort_type -> {
-
-//                Sort.ASCENDING
-
+                AppPreff.listsSortType = !AppPreff.listsSortType
+                BuyList.orderBy(AppPreff.listsOrderType, AppPreff.listsSortType)
+                if(AppPreff.listsSortType){
+                    item.setIcon(R.drawable.ic_sort_ascending)
+                } else{
+                    item.setIcon(R.drawable.ic_sort_descending)
+                }
+                MenuTintUtils.tintMenuItemIcon(item, Color.WHITE)
             }
-
-
-//            R.id.action_order -> {
-//                showPopupWindow(findViewById<View>(R.id.action_order))
-//            }
-//            R.id.action_settings -> {
-//                return true
-//            }
-//            R.id.order_alphabet ->{
-//                BuyList.orderBy(BuyList.OrderType.ALPHABET, Sort.ASCENDING)
-//            }
-//            R.id.order_alphabet ->{
-//                BuyList.orderBy(BuyList.OrderType.ALPHABET, Sort.DESCENDING)
-//            }
-//            R.id.order_popularity ->{
-//                BuyList.orderBy(BuyList.OrderType.POPULARITY, Sort.ASCENDING)
-//            }
-//            R.id.order_popularity ->{
-//                BuyList.orderBy(BuyList.OrderType.POPULARITY, Sort.DESCENDING)
-//            }
-//            R.id.order_size ->{
-//                BuyList.orderBy(BuyList.OrderType.SIZE, Sort.ASCENDING)
-//            }
-//            R.id.order_size ->{
-//                BuyList.orderBy(BuyList.OrderType.SIZE, Sort.DESCENDING)
-//            }
+            R.id.item_order_alphabet ->{
+                BuyList.orderBy(OrderType.ALPHABET, AppPreff.listsSortType)
+                checkItem(item, menu!!)
+            }
+            R.id.item_order_popularity ->{
+                BuyList.orderBy(OrderType.POPULARITY, AppPreff.listsSortType)
+                checkItem(item, menu!!)
+            }
+            R.id.item_order_size ->{
+                BuyList.orderBy(OrderType.SIZE, AppPreff.listsSortType)
+                checkItem(item, menu!!)
+            }
+            R.id.item_order_create ->{
+                BuyList.orderBy(OrderType.CREATED, AppPreff.listsSortType)
+                checkItem(item, menu!!)
+            }
+            R.id.item_order_modify ->{
+                BuyList.orderBy(OrderType.MODIFIED, AppPreff.listsSortType)
+                checkItem(item, menu!!)
+            }
+            R.id.item_order_price ->{
+                BuyList.orderBy(OrderType.PRICE, AppPreff.listsSortType)
+                checkItem(item, menu!!)
+            }
             R.id.item_order_hand ->{
                 menu?.setGroupVisible(R.id.group_normal_mode, false)
                 menu?.setGroupVisible(R.id.group_reorder_mode, true)
                 adapter?.enableReorderMode(true)
+                item.isChecked = true
             }
             R.id.item_action_clear ->{
                 menu?.setGroupVisible(R.id.group_reorder_mode, false)
