@@ -64,9 +64,10 @@ open class BuyList : RealmObject() {
             }
         }
 
-        fun orderBy(orderType: Int, ascending: Boolean) {
+        fun orderBy(orderType: Int, sortOrder: Sort) {
+            AppPreff.listsSortType = if(AppPreff.listsSortType == Sort.ASCENDING) Sort.DESCENDING else Sort.ASCENDING
             AppPreff.listsOrderType = orderType
-            val sortOrder = if(ascending) Sort.ASCENDING else Sort.DESCENDING
+
             when (orderType) {
                 OrderType.ALPHABET -> {
                     orderByField("name", sortOrder)

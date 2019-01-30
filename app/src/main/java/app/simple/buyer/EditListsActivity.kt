@@ -102,13 +102,14 @@ class EditListsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_sort_type -> {
-                AppPreff.listsSortType = !AppPreff.listsSortType
+//                AppPreff.listsSortType = if(AppPreff.listsSortType == Sort.ASCENDING) Sort.DESCENDING else Sort.ASCENDING
                 BuyList.orderBy(AppPreff.listsOrderType, AppPreff.listsSortType)
-                if(AppPreff.listsSortType){
+                if(AppPreff.listsSortType.value){
                     item.setIcon(R.drawable.ic_sort_ascending)
                 } else{
                     item.setIcon(R.drawable.ic_sort_descending)
                 }
+
                 MenuTintUtils.tintMenuItemIcon(item, Color.WHITE)
             }
             R.id.item_order_alphabet ->{

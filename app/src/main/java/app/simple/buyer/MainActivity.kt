@@ -11,9 +11,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import app.simple.buyer.R.id.*
 import app.simple.buyer.adapters.MainMenuRecyclerViewAdapter
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.util.crash.LogModule
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.text.MessageFormat

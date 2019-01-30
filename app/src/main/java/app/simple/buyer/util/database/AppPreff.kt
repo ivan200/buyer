@@ -21,12 +21,13 @@ object AppPreff {
             getEditor()?.putInt("listsOrderType", value)?.apply()
         }
 
-    var listsSortType: Boolean
+    var listsSortType: Sort
         get() {
-            return getPreff()?.getBoolean("listsSortType", Sort.ASCENDING.value) ?: Sort.ASCENDING.value
+            val s = getPreff()?.getBoolean("listsSortType", true) ?: true
+            return if(s) Sort.ASCENDING else Sort.DESCENDING
         }
         set(value) {
-            getEditor()?.putBoolean("listsSortType", value)?.apply()
+            getEditor()?.putBoolean("listsSortType", value.value)?.apply()
         }
 
 
