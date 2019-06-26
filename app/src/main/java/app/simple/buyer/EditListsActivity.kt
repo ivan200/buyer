@@ -2,10 +2,12 @@ package app.simple.buyer
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.adapters.EditListsRecyclerViewAdapter
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.OrderType
@@ -13,11 +15,9 @@ import app.simple.buyer.util.database.AppPreff
 import app.simple.buyer.util.database.DBHelper
 import app.simple.buyer.util.views.DialogHelper
 import app.simple.buyer.util.views.MenuTintUtils
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.reactivex.functions.Consumer
 import io.realm.Realm
-import kotlinx.android.synthetic.main.activity_edit_lists.*
-
-
 
 
 /**
@@ -35,10 +35,15 @@ class EditListsActivity : AppCompatActivity() {
 
     private var menu: Menu? = null
 
+    private val toolbar by lazy { findViewById<Toolbar>(R.id.edit_lists_toolbar) }
+    private val fab by lazy { findViewById<FloatingActionButton>(R.id.lists_fab) }
+    private val rv by lazy { findViewById<RecyclerView>(R.id.rv_edit_lists) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_lists)
-        setSupportActionBar(edit_lists_toolbar)
+
+        setSupportActionBar(toolbar)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -46,7 +51,7 @@ class EditListsActivity : AppCompatActivity() {
 
         supportActionBar?.title = "Edit lists"
 
-        lists_fab.setOnClickListener { view ->
+        fab.setOnClickListener { view ->
             DialogHelper.showInputDialog(this,
                     baseContext.getString(R.string.dialog_add_list_title),
                     baseContext.getString(R.string.dialog_add_list_hint),
@@ -62,17 +67,18 @@ class EditListsActivity : AppCompatActivity() {
         }
 
         adapter = EditListsRecyclerViewAdapter(BuyList.getAllOrdered())
-        rv_edit_lists.adapter = adapter
-        rv_edit_lists.setHasFixedSize(true)
-        rv_edit_lists.layoutManager = LinearLayoutManager(this)
+
+        rv.adapter = adapter
+        rv.setHasFixedSize(true)
+        rv.layoutManager = LinearLayoutManager(this)
     }
 
 
     private fun addList(name: String) {
         var listByName = BuyList.getByName(name)
-        if(listByName != null){
+        if (listByName != null) {
             throw RuntimeException(baseContext.getString(R.string.dialog_add_list_error))
-        } else{
+        } else {
             BuyList.addAsync(name)
         }
     }
@@ -88,12 +94,12 @@ class EditListsActivity : AppCompatActivity() {
         return true
     }
 
-    fun checkItem(item: MenuItem, menu: Menu){
+    fun checkItem(item: MenuItem, menu: Menu) {
         for (i in 0 until menu.size()) {
             val menuItem = menu.getItem(i)!!
             menuItem.isCheckable = (menuItem.itemId == item.itemId)
             menuItem.isChecked = (menuItem.itemId == item.itemId)
-            if(menuItem.hasSubMenu()){
+            if (menuItem.hasSubMenu()) {
                 checkItem(item, menuItem.subMenu)
             }
         }
@@ -104,45 +110,45 @@ class EditListsActivity : AppCompatActivity() {
             R.id.item_sort_type -> {
 //                AppPreff.listsSortType = if(AppPreff.listsSortType == Sort.ASCENDING) Sort.DESCENDING else Sort.ASCENDING
                 BuyList.orderBy(AppPreff.listsOrderType, AppPreff.listsSortType)
-                if(AppPreff.listsSortType.value){
+                if (AppPreff.listsSortType.value) {
                     item.setIcon(R.drawable.ic_sort_ascending)
-                } else{
+                } else {
                     item.setIcon(R.drawable.ic_sort_descending)
                 }
 
                 MenuTintUtils.tintMenuItemIcon(item, Color.WHITE)
             }
-            R.id.item_order_alphabet ->{
+            R.id.item_order_alphabet -> {
                 BuyList.orderBy(OrderType.ALPHABET, AppPreff.listsSortType)
                 checkItem(item, menu!!)
             }
-            R.id.item_order_popularity ->{
+            R.id.item_order_popularity -> {
                 BuyList.orderBy(OrderType.POPULARITY, AppPreff.listsSortType)
                 checkItem(item, menu!!)
             }
-            R.id.item_order_size ->{
+            R.id.item_order_size -> {
                 BuyList.orderBy(OrderType.SIZE, AppPreff.listsSortType)
                 checkItem(item, menu!!)
             }
-            R.id.item_order_create ->{
+            R.id.item_order_create -> {
                 BuyList.orderBy(OrderType.CREATED, AppPreff.listsSortType)
                 checkItem(item, menu!!)
             }
-            R.id.item_order_modify ->{
+            R.id.item_order_modify -> {
                 BuyList.orderBy(OrderType.MODIFIED, AppPreff.listsSortType)
                 checkItem(item, menu!!)
             }
-            R.id.item_order_price ->{
+            R.id.item_order_price -> {
                 BuyList.orderBy(OrderType.PRICE, AppPreff.listsSortType)
                 checkItem(item, menu!!)
             }
-            R.id.item_order_hand ->{
+            R.id.item_order_hand -> {
                 menu?.setGroupVisible(R.id.group_normal_mode, false)
                 menu?.setGroupVisible(R.id.group_reorder_mode, true)
                 adapter?.enableReorderMode(true)
                 item.isChecked = true
             }
-            R.id.item_action_clear ->{
+            R.id.item_action_clear -> {
                 menu?.setGroupVisible(R.id.group_reorder_mode, false)
                 menu?.setGroupVisible(R.id.group_normal_mode, true)
                 adapter?.enableReorderMode(false)

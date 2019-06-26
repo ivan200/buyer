@@ -16,8 +16,9 @@ object DBHelper {
     private fun getRealmConfiguration(): RealmConfiguration {
         if (realmConfiguration == null) {
             realmConfiguration = RealmConfiguration.Builder()
-                    .schemaVersion(3)
-                    .migration(DBMigration())
+                    .schemaVersion(DBMigration.schemaVersion)
+                    .deleteRealmIfMigrationNeeded()
+//                    .migration(DBMigration())
                     .build()
         }
         return realmConfiguration!!

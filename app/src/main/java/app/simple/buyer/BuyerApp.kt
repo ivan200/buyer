@@ -2,7 +2,6 @@ package app.simple.buyer
 
 import android.app.Application
 import android.content.Context
-import android.support.v7.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate
 import app.simple.buyer.util.crash.CustomSenderFactory
 import app.simple.buyer.util.crash.LogModule
@@ -43,4 +42,17 @@ class BuyerApp : Application() {
             return _appContext
         }
     }
+
+
+//    private fun initRealm(context: Context) {
+//        Realm.init(context)
+//        val realmConfiguration = RealmConfiguration.Builder()
+//                .schemaVersion(DBMigration.schemaVersion)
+//                .deleteRealmIfMigrationNeeded() //TODO THIS IS ONLY FOR DEVELOPMENT
+//                .migration(DBMigration())
+//                .build()
+//        Realm.setDefaultConfiguration(realmConfiguration)
+//
+//        getRealm(realmConfiguration).use({ realm -> PrimaryKeyFactory.initialize(realm) })
+//    }
 }

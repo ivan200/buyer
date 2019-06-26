@@ -2,17 +2,19 @@ package app.simple.buyer
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.adapters.AddItemRecyclerViewAdapter
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.util.database.DBHelper
 import io.realm.Realm
-import kotlinx.android.synthetic.main.activity_add_item.*
 
 
 /**
@@ -25,9 +27,15 @@ class AddItemActivity : AppCompatActivity() {
 
     val realm: Realm = DBHelper.realm
 
+    private val toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
+    private val doneButton by lazy { findViewById<Button>(R.id.doneButton) }
+    private val editText by lazy { findViewById<EditText>(R.id.editText) }
+    private val recyclerList by lazy { findViewById<RecyclerView>(R.id.recyclerList) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item)
+
         setSupportActionBar(toolbar)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -36,13 +44,11 @@ class AddItemActivity : AppCompatActivity() {
 
 
 //        var equalTo = realm.where(BuyItem::class.java).equalTo("name", "ffdsfdsf").findAll()
-
         doneButton.setOnClickListener {
             addItem(editText.text.toString())
             onBackPressed()
             overridePendingTransition(0, 0)
         }
-
 
         editText.setOnEditorActionListener { textView, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
@@ -53,12 +59,12 @@ class AddItemActivity : AppCompatActivity() {
         }
 
         recyclerList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if(newState == RecyclerView.SCROLL_STATE_DRAGGING){
-                    if(editText.hasFocus()) {
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    if (editText.hasFocus()) {
                         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                        imm.hideSoftInputFromWindow(editText!!.windowToken, 0)
+                        imm.hideSoftInputFromWindow(editText.windowToken, 0)
                     }
                 }
             }

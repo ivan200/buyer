@@ -1,13 +1,13 @@
 package app.simple.buyer.util.views
 
 import android.content.Context
-import android.support.design.widget.TextInputEditText
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AlertDialog
 import app.simple.buyer.R
 import app.simple.buyer.util.crash.LogModule
+import com.google.android.material.textfield.TextInputEditText
 import io.reactivex.functions.Consumer
 
 /**

@@ -3,35 +3,42 @@ package app.simple.buyer
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.simple.buyer.R.id.*
+import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.adapters.MainMenuRecyclerViewAdapter
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.util.crash.LogModule
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import java.text.MessageFormat
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private val fab by lazy { findViewById<FloatingActionButton>(R.id.fab) }
+    private val toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
+    private val drawer_layout by lazy { findViewById<DrawerLayout>(R.id.drawer_layout) }
+    private val nav_view by lazy { findViewById<NavigationView>(R.id.nav_view) }
+    private val menu_tv_title by lazy { findViewById<TextView>(R.id.menu_tv_title) }
+    private val menu_rv_list by lazy { findViewById<RecyclerView>(R.id.menu_rv_list) }
+    private val menu_ll_status_bar by lazy { findViewById<LinearLayout>(R.id.menu_ll_status_bar) }
+
     //    var menu_list: RecyclerView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
+        setSupportActionBar(toolbar)
         fab.setOnClickListener { view ->
             val intent = Intent(this, AddItemActivity::class.java)
             startActivityForResult(intent, AddItemActivity.ActivityCode)
@@ -40,21 +47,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                    .setAction("Action", null).show()
         }
 
+
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             menu_ll_status_bar.visibility = View.GONE
             menu_rv_list.setPadding(0, 0, 0, 0)
         }
 
-        menu_tv_title.setOnClickListener({ v ->
+        menu_tv_title.setOnClickListener { v ->
             val intent = Intent(this, EditListsActivity::class.java)
             startActivityForResult(intent, EditListsActivity.ActivityCode)
-        })
+        }
 
         menu_rv_list.adapter = MainMenuRecyclerViewAdapter(BuyList.getAllOrdered())
         menu_rv_list.setHasFixedSize(true)

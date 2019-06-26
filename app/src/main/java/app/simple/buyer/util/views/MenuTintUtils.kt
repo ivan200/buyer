@@ -1,6 +1,6 @@
 package app.simple.buyer.util.views
 
-import android.support.v4.graphics.drawable.DrawableCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View

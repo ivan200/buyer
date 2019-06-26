@@ -9,28 +9,32 @@ import java.util.*
  */
 
 class DBMigration : RealmMigration {
+    companion object {
+        const val schemaVersion: Long = 3
+    }
+
     override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
         var oldVersion = oldVersion
 
         val schema = realm.schema
-        if (oldVersion == 0L) {
-            schema.get("BuyItem")?.removeField("count")
-            schema.get("BuyListItem")?.removeField("price")
-            oldVersion++
+
+        for (version in oldVersion..newVersion) when (version) {
+            0L -> {
+                schema.get("BuyItem")?.removeField("count")
+                schema.get("BuyListItem")?.removeField("price")
+            }
+            1L -> {
+                schema.get("BuyList")?.addField("isHidden", Boolean::class.java)
+                schema.get("BuyList")?.addField("handSortPosition", Long::class.java)
+                schema.get("BuyListItem")?.addField("modified", Date::class.java)
+                schema.get("BuyListItem")?.addField("created", Date::class.java)
+                schema.get("BuyListItem")?.addField("handSortPosition", Long::class.java)
+            }
+            2L -> {
+                schema.get("BuyList")?.addField("personalOrderType", Int::class.java)
+            }
         }
-        if (oldVersion == 1L) {
-            schema.get("BuyList")?.addField("isHidden", Boolean::class.java)
-            schema.get("BuyList")?.addField("handSortPosition", Long::class.java)
-            schema.get("BuyListItem")?.addField("modified", Date::class.java)
-            schema.get("BuyListItem")?.addField("created", Date::class.java)
-            schema.get("BuyListItem")?.addField("handSortPosition", Long::class.java)
-            oldVersion++
-        }
-        if (oldVersion == 2L) {
-            schema.get("BuyList")?.addField("personalOrderType", Int::class.java)
-            oldVersion++
-        }
-//
+
 //        // DynamicRealm exposes an editable schema
 //
 //

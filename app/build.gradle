@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 
 ext {
@@ -41,19 +41,18 @@ dependencies {
 
     //appcompat
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'com.google.android.material:material:1.1.0-alpha07'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
 
     //realm
-    implementation "io.realm:android-adapters:2.1.1"
+    implementation "io.realm:android-adapters:3.1.0"
 
     //Logging
-    implementation "ch.acra:acra:4.9.2"
+    implementation "ch.acra:acra:4.11"
 
     //streams under java 8
-    implementation "com.annimon:stream:1.1.8"
+    implementation "com.annimon:stream:1.2.1"
 
     //rx for background
     implementation 'io.reactivex.rxjava2:rxjava:2.1.8'

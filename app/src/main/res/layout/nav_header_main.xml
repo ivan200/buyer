@@ -7,7 +7,7 @@
     android:gravity="top"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_status_bar">
         </LinearLayout>
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -43,8 +43,8 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
 </LinearLayout>

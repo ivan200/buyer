@@ -1,7 +1,7 @@
 package app.simple.buyer.util.views
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by Zakharovi on 12.01.2018.
