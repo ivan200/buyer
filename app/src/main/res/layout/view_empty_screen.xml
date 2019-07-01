@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:colorBackground"
+    android:id="@+id/emptyView"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:id="@+id/emptyLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/emptyImageView"
+            android:layout_width="@dimen/size_icon_big2"
+            android:layout_height="@dimen/size_icon_big2"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/ic_error"
+            android:tint="#b4b4b4" />
+
+        <!--app:srcCompat="@android:drawable/stat_notify_error"-->
+        <!--android:tint="#b4b4b4"-->
+
+        <TextView
+            android:id="@+id/emptyTextTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/margin_default"
+            android:text="@string/empty_data"
+            android:textColor="?android:textColorSecondary"
+            android:enabled="false"
+            android:textSize="@dimen/text_title" />
+
+        <TextView
+            android:id="@+id/emptyTextSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="@dimen/margin_default"
+            android:paddingRight="@dimen/margin_default"
+            android:gravity="center"
+            android:text="@string/empty_getting_data"
+            android:enabled="false"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="@dimen/text_list_item_default" />
+    </LinearLayout>
+</RelativeLayout>

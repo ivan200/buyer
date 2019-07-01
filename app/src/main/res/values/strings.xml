@@ -34,5 +34,8 @@
     <string name="order_ascending">По возрастанию</string>
     <string name="order_descending">По убыванию</string>
 
+    <string name="empty_data">Нет данных</string>
+    <string name="empty_getting_data">Нечего отображать</string>
+
 
 </resources>

@@ -6,18 +6,17 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.util.Consumer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.adapters.EditListsRecyclerViewAdapter
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.OrderType
-import app.simple.buyer.util.database.AppPreff
-import app.simple.buyer.util.database.DBHelper
+import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.views.DialogHelper
 import app.simple.buyer.util.views.MenuTintUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import io.reactivex.functions.Consumer
-import io.realm.Realm
+import io.realm.Sort
 
 
 /**
@@ -28,8 +27,6 @@ class EditListsActivity : AppCompatActivity() {
     companion object {
         const val ActivityCode = 124
     }
-
-    val realm: Realm = DBHelper.realm
 
     var adapter: EditListsRecyclerViewAdapter? = null
 
@@ -52,7 +49,8 @@ class EditListsActivity : AppCompatActivity() {
         supportActionBar?.title = "Edit lists"
 
         fab.setOnClickListener { view ->
-            DialogHelper.showInputDialog(this,
+
+            DialogHelper(this).showInputDialog(
                     baseContext.getString(R.string.dialog_add_list_title),
                     baseContext.getString(R.string.dialog_add_list_hint),
                     baseContext.getString(R.string.button_add),
@@ -106,11 +104,13 @@ class EditListsActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val sortType = if(Prefs(this).listsSortAscending)  Sort.ASCENDING else Sort.DESCENDING
+
         when (item.itemId) {
             R.id.item_sort_type -> {
-//                AppPreff.listsSortType = if(AppPreff.listsSortType == Sort.ASCENDING) Sort.DESCENDING else Sort.ASCENDING
-                BuyList.orderBy(AppPreff.listsOrderType, AppPreff.listsSortType)
-                if (AppPreff.listsSortType.value) {
+                val invertSort = if(sortType == Sort.ASCENDING)  Sort.DESCENDING else Sort.ASCENDING
+                BuyList.orderBy(this, Prefs(this).listsOrderType, invertSort)
+                if (invertSort == Sort.ASCENDING) {
                     item.setIcon(R.drawable.ic_sort_ascending)
                 } else {
                     item.setIcon(R.drawable.ic_sort_descending)
@@ -119,27 +119,27 @@ class EditListsActivity : AppCompatActivity() {
                 MenuTintUtils.tintMenuItemIcon(item, Color.WHITE)
             }
             R.id.item_order_alphabet -> {
-                BuyList.orderBy(OrderType.ALPHABET, AppPreff.listsSortType)
+                BuyList.orderBy(this, OrderType.ALPHABET, sortType)
                 checkItem(item, menu!!)
             }
             R.id.item_order_popularity -> {
-                BuyList.orderBy(OrderType.POPULARITY, AppPreff.listsSortType)
+                BuyList.orderBy(this, OrderType.POPULARITY, sortType)
                 checkItem(item, menu!!)
             }
             R.id.item_order_size -> {
-                BuyList.orderBy(OrderType.SIZE, AppPreff.listsSortType)
+                BuyList.orderBy(this, OrderType.SIZE, sortType)
                 checkItem(item, menu!!)
             }
             R.id.item_order_create -> {
-                BuyList.orderBy(OrderType.CREATED, AppPreff.listsSortType)
+                BuyList.orderBy(this, OrderType.CREATED, sortType)
                 checkItem(item, menu!!)
             }
             R.id.item_order_modify -> {
-                BuyList.orderBy(OrderType.MODIFIED, AppPreff.listsSortType)
+                BuyList.orderBy(this, OrderType.MODIFIED, sortType)
                 checkItem(item, menu!!)
             }
             R.id.item_order_price -> {
-                BuyList.orderBy(OrderType.PRICE, AppPreff.listsSortType)
+                BuyList.orderBy(this, OrderType.PRICE, sortType)
                 checkItem(item, menu!!)
             }
             R.id.item_order_hand -> {

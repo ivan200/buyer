@@ -1,8 +1,7 @@
 package app.simple.buyer.entities
 
-import app.simple.buyer.util.database.AppPreff
-import app.simple.buyer.util.database.DBHelper
-import app.simple.buyer.util.database.DBHelper.realm
+import android.content.Context
+import app.simple.buyer.util.database.Prefs
 import io.realm.*
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
@@ -45,7 +44,7 @@ open class BuyList : RealmObject() {
 
     companion object {
         private fun getQuery() : RealmQuery<BuyList> {
-            return DBHelper.realm.where(BuyList::class.java)
+            return Realm.getDefaultInstance().where(BuyList::class.java)
         }
 
         fun getAll() : RealmResults<BuyList> {
@@ -59,15 +58,14 @@ open class BuyList : RealmObject() {
         }
 
         fun clearHandOrder(){
-            realm.executeTransactionAsync {
+            Realm.getDefaultInstance().executeTransactionAsync {
                 getAllOrdered().forEach { buyList -> buyList.handSortPosition = buyList.sortPosition }
             }
         }
 
-        fun orderBy(orderType: Int, sortOrder: Sort) {
-            AppPreff.listsSortType = if(AppPreff.listsSortType == Sort.ASCENDING) Sort.DESCENDING else Sort.ASCENDING
-            AppPreff.listsOrderType = orderType
-
+        fun orderBy(context: Context, orderType: Int, sortOrder: Sort) {
+            Prefs(context).listsSortAscending = if(sortOrder == Sort.ASCENDING) Sort.ASCENDING.value else Sort.DESCENDING.value
+            Prefs(context).listsOrderType = orderType
             when (orderType) {
                 OrderType.ALPHABET -> {
                     orderByField("name", sortOrder)
@@ -82,7 +80,7 @@ open class BuyList : RealmObject() {
                     orderByField("modified", sortOrder)
                 }
                 OrderType.SIZE -> {
-                    realm.executeTransactionAsync {
+                    Realm.getDefaultInstance().executeTransactionAsync {
                         val sort = getAllOrdered().sortedBy { l -> BuyListItem.countInList(l.id!!) }
                         val indices = if (sortOrder == Sort.ASCENDING) sort.indices else sort.indices.reversed()
                         for ((k, i) in indices.withIndex()) {
@@ -95,7 +93,7 @@ open class BuyList : RealmObject() {
 
         //Сортировка по одному из полей
         private fun orderByField(fieldName: String, sortOrder: Sort) {
-            realm.executeTransactionAsync {
+            Realm.getDefaultInstance().executeTransactionAsync {
                 val sort = getAllOrdered().sort(fieldName, sortOrder)
                 for (i in sort.indices) {
                     sort[i]?.sortPosition = i.toLong()
@@ -116,8 +114,8 @@ open class BuyList : RealmObject() {
             newList.created = Date()
             newList.modified = Date()
             newList.sortPosition = BuyList.count()+1
-            realm.executeTransactionAsync {
-                realm.copyToRealm(newList)
+            Realm.getDefaultInstance().executeTransactionAsync {
+                Realm.getDefaultInstance().copyToRealm(newList)
             }
         }
     }

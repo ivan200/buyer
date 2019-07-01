@@ -1,8 +1,7 @@
 package app.simple.buyer.entities
 
-import app.simple.buyer.util.database.DBHelper
-import app.simple.buyer.util.database.DBHelper.realm
 import io.realm.OrderedRealmCollection
+import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmQuery
 import io.realm.annotations.PrimaryKey
@@ -21,9 +20,6 @@ open class BuyItem : RealmObject() {
     @Required
     var id: Long? = null
 
-    //id суперкатегории, куда она относится
-    var superID: Long? = null
-
     //Название
     var name: String? = null
 
@@ -35,7 +31,7 @@ open class BuyItem : RealmObject() {
 
     companion object {
         private fun getQuery() : RealmQuery<BuyItem> {
-            return DBHelper.realm.where(BuyItem::class.java)
+            return Realm.getDefaultInstance().where(BuyItem::class.java)
         }
 
         fun getAll(): OrderedRealmCollection<BuyItem> {
@@ -55,7 +51,7 @@ open class BuyItem : RealmObject() {
         }
 
         fun addItem(name: String){
-            realm.executeTransactionAsync {
+            Realm.getDefaultInstance().executeTransactionAsync {
                 var item = getByName(name)
                 if (item == null) {
                     item = BuyItem()

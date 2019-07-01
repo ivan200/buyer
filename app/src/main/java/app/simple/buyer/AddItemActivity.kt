@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.adapters.AddItemRecyclerViewAdapter
 import app.simple.buyer.entities.BuyItem
-import app.simple.buyer.util.database.DBHelper
-import io.realm.Realm
 
 
 /**
@@ -24,8 +22,6 @@ class AddItemActivity : AppCompatActivity() {
     companion object {
         const val ActivityCode = 123
     }
-
-    val realm: Realm = DBHelper.realm
 
     private val toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
     private val doneButton by lazy { findViewById<Button>(R.id.doneButton) }

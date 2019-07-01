@@ -1,32 +1,31 @@
 package app.simple.buyer.util.views
 
-import android.content.Context
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AlertDialog
+import androidx.core.util.Consumer
 import app.simple.buyer.R
-import app.simple.buyer.util.crash.LogModule
 import com.google.android.material.textfield.TextInputEditText
-import io.reactivex.functions.Consumer
+import java.util.logging.Level
+import java.util.logging.Logger
 
 /**
  * Created by Zakharovi on 24.01.2018.
  */
 
-object DialogHelper {
-    fun showInputDialog(
-            context: Context,
-            title: String,
-            hint: String,
-            positiveButton: String,
-            positiveResult: Consumer<String>) {
-        val ctx = android.view.ContextThemeWrapper(context, R.style.AppTheme_Dialog)
+class DialogHelper(val activity: Activity) : DialogHelperBase(activity) {
+
+    fun showInputDialog(title: String,
+                        hint: String,
+                        positiveButton: String,
+                        positiveResult: Consumer<String>) {
+        val ctx = android.view.ContextThemeWrapper(activity, R.style.AppTheme_Dialog)
         val subView = LayoutInflater.from(ctx).inflate(R.layout.dialog_add_list_content, null)
         val editText = subView.findViewById<TextInputEditText>(R.id.tiet_add_list)
 
         editText.hint = hint
-
 
         val builder = AlertDialog.Builder(ctx)
         builder.setTitle(title)
@@ -57,14 +56,18 @@ object DialogHelper {
         dialog.show()
     }
 
-    fun checkInputDialog(dialog:AlertDialog, editText: TextInputEditText, positiveResult: Consumer<String>){
+    private fun checkInputDialog(dialog: AlertDialog, editText: TextInputEditText, positiveResult: Consumer<String>) {
         try {
             positiveResult.accept(editText.text.toString())
             dialog.dismiss()
         } catch (e: Exception) {
-            LogModule.printToLog(e)
+            logger.log(Level.FINE, e.message, e)
             editText.error = e.message
         }
     }
 
+
+    companion object {
+        private val logger = Logger.getLogger(DialogHelper::class.java.name)
+    }
 }

@@ -1,6 +1,6 @@
 package app.simple.buyer.entities
 
-import app.simple.buyer.util.database.DBHelper
+import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmQuery
 import io.realm.RealmResults
@@ -48,7 +48,7 @@ open class BuyListItem : RealmObject() {
 
     companion object {
         private fun getQuery() : RealmQuery<BuyListItem> {
-            return DBHelper.realm.where(BuyListItem::class.java)
+            return  Realm.getDefaultInstance().where(BuyListItem::class.java)
         }
 
         fun getAll(): RealmResults<BuyListItem> {
@@ -72,7 +72,7 @@ open class BuyListItem : RealmObject() {
         }
 
         fun copyOrUpdateItem(item: BuyListItem) {
-            var realm = DBHelper.realm
+            var realm = Realm.getDefaultInstance()
             realm.beginTransaction()
             realm.copyToRealmOrUpdate(item)
             realm.commitTransaction()
