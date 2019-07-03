@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/height_subheader"
-    android:orientation="horizontal"
-    android:theme="@style/AppTheme">
+    android:orientation="horizontal">
 
 
     <CheckBox

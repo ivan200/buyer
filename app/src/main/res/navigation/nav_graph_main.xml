@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph_section_calendar"
             app:startDestination="@id/fragmentMain">
 
     <fragment
         android:id="@+id/fragmentMain"
         android:name="app.simple.buyer.fragments.FragmentMain"
-        android:label="FragmentMain"/>
+        android:label="FragmentMain"
+        tools:layout="@layout/fragment_main"
+        >
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentAddItem"
+            app:destination="@id/fragmentAddItem"/>
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentAddItem"
+        android:name="app.simple.buyer.fragments.FragmentAddItem"
+        android:label="FragmentAddItem"
+        tools:layout="@layout/fragment_add_item"
+        />
 
 </navigation>

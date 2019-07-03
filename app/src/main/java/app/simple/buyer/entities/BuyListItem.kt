@@ -1,5 +1,6 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.util.getById
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmQuery
@@ -67,7 +68,7 @@ open class BuyListItem : RealmObject() {
             var sumPrice = 0f
             getQuery()
                     .equalTo("listId", listId)
-                    .findAll().forEach { x -> x.itemId?.let { sumPrice += BuyItem.getByID(it)?.price!! } }
+                    .findAll().forEach { x -> x.itemId?.let { sumPrice += Realm.getDefaultInstance().getById<BuyItem>(it)?.price!! } }
             return sumPrice
         }
 

@@ -32,7 +32,7 @@ class EditListsActivity : AppCompatActivity() {
 
     private var menu: Menu? = null
 
-    private val toolbar by lazy { findViewById<Toolbar>(R.id.edit_lists_toolbar) }
+    private val toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
     private val fab by lazy { findViewById<FloatingActionButton>(R.id.lists_fab) }
     private val rv by lazy { findViewById<RecyclerView>(R.id.rv_edit_lists) }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#E53935</color>
-    <color name="colorPrimaryDark">#C62828</color>
+    <color name="colorPrimaryDark">#E53935</color>
     <color name="colorAccent">#7cb342</color>
 
 
@@ -20,10 +20,35 @@
     <color name="colorTextWhiteDisabled">   #80ffffff</color> <!--white 50%-->
     <color name="colorTextWhiteDivider">    #1fffffff</color> <!--white 12%-->
 
+    <!--Получено путём сверки цветов с дефолтными на draw'ере-->
+    <color name="background_selected">#1f000000</color>          <!--black 12%-->
+    <color name="background_selected_white">#33ffffff</color>    <!--white 20%-->
+    <color name="background_pressed">#0f000000</color>           <!--black 6%-->
+    <color name="background_pressed_white">#1Affffff</color>     <!--white 10%-->
+
     <!--https://material.io/guidelines/style/color.html#color-themes -->
-    <color name="ColorBackgroundGrey300">#e0e0e0</color>
-    <color name="ColorBackgroundGrey100">#f5f5f5</color>
-    <color name="ColorBackgroundGrey50">#fafafa</color>
+    <color name="ColorBackgroundGrey900">#ff212121</color>
+    <color name="ColorBackgroundGrey850">#ff303030</color>
+    <color name="ColorBackgroundGrey800">#ff424242</color>
+    <color name="ColorBackgroundGrey600">#ff757575</color>
+    <color name="ColorBackgroundGrey300">#ffe0e0e0</color>
+    <color name="ColorBackgroundGrey200">#ffeeeeee</color>
+    <color name="ColorBackgroundGrey100">#fff5f5f5</color>
+    <color name="ColorBackgroundGrey50">#fffafafa</color>
     <color name="colorBackground">#fafafa</color>
     <color name="colorBackgroundDark">#212121</color>
+
+
+    <!--Percent to hex conversion table-->
+    <!--%  0  1  2  3  4  5  6  7  8  9-->
+    <!--0 00 03 05 08 0A 0D 0F 12 14 17-->
+    <!--1 19 1C 1F 21 24 26 29 2B 2E 30-->
+    <!--2 33 36 38 3B 3D 40 42 45 47 4A-->
+    <!--3 4D 4F 52 54 57 59 5C 5E 61 63-->
+    <!--4 66 69 6B 6E 70 73 75 78 7A 7D-->
+    <!--5 80 82 85 87 8A 8C 8F 91 94 96-->
+    <!--6 99 9C 9E A1 A3 A6 A8 AB AD B0-->
+    <!--7 B3 B5 B8 BA BD BF C2 C4 C7 C9-->
+    <!--8 CC CF D1 D4 D6 D9 DB DE E0 E3-->
+    <!--9 E6 E8 EB ED F0 F2 F5 F7 FA FC-->
 </resources>

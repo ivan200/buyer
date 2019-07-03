@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AlertDialog
 import androidx.core.util.Consumer
 import app.simple.buyer.R
+import app.simple.buyer.util.database.Prefs
 import com.google.android.material.textfield.TextInputEditText
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -21,7 +22,8 @@ class DialogHelper(val activity: Activity) : DialogHelperBase(activity) {
                         hint: String,
                         positiveButton: String,
                         positiveResult: Consumer<String>) {
-        val ctx = android.view.ContextThemeWrapper(activity, R.style.AppTheme_Dialog)
+        val styleId = if(Prefs(activity).darkTheme) R.style.AppThemeDark_Translucent else R.style.AppThemeLight_Translucent
+        val ctx = android.view.ContextThemeWrapper(activity, styleId)
         val subView = LayoutInflater.from(ctx).inflate(R.layout.dialog_add_list_content, null)
         val editText = subView.findViewById<TextInputEditText>(R.id.tiet_add_list)
 

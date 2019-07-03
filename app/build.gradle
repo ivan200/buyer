@@ -30,10 +30,20 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == "androidx" || requested.group == "com.android.support") {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion "$sdkVersion.+"
+                }
+            }
+        }
+    }
 }
 
 def acraVersion = '5.3.0'
-def coroutinesVersion = '1.1.1'
+//def coroutinesVersion = '1.1.1'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -42,7 +52,7 @@ dependencies {
 
     //appcompat
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.google.android.material:material:1.1.0-alpha07'
+    //implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
@@ -56,8 +66,8 @@ dependencies {
     implementation "ch.acra:acra-mail:$acraVersion"
     implementation "ch.acra:acra-toast:$acraVersion"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
     //streams under java 8
 //    implementation "com.annimon:stream:1.2.1"

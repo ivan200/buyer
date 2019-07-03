@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--На апи 26 стало возможным включать SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        потому для навигейшнбара мы выставляем бэкграунд какой и у обычных вью, чтоб он плавно переходил в боттомбар-->
+
+    <style name="AppThemeLight.ColoredStatus" parent="AppThemeLight.Base">
+        <item name="android:statusBarColor">?attr/colorStatusBar</item>
+        <item name="android:navigationBarColor">?android:colorBackground</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
+
+    <style name="AppThemeDark.ColoredStatus" parent="AppThemeDark.Base">
+        <item name="android:statusBarColor">?attr/colorStatusBar</item>
+        <item name="android:navigationBarColor">?android:colorBackground</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
+</resources>

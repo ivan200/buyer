@@ -6,16 +6,16 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
+import app.simple.buyer.util.database.Database
+import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.views.DialogHelper
-import io.realm.Realm
 
 
 abstract class BaseActivity : AppCompatActivity() {
     abstract val layoutId: Int
 
-    val realm: Realm = Realm.getDefaultInstance()
-
-    var onResumeHandler: Function0<Unit>? = null
+    val database = Database()
+    private var onResumeHandler: Function0<Unit>? = null
 
     override fun setTitle(title: CharSequence) {
         super.setTitle(title)
@@ -23,13 +23,18 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(if(Prefs(this).darkTheme) R.style.AppThemeDark_Translucent else R.style.AppThemeLight_Translucent)
         super.onCreate(savedInstanceState)
 
         setContentView(layoutId)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //using styles.xml(v26) with it
-            window.decorView.systemUiVisibility = WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+            if(Prefs(this).darkTheme){
+                window.decorView.systemUiVisibility = WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+            } else{
+                window.decorView.systemUiVisibility = WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+            }
         }
     }
 
@@ -48,12 +53,8 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    open fun showException(throwable: Throwable) {
-        DialogHelper(this).withThrowable(throwable).show()
-    }
-
     override fun onDestroy() {
-        realm.close()
+        database.close()
         super.onDestroy()
     }
 

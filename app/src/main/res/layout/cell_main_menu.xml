@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:minHeight="@dimen/height_subheader"
     android:orientation="horizontal"
-    android:theme="@style/AppTheme">
+    >
 
 
     <TextView

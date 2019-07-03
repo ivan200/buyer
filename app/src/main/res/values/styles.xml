@@ -1,28 +1,48 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
+        <item name="colorControlNormal">?android:textColorSecondary</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <item name="colorStatusBar">@color/colorTextBlackDivider</item>
+        <item name="bgSelectable">@drawable/layer_list</item>
+        <item name="colorFab">@android:color/white</item>
+        <item name="colorSectionHeader">@color/ColorBackgroundGrey100</item>
+        <item name="colorBackground">@color/ColorBackgroundGrey50</item>
+        <item name="colorDisabled">@color/colorTextBlackDisabled</item>
+        <item name="colorDivider">@color/colorTextBlackDivider</item>
+        <!--<item name="android:windowAnimationStyle">@null</item>-->
     </style>
 
-    <style name="AppTheme.Dialog" parent="AppTheme">
+    <style name="AppThemeLight.Base" parent="AppThemeLight"/>
+    <style name="AppThemeLight.ColoredStatus" parent="AppThemeLight"/>
+    <style name="AppThemeLight.Translucent" parent="AppThemeLight"/>
+
+    <style name="AppThemeDark" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">?android:textColorSecondary</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <item name="colorStatusBar">@color/colorTextBlackDivider</item>
+        <item name="bgSelectable">@drawable/layer_list_light</item>
+        <item name="colorFab">@color/ColorBackgroundGrey800</item>
+        <item name="colorSectionHeader">@color/ColorBackgroundGrey800</item>
+        <item name="colorBackground">@color/ColorBackgroundGrey850</item>
+        <item name="colorDivider">@color/colorTextWhiteDivider</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
-
-    <style name="noAnimTheme" parent="AppTheme.NoActionBar">
-        <item name="android:windowAnimationStyle">@null</item>
-    </style>
+    <style name="AppThemeDark.Base" parent="AppThemeDark"/>
+    <style name="AppThemeDark.ColoredStatus" parent="AppThemeDark"/>
+    <style name="AppThemeDark.Translucent" parent="AppThemeDark"/>
 
 </resources>

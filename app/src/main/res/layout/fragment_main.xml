@@ -1,41 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
+    >
+
+    <include layout="@layout/content_main"/>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="?android:colorBackground"
-        android:orientation="vertical">
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        >
 
-    <include
-            android:id="@+id/include_toolbar"
-            layout="@layout/view_toolbar"/>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_container"
+        <LinearLayout
+            android:id="@+id/menu_ll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical">
+            android:background="?attr/colorPrimary"
+            android:orientation="vertical"
+            >
 
-        <RelativeLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/menu_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                >
+            </androidx.appcompat.widget.Toolbar>
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingBottom="@dimen/height_list_item_two_line"
-                    android:clipToPadding="false">
+                android:id="@+id/menu_rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?android:colorBackground"
+                android:clipToPadding="false"
+                />
 
-            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+    </com.google.android.material.navigation.NavigationView>
 
-            <include
-                    android:id="@+id/emptyView"
-                    layout="@layout/view_empty_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"/>
-
-        </RelativeLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

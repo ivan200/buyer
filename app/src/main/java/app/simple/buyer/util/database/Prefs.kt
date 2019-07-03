@@ -46,5 +46,6 @@ class Prefs(context: Context) {
 
     var listsOrderType by AnyPref(context, OrderType.CREATED)
     var listsSortAscending by AnyPref(context, true)
+    var darkTheme by AnyPref(context, true)
 
 }

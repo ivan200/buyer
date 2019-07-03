@@ -1,11 +1,9 @@
 package app.simple.buyer.entities
 
-import io.realm.OrderedRealmCollection
-import io.realm.Realm
+import app.simple.buyer.util.database.Database
 import io.realm.RealmObject
 import io.realm.RealmQuery
 import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
 
 
 
@@ -17,11 +15,13 @@ import io.realm.annotations.Required
 open class BuyItem : RealmObject() {
     //Уникальный id
     @PrimaryKey
-    @Required
-    var id: Long? = null
+    var id: Long = 0
 
     //Название
     var name: String? = null
+
+    //Количество слов в названии (количество пробелов + 1)
+    var nameWords: Int = 0
 
     //Сколько раз добавлялась, или популярность
     var populatity = 0L
@@ -30,41 +30,12 @@ open class BuyItem : RealmObject() {
     var price = 0.0f
 
     companion object {
-        private fun getQuery() : RealmQuery<BuyItem> {
-            return Realm.getDefaultInstance().where(BuyItem::class.java)
+        private fun getQuery(db: Database) : RealmQuery<BuyItem> {
+            return db.realm.where(BuyItem::class.java)
         }
 
-        fun getAll(): OrderedRealmCollection<BuyItem> {
-            return getQuery().findAll()
-        }
-
-        fun getByID(id: Long) : BuyItem? {
-            return getQuery().equalTo("id", id).findFirst()
-        }
-
-        fun getByName(name: String) : BuyItem? {
-            return getQuery().equalTo("name", name).findFirst()
-        }
-
-        fun count(): Long {
-            return getQuery().count()
-        }
-
-        fun addItem(name: String){
-            Realm.getDefaultInstance().executeTransactionAsync {
-                var item = getByName(name)
-                if (item == null) {
-                    item = BuyItem()
-                    item.id = BuyItem.count() + 1
-                    item.name = name
-                } else {
-                    item.populatity += 1
-                }
-            }
-//            realm.beginTransaction()
-//            realm.copyToRealmOrUpdate(item)
-//            realm.commitTransaction()
-
+        fun getByName(db: Database, name: String) : BuyItem? {
+            return getQuery(db).equalTo("name", name).findFirst()
         }
     }
 }

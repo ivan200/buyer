@@ -1,29 +1,15 @@
 package app.simple.buyer
 
-import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import app.simple.buyer.adapters.MainMenuRecyclerViewAdapter
-import app.simple.buyer.entities.BuyList
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import java.util.logging.Level
-import java.util.logging.Logger
 
 
 class MainActivityOld : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+    /*
     companion object {
         private val logger = Logger.getLogger(MainActivityOld::class.java.name)
     }
@@ -136,7 +122,7 @@ class MainActivityOld : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
-
+*/
 
 //    private fun loadCities(): List<City>? {
 //        // In this case we're loading from local assets.

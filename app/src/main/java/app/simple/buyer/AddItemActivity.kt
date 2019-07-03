@@ -9,10 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.simple.buyer.adapters.AddItemRecyclerViewAdapter
-import app.simple.buyer.entities.BuyItem
 
 
 /**
@@ -30,7 +27,7 @@ class AddItemActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_item)
+        setContentView(R.layout.fragment_add_item)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setHomeButtonEnabled(true)
@@ -66,24 +63,15 @@ class AddItemActivity : AppCompatActivity() {
             }
         })
 
-//        val listItems = ArrayList<MultiCellObject<*>>()
-//        if (count > 0) {
-//            listItems.add(MultiCellObject("test", Func1 { ViewHolderHeader(it) }, R.layout.cell_add_item))
-//        }
-//        val adapter = MultiCellTypeAdapter()
-
-        val adapter = AddItemRecyclerViewAdapter(BuyItem.getAll())
-
-        recyclerList.adapter = adapter
-        recyclerList.layoutManager = LinearLayoutManager(this)
-//        adapter.update(listItems)
-
-        recyclerList.invalidate()
+//        val adapter = AddItemRecyclerViewAdapter(BuyItem.getAll())
+//        recyclerList.adapter = adapter
+//        recyclerList.layoutManager = LinearLayoutManager(this)
+//        recyclerList.invalidate()
     }
 
     fun addItem(name: String) {
-        BuyItem.addItem(name)
-        editText.setText("")
+//        BuyItem.addItem(name)
+//        editText.setText("")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
