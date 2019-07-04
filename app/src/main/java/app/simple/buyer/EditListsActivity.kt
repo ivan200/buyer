@@ -38,7 +38,7 @@ class EditListsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_lists)
+        setContentView(R.layout.fragment_edit_lists)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setHomeButtonEnabled(true)

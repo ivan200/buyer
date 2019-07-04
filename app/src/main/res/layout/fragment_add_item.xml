@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<app.simple.buyer.util.views.WindowInsetsLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/add_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -43,6 +44,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/margin_default"
                     android:background="@color/colorTransparent"
+                    android:focusable="true"
                     android:text="Готово"
                     />
             </LinearLayout>
@@ -54,8 +56,8 @@
         android:id="@+id/recyclerList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?android:colorBackground"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/height_list_item_two_line"
         />
 
-</LinearLayout>
+</app.simple.buyer.util.views.WindowInsetsLinearLayout>

@@ -1,49 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
+<app.simple.buyer.util.views.WindowInsetsLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/main_base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start"
-    >
+    android:orientation="vertical">
 
-    <include layout="@layout/content_main"/>
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
+        android:fitsSystemWindows="false"
+        tools:openDrawer="start"
         >
 
-        <LinearLayout
-            android:id="@+id/menu_ll"
-            android:layout_width="match_parent"
+        <include layout="@layout/content_main"/>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?attr/colorPrimary"
-            android:orientation="vertical"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="false"
             >
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/menu_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                >
-            </androidx.appcompat.widget.Toolbar>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/menu_rv_list"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?android:colorBackground"
-                android:clipToPadding="false"
-                />
+                android:background="?attr/colorPrimaryDark"
+                android:orientation="vertical"
+                >
 
-        </LinearLayout>
-    </com.google.android.material.navigation.NavigationView>
+                <FrameLayout
+                    android:id="@+id/menu_toolbar_super"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary">
 
-</androidx.drawerlayout.widget.DrawerLayout>
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/menu_toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="?attr/colorPrimary"
+                        >
+                    </androidx.appcompat.widget.Toolbar>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/menu_recycler_super"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:colorBackground">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/menu_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:colorBackground"
+                        android:clipToPadding="false"
+                        />
+                </FrameLayout>
+            </LinearLayout>
+        </com.google.android.material.navigation.NavigationView>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+</app.simple.buyer.util.views.WindowInsetsLinearLayout>

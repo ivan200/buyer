@@ -12,13 +12,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import app.simple.buyer.util.hide
 import app.simple.buyer.util.show
-import java.util.logging.Logger
+import com.google.android.material.appbar.AppBarLayout
 
 abstract class BaseFragment : Fragment(), IEmptyView {
-    companion object {
-        private val logger = Logger.getLogger(BaseFragment::class.java.name)
-    }
-
     abstract val title: Int
     abstract val layoutId: Int
     abstract fun initialize(view: View)
@@ -33,6 +29,7 @@ abstract class BaseFragment : Fragment(), IEmptyView {
     override val emptyTextSubTitle by lazy { view!!.findViewById<TextView?>(R.id.emptyTextSubTitle) }
 
     val toolbar by lazy { view!!.findViewById<Toolbar?>(R.id.toolbar) }
+    val app_bar_layout by lazy { view!!.findViewById<AppBarLayout?>(R.id.app_bar_layout) }
     var linkToView: View? = null
     var initCount = 0
 

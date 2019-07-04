@@ -10,7 +10,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="colorStatusBar">@color/colorTextBlackDivider</item>
+        <item name="colorStatusBar">@color/colorPrimaryDark</item>
         <item name="bgSelectable">@drawable/layer_list</item>
         <item name="colorFab">@android:color/white</item>
         <item name="colorSectionHeader">@color/ColorBackgroundGrey100</item>
@@ -33,7 +33,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="colorStatusBar">@color/colorTextBlackDivider</item>
+        <item name="colorStatusBar">@color/colorPrimaryDark</item>
         <item name="bgSelectable">@drawable/layer_list_light</item>
         <item name="colorFab">@color/ColorBackgroundGrey800</item>
         <item name="colorSectionHeader">@color/ColorBackgroundGrey800</item>

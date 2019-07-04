@@ -60,6 +60,15 @@ object Utils {
         }
     }
 
+    fun hideKeyboard2(activity: Activity, editText: EditText) {
+        editText.clearFocus()
+        val focusedView = activity.currentFocus
+        if (focusedView != null) {
+            val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(focusedView.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
+        }
+    }
+
     fun hideKeyboardFrom(view: View) {
         val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
