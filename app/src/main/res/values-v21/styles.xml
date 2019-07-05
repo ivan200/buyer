@@ -1,13 +1,13 @@
 <resources>
 
     <style name="AppThemeLight.Base" parent="AppThemeLight">
-        <item name="android:colorEdgeEffect">@color/colorPrimary</item>
+        <item name="android:colorEdgeEffect">?attr/colorToolbar</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="AppThemeLight.ColoredStatus" parent="AppThemeLight.Base">
         <item name="android:statusBarColor">?attr/colorStatusBar</item>
-        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">?attr/colorToolbar</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
     </style>
@@ -21,13 +21,13 @@
 
 
     <style name="AppThemeDark.Base" parent="AppThemeDark">
-        <item name="android:colorEdgeEffect">@color/colorPrimary</item>
+        <item name="android:colorEdgeEffect">?attr/colorToolbar</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="AppThemeDark.ColoredStatus" parent="AppThemeDark.Base">
         <item name="android:statusBarColor">?attr/colorStatusBar</item>
-        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">?attr/colorToolbar</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
     </style>

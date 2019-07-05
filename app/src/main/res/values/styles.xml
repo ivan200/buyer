@@ -1,7 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -10,13 +9,21 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+        <item name="colorToolbar">@color/ColorBackgroundGrey200</item>
+        <item name="colorToolbarText">@color/colorTextBlack</item>
         <item name="colorStatusBar">@color/colorPrimaryDark</item>
         <item name="bgSelectable">@drawable/layer_list</item>
         <item name="colorFab">@android:color/white</item>
         <item name="colorSectionHeader">@color/ColorBackgroundGrey100</item>
         <item name="colorBackground">@color/ColorBackgroundGrey50</item>
-        <item name="colorDisabled">@color/colorTextBlackDisabled</item>
-        <item name="colorDivider">@color/colorTextBlackDivider</item>
+
+        <item name="colorText">                 @color/colorTextBlack</item>
+        <item name="colorTextDisabled">         @color/colorTextBlackDisabled</item>
+        <item name="colorTextSecondary">        @color/colorTextBlackSecondary</item>
+        <item name="colorTextSecondaryDisabled">@color/colorTextBlackSecondaryDisabled</item>
+        <item name="colorTextHint">             @color/colorTextBlackHint</item>
+        <item name="colorDivider">              @color/colorTextBlackDivider</item>
+
         <!--<item name="android:windowAnimationStyle">@null</item>-->
     </style>
 
@@ -33,16 +40,33 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+        <item name="colorToolbar">@color/ColorBackgroundGrey800</item>
+        <item name="colorToolbarText">@color/colorTextWhite</item>
         <item name="colorStatusBar">@color/colorPrimaryDark</item>
         <item name="bgSelectable">@drawable/layer_list_light</item>
         <item name="colorFab">@color/ColorBackgroundGrey800</item>
         <item name="colorSectionHeader">@color/ColorBackgroundGrey800</item>
         <item name="colorBackground">@color/ColorBackgroundGrey850</item>
-        <item name="colorDivider">@color/colorTextWhiteDivider</item>
+
+        <item name="colorText">                 @color/colorTextWhite</item>
+        <item name="colorTextDisabled">         @color/colorTextWhiteDisabled</item>
+        <item name="colorTextSecondary">        @color/colorTextWhiteSecondary</item>
+        <item name="colorTextSecondaryDisabled">@color/colorTextWhiteSecondaryDisabled</item>
+        <item name="colorTextHint">             @color/colorTextWhiteHint</item>
+        <item name="colorDivider">              @color/colorTextWhiteDivider</item>
     </style>
 
     <style name="AppThemeDark.Base" parent="AppThemeDark"/>
     <style name="AppThemeDark.ColoredStatus" parent="AppThemeDark"/>
     <style name="AppThemeDark.Translucent" parent="AppThemeDark"/>
+
+
+    <style name="ToolBarStyle" parent="Theme.AppCompat">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">?attr/colorToolbar</item>
+        <item name="android:textColorPrimary">?attr/colorToolbarText</item>
+        <item name="android:textColorSecondary">?attr/colorToolbarText</item>
+        <item name="actionMenuTextColor">?attr/colorToolbarText</item>
+    </style>
 
 </resources>

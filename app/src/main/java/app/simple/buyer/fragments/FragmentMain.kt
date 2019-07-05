@@ -1,8 +1,7 @@
 package app.simple.buyer.fragments
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -14,15 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
+import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
 
 
 
-class FragmentMain : BaseFragment() {
+class FragmentMain : BaseFragment(), Toolbar.OnMenuItemClickListener {
     override val layoutId: Int
         get() = R.layout.fragment_main
 
@@ -35,7 +36,7 @@ class FragmentMain : BaseFragment() {
 
     private val menu_toolbar by lazy { mActivity.findViewById<Toolbar>(R.id.menu_toolbar) }
     private val menu_recycler by lazy { mActivity.findViewById<RecyclerView>(R.id.menu_recycler) }
-    private val menu_toolbar_super by lazy { mActivity.findViewById<FrameLayout>(R.id.menu_toolbar_super) }
+    private val menu_toolbar_super by lazy { mActivity.findViewById<AppBarLayout>(R.id.menu_toolbar_super) }
     private val menu_recycler_super by lazy { mActivity.findViewById<FrameLayout>(R.id.menu_recycler_super) }
 
     private val main_recycler by lazy { mActivity.findViewById<RecyclerView>(R.id.main_recycler) }
@@ -56,8 +57,11 @@ class FragmentMain : BaseFragment() {
         toggle.syncState()
 
         ViewCompat.setOnApplyWindowInsetsListener(main_base_layout) { _, insets ->
+            val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
+
             app_bar_layout?.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
-            main_recycler.setPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
+            main_recycler.setPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom
+                    + resources.getDimensionPixelOffset(R.dimen.size_fab) + margin*2)
 
             if (ViewCompat.getLayoutDirection(drawer_layout) == ViewCompat.LAYOUT_DIRECTION_LTR) {
                 menu_toolbar_super.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, 0, 0)
@@ -70,16 +74,20 @@ class FragmentMain : BaseFragment() {
             }
 
             val ll = fab.layoutParams as ViewGroup.MarginLayoutParams
-            val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
+
             ll.bottomMargin = margin + insets.systemWindowInsetBottom
             ll.rightMargin = margin + insets.systemWindowInsetRight
+            ll.leftMargin = margin + insets.systemWindowInsetLeft
             fab.layoutParams = ll
             insets.consumeSystemWindowInsets()
         }
 
         fab.setOnClickListener(navigateAddItem)
+
+        setHasOptionsMenu(true)
         menu_toolbar.title = getText(title)
         menu_toolbar.setOnClickListener(navigateEditLists)
+        menu_toolbar?.setOnMenuItemClickListener(this)
 
 
         val adapter = MultiCellTypeAdapter(mActivity, this::showError)
@@ -96,5 +104,23 @@ class FragmentMain : BaseFragment() {
     override fun onResume() {
         super.onResume()
 //        Utils.hideKeyboardFrom(drawer_layout)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if(menu_toolbar?.menu?.size() == 0){
+            menu_toolbar?.inflateMenu(R.menu.main)
+        }
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.darkTheme ->{
+                Prefs(mActivity).darkTheme = !Prefs(mActivity).darkTheme
+                mActivity.recreate()
+                //OpenActivityManager.showPrefferences(mActivity)
+            }
+        }
+        return true
     }
 }

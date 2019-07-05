@@ -36,7 +36,6 @@ class FragmentAddItem : BaseFragment() {override val layoutId: Int
         ViewCompat.setOnApplyWindowInsetsListener(base_layout) { _, insets ->
             add_appbar.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
             recyclerList.setPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
-//            add_appbar.setPadding(0, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
             insets.consumeSystemWindowInsets()
         }
 

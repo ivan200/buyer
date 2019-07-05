@@ -13,8 +13,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="146" />
-                            <option name="y" value="-43" />
+                            <option name="x" value="282" />
+                            <option name="y" value="98" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -25,8 +25,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-23" />
-                            <option name="y" value="-371" />
+                            <option name="x" value="282" />
+                            <option name="y" value="-235" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -53,7 +53,24 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_fragmentMain_to_fragmentPreference">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="fragmentPreference">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="1" />
+                            <option name="y" value="-408" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>

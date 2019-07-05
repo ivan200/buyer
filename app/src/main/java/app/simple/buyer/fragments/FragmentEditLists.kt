@@ -1,6 +1,7 @@
 package app.simple.buyer.fragments
 
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,9 +29,19 @@ class FragmentEditLists : BaseFragment() {
             setDisplayHomeAsUpEnabled(true)
         }
         ViewCompat.setOnApplyWindowInsetsListener(lists_base_layout) { _, insets ->
+            val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
+
             app_bar_layout?.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
-            rv_edit_lists.setPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
-//            add_appbar.setPadding(0, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
+            rv_edit_lists.setPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom
+                    + resources.getDimensionPixelOffset(R.dimen.size_fab) + margin*2)
+
+            val ll = lists_fab.layoutParams as ViewGroup.MarginLayoutParams
+
+            ll.bottomMargin = margin + insets.systemWindowInsetBottom
+            ll.rightMargin = margin + insets.systemWindowInsetRight
+            ll.leftMargin = margin + insets.systemWindowInsetLeft
+            lists_fab.layoutParams = ll
+
             insets.consumeSystemWindowInsets()
         }
 

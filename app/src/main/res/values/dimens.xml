@@ -21,6 +21,7 @@
     <dimen name="size_avatar">40dp</dimen>
     <dimen name="size_icon_big">64dp</dimen>
     <dimen name="size_icon_big2">96dp</dimen>
+    <dimen name="size_fab">56dp</dimen>
 
     <dimen name="size_icon_bounding">56dp</dimen>
     <dimen name="size_icon_clickable_area">48dp</dimen>

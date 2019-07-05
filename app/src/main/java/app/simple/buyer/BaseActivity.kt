@@ -1,9 +1,6 @@
 package app.simple.buyer
 
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import app.simple.buyer.util.database.Database
@@ -28,14 +25,14 @@ abstract class BaseActivity : AppCompatActivity() {
 
         setContentView(layoutId)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //using styles.xml(v26) with it
-            if(Prefs(this).darkTheme){
-                window.decorView.systemUiVisibility = WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
-            } else{
-                window.decorView.systemUiVisibility = WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            //using styles.xml(v26) with it
+//            if(Prefs(this).darkTheme){
+//                window.decorView.systemUiVisibility = WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+//            } else{
+//                window.decorView.systemUiVisibility = WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+//            }
+//        }
     }
 
     override fun onResume() {

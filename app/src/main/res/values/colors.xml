@@ -9,16 +9,19 @@
     <color name="colorTransparent">#00000000</color>
 
     <!-- https://material.io/guidelines/style/color.html#color-text-background-colors -->
-    <color name="colorTextBlack">           #de000000</color> <!--black 87%-->
-    <color name="colorTextBlackSecondary">  #8a000000</color> <!--black 54%-->
-    <color name="colorTextBlackPlaceholder">#6b000000</color> <!--black 42%-->
-    <color name="colorTextBlackDisabled">   #61000000</color> <!--black 38%-->
-    <color name="colorTextBlackDivider">    #1f000000</color> <!--black 12%-->
+    <color name="colorTextBlack">                   #de000000</color> <!--black 87%-->
+    <color name="colorTextBlackDisabled">           #39000000</color> <!--black 22%-->
+    <color name="colorTextBlackSecondary">          #8a000000</color> <!--black 54%-->
+    <color name="colorTextBlackSecondaryDisabled">  #24000000</color> <!--black 14%-->
+    <color name="colorTextBlackHint">               #61000000</color> <!--black 38%-->
+    <color name="colorTextBlackDivider">            #1f000000</color> <!--black 12%-->
 
-    <color name="colorTextWhite">             #ffffff</color>
-    <color name="colorTextWhiteSecondary">  #b2ffffff</color> <!--white 70%-->
-    <color name="colorTextWhiteDisabled">   #80ffffff</color> <!--white 50%-->
-    <color name="colorTextWhiteDivider">    #1fffffff</color> <!--white 12%-->
+    <color name="colorTextWhite">                   #ffffff</color>   <!--white 100%-->
+    <color name="colorTextWhiteDisabled">           #4Dffffff</color> <!--white 30%-->
+    <color name="colorTextWhiteSecondary">          #b3ffffff</color> <!--white 70%-->
+    <color name="colorTextWhiteSecondaryDisabled">  #36ffffff</color> <!--white 21%-->
+    <color name="colorTextWhiteHint">               #80ffffff</color> <!--white 50%-->
+    <color name="colorTextWhiteDivider">            #1fffffff</color> <!--white 12%-->
 
     <!--Получено путём сверки цветов с дефолтными на draw'ере-->
     <color name="background_selected">#1f000000</color>          <!--black 12%-->
