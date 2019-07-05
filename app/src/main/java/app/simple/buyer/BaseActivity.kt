@@ -22,17 +22,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(if(Prefs(this).darkTheme) R.style.AppThemeDark_Translucent else R.style.AppThemeLight_Translucent)
         super.onCreate(savedInstanceState)
-
         setContentView(layoutId)
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            //using styles.xml(v26) with it
-//            if(Prefs(this).darkTheme){
-//                window.decorView.systemUiVisibility = WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
-//            } else{
-//                window.decorView.systemUiVisibility = WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-//            }
-//        }
     }
 
     override fun onResume() {

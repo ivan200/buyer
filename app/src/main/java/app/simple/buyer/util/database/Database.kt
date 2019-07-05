@@ -41,17 +41,29 @@ class Database {
             return
         }
         val items = arrayListOf<BuyItem>()
-
-        val inputStream = context.resources.openRawResource(R.raw.foodstuff)
+        val inputStream = context.resources.openRawResource(R.raw.food)
         val inputReader = InputStreamReader(inputStream)
         val bufReader = BufferedReader(inputReader)
         var line = bufReader.readLine()
 
+        var catId = 0L
         while (line != null) {
             val item = BuyItem().apply {
                 id = PrimaryKeyFactory.nextKey<BuyItem>()
-                name = line
-                nameWords = line.count { c -> c.isWhitespace() } + 1
+                if(!line.startsWith('\t')){
+                    catId = id
+                    parentId = 0L
+                } else{
+                    parentId = catId
+                }
+                val foodName = line.trim()
+                name = foodName
+                searchName = foodName.replace('ё', 'е')
+                        .replace('Ё', 'Е')
+                        .toLowerCase()
+                nameWords = foodName.count { c -> c.isWhitespace() } + 1
+
+                searchCombineString = getSearchString()
             }
             items.add(item)
             line = bufReader.readLine()

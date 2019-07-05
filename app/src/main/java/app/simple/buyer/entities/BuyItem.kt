@@ -20,14 +20,27 @@ open class BuyItem : RealmObject() {
     //Название
     var name: String? = null
 
+    //Название без заглавных и букв ё
+    var searchName: String? = null
+
     //Количество слов в названии (количество пробелов + 1)
     var nameWords: Int = 0
 
     //Сколько раз добавлялась, или популярность
     var populatity = 0L
 
+    //Ссылка на верхнюю категорию (если есть)
+    var parentId = 0L
+
+    //Уровень категории
+    var level = 0.0f
+
     //Цена, запоминается
     var price = 0.0f
+
+    var searchCombineString: String? = null
+
+    fun getSearchString() =  String.format("%05d" , populatity) + nameWords.toString() + searchName
 
     companion object {
         private fun getQuery(db: Database) : RealmQuery<BuyItem> {

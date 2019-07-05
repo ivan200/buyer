@@ -53,24 +53,7 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
-                            <entry key="action_fragmentMain_to_fragmentPreference">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                           </map>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="fragmentPreference">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="1" />
-                            <option name="y" value="-408" />
-                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>
