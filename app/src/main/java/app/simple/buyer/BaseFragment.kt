@@ -20,7 +20,7 @@ abstract class BaseFragment : Fragment(), IEmptyView {
     abstract fun initialize(view: View)
 
     val mActivity  by lazy { activity as BaseActivity }
-    val database by lazy { mActivity.database }
+    val realm by lazy { mActivity.realm }
 
     override val emptyData: EmptyData? = null
     override val emptyView by lazy { view!!.findViewById<View?>(R.id.emptyView) }
@@ -87,6 +87,4 @@ abstract class BaseFragment : Fragment(), IEmptyView {
     fun showError(throwable: Throwable) {
         mActivity.showError(throwable)
     }
-
-    fun isSectionVisible(): Boolean = (((view?.parent as? ViewGroup)?.parent as? ViewGroup)?.visibility == View.VISIBLE)
 }

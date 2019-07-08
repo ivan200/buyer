@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
+import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.util.Utils
-import app.simple.buyer.util.views.MultiCellObject
-import app.simple.buyer.util.views.MultiCellTypeAdapter
 import com.google.android.material.appbar.AppBarLayout
 
-class FragmentAddItem : BaseFragment() {override val layoutId: Int
-    get() = R.layout.fragment_add_item
+class FragmentAddItem : BaseFragment() {
+    override val layoutId: Int
+        get() = R.layout.fragment_add_item
 
     override val title: Int
         get() = R.string.app_name
@@ -23,10 +23,8 @@ class FragmentAddItem : BaseFragment() {override val layoutId: Int
     private val add_appbar by lazy { mActivity.findViewById<AppBarLayout>(R.id.add_appbar) }
     private val editText by lazy { mActivity.findViewById<EditText>(R.id.editText) }
     private val recyclerList by lazy { mActivity.findViewById<RecyclerView>(R.id.recyclerList) }
-//    private val add_appbar by lazy { mActivity.findViewById<RecyclerView>(R.id.recyclerList) }
 
-    //    private val recyclerList by lazy { mActivity.findViewById<RecyclerView>(R.id.recyclerList) }
-//    private val editText by lazy { mActivity.findViewById<EditText>(R.id.editText) }
+    private lateinit var adapter: FoodAdapter
 
     override fun initialize(view: View) {
         mActivity.supportActionBar?.apply {
@@ -39,11 +37,21 @@ class FragmentAddItem : BaseFragment() {override val layoutId: Int
             insets.consumeSystemWindowInsets()
         }
 
-        val adapter = MultiCellTypeAdapter(mActivity, this::showError)
+//        val adapter = MultiCellTypeAdapter(mActivity, this::showError)
+//        recyclerList.layoutManager = LinearLayoutManager(mActivity)
+//        recyclerList.adapter = adapter
+//        adapter.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
+
+
+        adapter = FoodAdapter(BuyItem.getListAsync(realm, ""))
         recyclerList.layoutManager = LinearLayoutManager(mActivity)
         recyclerList.adapter = adapter
-        adapter.update((1..50).map { x-> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
 
+        editText.addTextChangedListener(Utils.simpleTextWatcher (this::onTextChanged))
+    }
+
+    fun onTextChanged(text: String){
+        adapter.updateData(BuyItem.getListAsync(realm, text.trim()))
     }
 
     override fun onResume() {

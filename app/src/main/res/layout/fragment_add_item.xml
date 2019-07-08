@@ -26,7 +26,7 @@
                 android:layout_height="@dimen/height_toolbar"
                 android:orientation="horizontal">
 
-                <EditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/editText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

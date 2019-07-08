@@ -42,6 +42,9 @@ open class BuyList : RealmObject() {
     //тип персональной сортировки данного списка (обычно сортировка внутри списка распространяется на все списки)
     var personalOrderType: Int = OrderType.CREATED
 
+    //элементы списка покупок
+    var items: RealmList<BuyListItem> = RealmList()
+
     companion object {
         private fun getQuery() : RealmQuery<BuyList> {
             return Realm.getDefaultInstance().where(BuyList::class.java)

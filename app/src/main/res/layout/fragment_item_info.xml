@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<app.simple.buyer.util.views.WindowInsetsLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lists_base_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_toolbar"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/layout_icons"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/size_icon_bounding"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_minus_default"
+                android:layout_marginStart="@dimen/margin_minus_default"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                android:padding="@dimen/margin_icon_bounding"
+                android:layout_alignParentEnd="true">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/btn_number_minus"
+                    android:layout_width="@dimen/size_icon_clickable_area"
+                    android:layout_height="@dimen/size_icon_clickable_area"
+                    android:background="?selectableItemBackground"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="center"
+                    android:visibility="visible"
+                    android:tint="@color/colorTextWhite"
+                    app:srcCompat="@drawable/ic_number_minus"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_icon_clickable_area"
+                    android:background="@android:color/transparent"
+                    android:minWidth="@dimen/size_icon"
+                    android:gravity="center"
+                    android:nextFocusUp="@id/et_number"
+                    android:nextFocusDown="@id/et_number"
+                    android:imeOptions="actionDone"
+                    android:text="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+                    />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/btn_number_plus"
+                    android:layout_width="@dimen/size_icon_clickable_area"
+                    android:layout_height="@dimen/size_icon_clickable_area"
+                    android:background="?selectableItemBackground"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="center"
+                    android:visibility="visible"
+                    android:tint="@color/colorTextWhite"
+                    app:srcCompat="@drawable/ic_number_plus"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/count_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_icon_bounding"
+                android:layout_gravity="center_vertical"
+                android:layout_toStartOf="@id/layout_icons"
+                android:layout_toLeftOf="@id/layout_icons"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_default">
+
+                <TextView
+                    android:id="@+id/tv_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="Количество"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Menu"/>
+
+            </LinearLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_below="@id/count_layout"
+                android:id="@+id/comment_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/margin_default"
+                android:paddingRight="@dimen/margin_default"
+                android:gravity="center_vertical|center_horizontal">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/comment_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Заметки"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:singleLine="false"
+
+                    android:textColor="?android:textColorPrimary"
+                    android:textColorHint="?attr/colorTextHint"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+</app.simple.buyer.util.views.WindowInsetsLinearLayout>

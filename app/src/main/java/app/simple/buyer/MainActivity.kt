@@ -3,6 +3,7 @@ package app.simple.buyer
 
 import android.os.Bundle
 import androidx.navigation.findNavController
+import app.simple.buyer.util.database.Database
 
 
 class MainActivity : BaseActivity() {
@@ -13,10 +14,12 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        ViewCompat.setOnApplyWindowInsetsListener(section_wrapper_main) { _, insets ->
-//            onInsetsChanged()
-//            insets.consumeSystemWindowInsets()
-//        }
+        try {
+            Database.firstInit(this, realm)
+        } catch (e: Throwable) {
+            showError(e)
+        }
+
     }
 
 //    fun onInsetsChanged(){

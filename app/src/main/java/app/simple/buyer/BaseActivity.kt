@@ -3,15 +3,15 @@ package app.simple.buyer
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import app.simple.buyer.util.database.Database
 import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.views.DialogHelper
+import io.realm.Realm
 
 
 abstract class BaseActivity : AppCompatActivity() {
     abstract val layoutId: Int
 
-    val database = Database()
+    var realm: Realm = Realm.getDefaultInstance()
     private var onResumeHandler: Function0<Unit>? = null
 
     override fun setTitle(title: CharSequence) {
@@ -41,7 +41,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        database.close()
+        realm.close()
         super.onDestroy()
     }
 

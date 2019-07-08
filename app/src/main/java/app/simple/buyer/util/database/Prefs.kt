@@ -44,8 +44,8 @@ class Prefs(context: Context) {
         }
     }
 
+    var currentListId by AnyPref(context, 0L)
     var listsOrderType by AnyPref(context, OrderType.CREATED)
     var listsSortAscending by AnyPref(context, true)
     var darkTheme by AnyPref(context, true)
-
 }

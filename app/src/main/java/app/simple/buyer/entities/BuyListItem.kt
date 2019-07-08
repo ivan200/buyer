@@ -36,9 +36,6 @@ open class BuyListItem : RealmObject() {
     var isBuyed: Boolean = false
 
     //Позиция при ручной сортировке
-    var sortPosition: Long = 0
-
-    //Позиция при ручной сортировке
     var handSortPosition: Long = 0
 
     //Дата модификации элемента

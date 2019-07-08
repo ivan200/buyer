@@ -1,10 +1,11 @@
 package app.simple.buyer.entities
 
-import app.simple.buyer.util.database.Database
+import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmQuery
+import io.realm.RealmResults
 import io.realm.annotations.PrimaryKey
-
+import java.util.*
 
 
 /**
@@ -24,7 +25,7 @@ open class BuyItem : RealmObject() {
     var searchName: String? = null
 
     //Количество слов в названии (количество пробелов + 1)
-    var nameWords: Int = 0
+    var wordCount: Int = 0
 
     //Сколько раз добавлялась, или популярность
     var populatity = 0L
@@ -38,17 +39,43 @@ open class BuyItem : RealmObject() {
     //Цена, запоминается
     var price = 0.0f
 
-    var searchCombineString: String? = null
+    //строка с данными для сортировки по ней (сортируется сначала по популярности, затем по количеству слов, затем по алфавиту
+    var orderCombineString: String? = null
 
-    fun getSearchString() =  String.format("%05d" , populatity) + nameWords.toString() + searchName
+    fun getOrderString() =  String.format("%05d" , populatity) + wordCount.toString() + searchName
 
     companion object {
-        private fun getQuery(db: Database) : RealmQuery<BuyItem> {
-            return db.realm.where(BuyItem::class.java)
+
+        //сглаживание имени (земеняем буквы ё, и ументшаем регистр, для поиска)
+        fun smoothName(name: String): String {
+            return name.replace('ё', 'е')
+                    .replace('Ё', 'Е')
+                    .toLowerCase(Locale("ru", "RU"))
         }
 
-        fun getByName(db: Database, name: String) : BuyItem? {
-            return getQuery(db).equalTo("name", name).findFirst()
+        private fun getQuery(realm: Realm) : RealmQuery<BuyItem> {
+            return realm.where(BuyItem::class.java)
+        }
+
+        fun getByName(realm: Realm, name: String) : BuyItem? {
+            return getQuery(realm).equalTo("searchName", smoothName(name)).findFirst()
+        }
+
+        fun getListAsync(realm: Realm, name: String) : RealmResults<BuyItem> {
+            val split = name.split(' ')
+            var query = getQuery(realm)
+
+            if(split.count() > 1){
+                for (s in split) {
+                    query = query.contains("searchName", smoothName(s))
+                }
+            } else {
+                query = query.contains("searchName", smoothName(name))
+            }
+
+            return query
+                    .sort("orderCombineString")
+                    .findAllAsync()
         }
     }
 }

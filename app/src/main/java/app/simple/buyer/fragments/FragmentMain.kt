@@ -21,8 +21,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
 
-
-
 class FragmentMain : BaseFragment(), Toolbar.OnMenuItemClickListener {
     override val layoutId: Int
         get() = R.layout.fragment_main
@@ -82,13 +80,15 @@ class FragmentMain : BaseFragment(), Toolbar.OnMenuItemClickListener {
             insets.consumeSystemWindowInsets()
         }
 
-        fab.setOnClickListener(navigateAddItem)
+        fab.setOnClickListener{ v->
+            navigateAddItem.onClick(v)
+//            Database.deleteAll(mActivity)
+        }
 
         setHasOptionsMenu(true)
         menu_toolbar.title = getText(title)
         menu_toolbar.setOnClickListener(navigateEditLists)
         menu_toolbar?.setOnMenuItemClickListener(this)
-
 
         val adapter = MultiCellTypeAdapter(mActivity, this::showError)
         main_recycler.layoutManager = LinearLayoutManager(mActivity)
