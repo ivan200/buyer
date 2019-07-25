@@ -5,7 +5,6 @@ import android.os.AsyncTask
 import app.simple.buyer.Constants
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyList
-import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.util.count
 import app.simple.buyer.util.update
 import io.realm.Realm
@@ -15,24 +14,24 @@ import java.util.*
 
 
 object Database {
-    fun addItem(itemName: String, realm: Realm){
-        realm.executeTransactionAsync {
-            val item = BuyItem.getByName(it, itemName)
-            if (item != null) {
-                item.apply {
-                    populatity += 1
-                    update(it)
-                }
-            } else {
-                BuyItem().apply {
-                    id = PrimaryKeyFactory.nextKey<BuyItem>()
-                    name = itemName
-                    wordCount = itemName.count { c -> c.isWhitespace() } + 1
-                    update(it)
-                }
-            }
-        }
-    }
+//    fun addItem(itemName: String, realm: Realm){
+//        realm.executeTransactionAsync {
+//            val item = BuyItem.getByName(it, itemName)
+//            if (item != null) {
+//                item.apply {
+//                    populatity += 1
+//                    update(it)
+//                }
+//            } else {
+//                BuyItem().apply {
+//                    id = PrimaryKeyFactory.nextKey<BuyItem>()
+//                    name = itemName
+//                    wordCount = itemName.count { c -> c.isWhitespace() } + 1
+//                    update(it)
+//                }
+//            }
+//        }
+//    }
 
     fun firstInit(context: Context, realm: Realm){
         if(realm.count<BuyItem>() > 0){
@@ -80,26 +79,38 @@ object Database {
         }
     }
 
+
+    //Добавление элемента покупок по имени в определённый список
     fun checkAddItem(realm: Realm, currentListId: Long, itemName: String){
+        //Проверяем, есть ли такой элемент в словаре
         val item = BuyItem.getByName(realm, itemName)
         if(item != null){
-            checkAddItem(realm, currentListId, item.id)
+            checkAddItem(realm, currentListId, item)
         } else{
+            //Если нет, то создаём и пихаем в словарик
             val newBuyItem = createBuyItem(itemName)
             newBuyItem.parentId = Constants.CUSTOM_CAT_ID
             realm.executeTransaction {
                 newBuyItem.update(it)
             }
-            checkAddItem(realm, currentListId, newBuyItem.id)
+            checkAddItem(realm, currentListId, newBuyItem)
         }
     }
 
-    fun checkAddItem(realm: Realm, currentListId: Long, buyItemId: Long){
-        val createBuyItem = createBuyItem(itemName)
+    //Добавление элемента покупок когда у нас уже точно есть элемент в словарике
+    fun checkAddItem(realm: Realm, currentListId: Long, buyItem: BuyItem){
+
+//        val item = BuyListItem.getByName(realm, itemName)
+//
+//        val createBuyItem = createBuyListItem(buyItem.id, currentListId)
+
+
+
+
+
+
 
     }
-
-
 
     fun initLists(){
         createBuyList("Продукты")
@@ -128,15 +139,15 @@ object Database {
         }
     }
 
-    fun createBuyListItem(buyItemId: Long, buyListId: Long): BuyListItem {
-        return BuyListItem().apply {
-            id = PrimaryKeyFactory.nextKey<BuyListItem>()
-            itemId = buyItemId
-            listId = buyListId
-            modified = Date()
-            created = Date()
-        }
-
-
-    }
+//    fun createBuyListItem(buyItemId: Long, buyListId: Long): BuyListItem {
+//        return BuyListItem().apply {
+//            id = PrimaryKeyFactory.nextKey<BuyListItem>()
+//            itemId = buyItemId
+//            listId = buyListId
+//            modified = Date()
+//            created = Date()
+//        }
+//
+//
+//    }
 }

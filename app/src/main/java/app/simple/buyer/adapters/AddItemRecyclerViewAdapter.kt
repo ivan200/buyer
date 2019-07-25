@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.R
 import app.simple.buyer.entities.BuyItem
+import app.simple.buyer.util.views.RealmRecyclerViewAdapter
 import io.realm.OrderedRealmCollection
-import io.realm.RealmRecyclerViewAdapter
 
 /**
  * Created by Zakharovi on 22.01.2018.
@@ -33,7 +33,7 @@ class AddItemRecyclerViewAdapter(data: OrderedRealmCollection<BuyItem>) : RealmR
     }
 
     override fun getItemId(index: Int): Long {
-        return getItem(index)!!.id!!
+        return getItem(index)!!.id
     }
 
     inner class BuyItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {

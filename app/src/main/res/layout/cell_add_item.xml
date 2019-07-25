@@ -8,12 +8,15 @@
     android:orientation="horizontal">
 
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_default"
-        android:layout_marginRight="@dimen/margin_default"
-        android:layout_gravity="center_vertical"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_add"
+        android:layout_width="@dimen/size_icon_clickable_area"
+        android:layout_height="@dimen/size_icon_clickable_area"
+        android:background="?android:attr/selectableItemBackground"
+        android:visibility="visible"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_add_circle"
+        android:tint="@color/colorCheckboxGreen"
         />
 
     <TextView
@@ -29,6 +32,7 @@
         android:text="Текст"
         android:layout_weight="1"
         android:textSize="@dimen/text_list_item_default"/>
+
     <TextView
         android:id="@+id/tv_count"
         android:layout_width="wrap_content"
@@ -50,6 +54,7 @@
         android:visibility="visible"
         android:scaleType="center"
         app:srcCompat="@drawable/ic_clear"
+        android:tint="@color/colorCheckboxRed"
         />
 
 </LinearLayout>

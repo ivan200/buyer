@@ -26,12 +26,25 @@
             android:fitsSystemWindows="false"
             >
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 >
 
+                <FrameLayout
+                    android:id="@+id/menu_recycler_super"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/colorBackground">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/menu_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?attr/colorBackground"
+                        android:clipToPadding="false"
+                        />
+                </FrameLayout>
 
                 <com.google.android.material.appbar.AppBarLayout
                     android:id="@+id/menu_toolbar_super"
@@ -44,27 +57,10 @@
                         android:id="@+id/menu_toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
-                        app:theme="@style/ToolBarStyle"
                         />
 
                 </com.google.android.material.appbar.AppBarLayout>
-
-
-                <FrameLayout
-                    android:id="@+id/menu_recycler_super"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="?android:colorBackground">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/menu_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="?android:colorBackground"
-                        android:clipToPadding="false"
-                        />
-                </FrameLayout>
-            </LinearLayout>
+            </RelativeLayout>
         </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>

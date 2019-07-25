@@ -1,6 +1,7 @@
 package app.simple.buyer.fragments
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -57,18 +58,26 @@ class FragmentMain : BaseFragment(), Toolbar.OnMenuItemClickListener {
         ViewCompat.setOnApplyWindowInsetsListener(main_base_layout) { _, insets ->
             val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
 
+
+            var toolbarHeight = 0
+            val tv = TypedValue()
+            if (mActivity.theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                toolbarHeight = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+            }
+
             app_bar_layout?.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
-            main_recycler.setPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom
+            main_recycler.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop + toolbarHeight,
+                    insets.systemWindowInsetRight, insets.systemWindowInsetBottom
                     + resources.getDimensionPixelOffset(R.dimen.size_fab) + margin*2)
 
             if (ViewCompat.getLayoutDirection(drawer_layout) == ViewCompat.LAYOUT_DIRECTION_LTR) {
                 menu_toolbar_super.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, 0, 0)
                 menu_recycler_super.setPadding(insets.systemWindowInsetLeft, 0, 0, 0)
-                menu_recycler.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
+                menu_recycler.setPadding(0, insets.systemWindowInsetTop + toolbarHeight, 0, insets.systemWindowInsetBottom)
             } else {
                 menu_toolbar_super.setPadding(0, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
                 menu_recycler_super.setPadding(0, 0, insets.systemWindowInsetRight, 0)
-                menu_recycler.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
+                menu_recycler.setPadding(0, insets.systemWindowInsetTop + toolbarHeight, 0, insets.systemWindowInsetBottom)
             }
 
             val ll = fab.layoutParams as ViewGroup.MarginLayoutParams
@@ -82,6 +91,7 @@ class FragmentMain : BaseFragment(), Toolbar.OnMenuItemClickListener {
 
         fab.setOnClickListener{ v->
             navigateAddItem.onClick(v)
+
 //            Database.deleteAll(mActivity)
         }
 

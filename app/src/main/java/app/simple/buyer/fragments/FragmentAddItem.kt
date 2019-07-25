@@ -7,22 +7,23 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
-import app.simple.buyer.R
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.util.Utils
 import com.google.android.material.appbar.AppBarLayout
 
+
+
 class FragmentAddItem : BaseFragment() {
     override val layoutId: Int
-        get() = R.layout.fragment_add_item
+        get() = app.simple.buyer.R.layout.fragment_add_item
 
     override val title: Int
-        get() = R.string.app_name
+        get() = app.simple.buyer.R.string.app_name
 
-    private val base_layout by lazy { mActivity.findViewById<LinearLayout>(R.id.base_layout) }
-    private val add_appbar by lazy { mActivity.findViewById<AppBarLayout>(R.id.add_appbar) }
-    private val editText by lazy { mActivity.findViewById<EditText>(R.id.editText) }
-    private val recyclerList by lazy { mActivity.findViewById<RecyclerView>(R.id.recyclerList) }
+    private val base_layout by lazy { mActivity.findViewById<LinearLayout>(app.simple.buyer.R.id.base_layout) }
+    private val add_appbar by lazy { mActivity.findViewById<AppBarLayout>(app.simple.buyer.R.id.add_appbar) }
+    private val editText by lazy { mActivity.findViewById<EditText>(app.simple.buyer.R.id.editText) }
+    private val recyclerList by lazy { mActivity.findViewById<RecyclerView>(app.simple.buyer.R.id.recyclerList) }
 
     private lateinit var adapter: FoodAdapter
 
@@ -44,6 +45,8 @@ class FragmentAddItem : BaseFragment() {
 
 
         adapter = FoodAdapter(BuyItem.getListAsync(realm, ""))
+//        (recyclerList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        recyclerList.itemAnimator = null
         recyclerList.layoutManager = LinearLayoutManager(mActivity)
         recyclerList.adapter = adapter
 
@@ -51,7 +54,7 @@ class FragmentAddItem : BaseFragment() {
     }
 
     fun onTextChanged(text: String){
-        adapter.updateData(BuyItem.getListAsync(realm, text.trim()))
+        adapter.updateDataNoClear(BuyItem.getListAsync(realm, text.trim()))
     }
 
     override fun onResume() {

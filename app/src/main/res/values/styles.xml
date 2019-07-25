@@ -9,13 +9,13 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="colorToolbar">@color/ColorBackgroundGrey200</item>
+        <item name="colorToolbar">#bfe1e3ea</item>
         <item name="colorToolbarText">@color/colorTextBlack</item>
         <item name="colorStatusBar">@color/colorPrimaryDark</item>
         <item name="bgSelectable">@drawable/layer_list</item>
         <item name="colorFab">@android:color/white</item>
         <item name="colorSectionHeader">@color/ColorBackgroundGrey100</item>
-        <item name="colorBackground">@color/ColorBackgroundGrey50</item>
+        <item name="colorBackground">#ffe1e3ea</item>
 
         <item name="colorText">                 @color/colorTextBlack</item>
         <item name="colorTextDisabled">         @color/colorTextBlackDisabled</item>
@@ -40,13 +40,13 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="colorToolbar">@color/ColorBackgroundGrey800</item>
+        <item name="colorToolbar">@color/colorBackgroundDarkTransparent</item>
         <item name="colorToolbarText">@color/colorTextWhite</item>
         <item name="colorStatusBar">@color/colorPrimaryDark</item>
         <item name="bgSelectable">@drawable/layer_list_light</item>
         <item name="colorFab">@color/ColorBackgroundGrey800</item>
         <item name="colorSectionHeader">@color/ColorBackgroundGrey800</item>
-        <item name="colorBackground">@color/ColorBackgroundGrey850</item>
+        <item name="colorBackground">@color/colorBackgroundDark</item>
 
         <item name="colorText">                 @color/colorTextWhite</item>
         <item name="colorTextDisabled">         @color/colorTextWhiteDisabled</item>

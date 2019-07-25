@@ -1,9 +1,6 @@
 package app.simple.buyer.entities
 
-import io.realm.Realm
-import io.realm.RealmObject
-import io.realm.RealmQuery
-import io.realm.RealmResults
+import io.realm.*
 import io.realm.annotations.PrimaryKey
 import java.util.*
 
@@ -44,6 +41,10 @@ open class BuyItem : RealmObject() {
 
     fun getOrderString() =  String.format("%05d" , populatity) + wordCount.toString() + searchName
 
+
+    //все элементы из разных списков с таким же именем
+    var items: RealmList<BuyListItem> = RealmList()
+
     companion object {
 
         //сглаживание имени (земеняем буквы ё, и ументшаем регистр, для поиска)
@@ -65,12 +66,8 @@ open class BuyItem : RealmObject() {
             val split = name.split(' ')
             var query = getQuery(realm)
 
-            if(split.count() > 1){
-                for (s in split) {
-                    query = query.contains("searchName", smoothName(s))
-                }
-            } else {
-                query = query.contains("searchName", smoothName(name))
+            for (s in split) {
+                query = query.contains("searchName", smoothName(s))
             }
 
             return query

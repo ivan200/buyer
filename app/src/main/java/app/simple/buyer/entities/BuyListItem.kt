@@ -20,11 +20,11 @@ open class BuyListItem : RealmObject() {
     @Required
     var id: Long? = null
 
-    //id вещи, на которую ссылается этот элемент списка
-    var itemId: Long? = null
+    //Вещь, на которую ссылается этот элемент списка
+    var buyItem: BuyItem? = null
 
     //id списка, в котором этот элемент
-    var listId: Long? = null
+    var buyList: BuyList? = null
 
     //Количество (если пользователь вводил)
     var count: Long = 1
@@ -65,7 +65,7 @@ open class BuyListItem : RealmObject() {
             var sumPrice = 0f
             getQuery()
                     .equalTo("listId", listId)
-                    .findAll().forEach { x -> x.itemId?.let { sumPrice += Realm.getDefaultInstance().getById<BuyItem>(it)?.price!! } }
+                    .findAll().forEach { x -> x.buyItem?.id?.let { sumPrice += Realm.getDefaultInstance().getById<BuyItem>(it)?.price!! } }
             return sumPrice
         }
 

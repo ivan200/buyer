@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.R
 import app.simple.buyer.entities.BuyItem
+import app.simple.buyer.util.views.RealmRecyclerViewAdapter
 import io.realm.OrderedRealmCollection
-import io.realm.RealmRecyclerViewAdapter
 
 class FoodAdapter (data: OrderedRealmCollection<BuyItem>) :
         RealmRecyclerViewAdapter<BuyItem, FoodAdapter.FoodHolder>(data, true) {
