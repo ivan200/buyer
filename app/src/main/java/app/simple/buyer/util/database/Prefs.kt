@@ -48,4 +48,7 @@ class Prefs(context: Context) {
     var listsOrderType by AnyPref(context, OrderType.CREATED)
     var listsSortAscending by AnyPref(context, true)
     var darkTheme by AnyPref(context, true)
+
+    var mainScrollPosition by AnyPref(context, 0)
+    var mainMenuScrollPosition by AnyPref(context, 0)
 }

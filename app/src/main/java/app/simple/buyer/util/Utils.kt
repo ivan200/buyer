@@ -2,6 +2,8 @@
 
 package app.simple.buyer.util
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -638,6 +640,27 @@ object Utils {
             setBackground(view, bitmapDrawable)
         } catch (e: Exception) {
             Log.e(TAG, "Exception while tiling the background of the view")
+        }
+    }
+
+    fun changeViewVisibilityWithAnimation(view: View,  show: Boolean){
+        view.clearAnimation()
+        if (show) {
+            view.animate().alpha(1.0f)
+                    ?.setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationStart(animation: Animator?) {
+                            super.onAnimationStart(animation)
+                            view.visibility = View.VISIBLE
+                        }
+                    })
+        } else {
+            view.animate().alpha(0.0f)
+                    ?.setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            view.visibility = View.INVISIBLE
+                        }
+                    })
         }
     }
 

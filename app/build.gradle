@@ -40,8 +40,8 @@ dependencies {
     //appcompat
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0-alpha06'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.1.0-alpha06'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0-beta02'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.1.0-beta02'
 
     //Logging
     implementation "ch.acra:acra-mail:$acraVersion"

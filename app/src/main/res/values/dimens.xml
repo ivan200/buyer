@@ -53,4 +53,6 @@
     <dimen name="button_text_padding">16dp</dimen>
 
 
+    <dimen name="appbar_shadow_size">5dp</dimen>
+
 </resources>

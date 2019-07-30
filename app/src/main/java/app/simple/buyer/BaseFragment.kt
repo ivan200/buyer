@@ -2,14 +2,18 @@ package app.simple.buyer
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.util.hide
 import app.simple.buyer.util.show
 import com.google.android.material.appbar.AppBarLayout
@@ -84,7 +88,31 @@ abstract class BaseFragment : Fragment(), IEmptyView {
         }
     }
 
+
+    fun getToolbarHeight(): Int {
+        var toolbarHeight = 0
+        val tv = TypedValue()
+        if (mActivity.theme.resolveAttribute(androidx.appcompat.R.attr.actionBarSize, tv, true)) {
+            toolbarHeight = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+        }
+        return toolbarHeight
+    }
+
     fun showError(throwable: Throwable) {
         mActivity.showError(throwable)
     }
+
+    fun setRecyclerPaddings(rView: RecyclerView, insets: WindowInsetsCompat? = null){
+        val toolbarHeight = getToolbarHeight()
+        val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
+
+        //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
+        if (Build.VERSION.SDK_INT < 21) {
+            rView.setPadding(rView.paddingLeft, toolbarHeight, rView.paddingRight, resources.getDimensionPixelOffset(R.dimen.size_fab) + margin * 2)
+        } else if(insets != null){
+            rView.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop + toolbarHeight,
+                    insets.systemWindowInsetRight, insets.systemWindowInsetBottom + resources.getDimensionPixelOffset(R.dimen.size_fab) + margin * 2)
+        }
+    }
+
 }

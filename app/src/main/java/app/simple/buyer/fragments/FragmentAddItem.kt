@@ -1,13 +1,16 @@
 package app.simple.buyer.fragments
 
+import android.content.res.Configuration
 import android.view.View
 import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
+import app.simple.buyer.R
 import app.simple.buyer.entities.BuyItem
+import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.Utils
 import com.google.android.material.appbar.AppBarLayout
 
@@ -15,15 +18,17 @@ import com.google.android.material.appbar.AppBarLayout
 
 class FragmentAddItem : BaseFragment() {
     override val layoutId: Int
-        get() = app.simple.buyer.R.layout.fragment_add_item
+        get() = R.layout.fragment_add_item
 
     override val title: Int
-        get() = app.simple.buyer.R.string.app_name
+        get() = R.string.app_name
 
-    private val base_layout by lazy { mActivity.findViewById<LinearLayout>(app.simple.buyer.R.id.base_layout) }
-    private val add_appbar by lazy { mActivity.findViewById<AppBarLayout>(app.simple.buyer.R.id.add_appbar) }
-    private val editText by lazy { mActivity.findViewById<EditText>(app.simple.buyer.R.id.editText) }
-    private val recyclerList by lazy { mActivity.findViewById<RecyclerView>(app.simple.buyer.R.id.recyclerList) }
+    private val base_layout by lazy { view!!.findViewById<RelativeLayout>(R.id.base_layout) }
+    private val add_appbar by lazy { view!!.findViewById<AppBarLayout>(R.id.add_appbar) }
+    private val editText by lazy { view!!.findViewById<EditText>(R.id.editText) }
+    private val recyclerList by lazy { view!!.findViewById<RecyclerView>(R.id.recyclerList) }
+    private val shadow by lazy { view!!.findViewById<View>(R.id.shadow_view) }
+    private var shadowToggler: ShadowRecyclerSwitcher? = null
 
     private lateinit var adapter: FoodAdapter
 
@@ -33,34 +38,38 @@ class FragmentAddItem : BaseFragment() {
             setDisplayHomeAsUpEnabled(true)
         }
         ViewCompat.setOnApplyWindowInsetsListener(base_layout) { _, insets ->
+            setRecyclerPaddings(recyclerList, insets)
             add_appbar.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
-            recyclerList.setPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
             insets.consumeSystemWindowInsets()
         }
-
-//        val adapter = MultiCellTypeAdapter(mActivity, this::showError)
-//        recyclerList.layoutManager = LinearLayoutManager(mActivity)
-//        recyclerList.adapter = adapter
-//        adapter.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
-
+        setRecyclerPaddings(recyclerList)
 
         adapter = FoodAdapter(BuyItem.getListAsync(realm, ""))
-//        (recyclerList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         recyclerList.itemAnimator = null
         recyclerList.layoutManager = LinearLayoutManager(mActivity)
         recyclerList.adapter = adapter
 
         editText.addTextChangedListener(Utils.simpleTextWatcher (this::onTextChanged))
+
+        shadowToggler = ShadowRecyclerSwitcher(recyclerList, shadow)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        setRecyclerPaddings(recyclerList)
     }
 
     fun onTextChanged(text: String){
+        if((recyclerList.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() > 0){
+            recyclerList.scrollToPosition(0)
+        }
         adapter.updateDataNoClear(BuyItem.getListAsync(realm, text.trim()))
     }
 
     override fun onResume() {
         super.onResume()
         editText.post {
-            Utils.showKeyboard(mActivity, editText)
+            Utils.showKeyBoard2(editText)
         }
     }
 

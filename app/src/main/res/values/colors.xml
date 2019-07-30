@@ -40,7 +40,7 @@
     <color name="ColorBackgroundGrey50">#fffafafa</color>
     <color name="colorBackground">#fafafa</color>
     <color name="colorBackgroundDark">#FF202125</color>
-    <color name="colorBackgroundDarkTransparent">#E6202125</color>
+    <color name="colorBackgroundDarkTransparent">#f2202125</color>
 
     <color name="colorCheckboxGreen">#4caf50</color>
     <color name="colorCheckboxRed">#D50000</color>

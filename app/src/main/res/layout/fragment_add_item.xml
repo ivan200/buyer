@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<app.simple.buyer.util.views.WindowInsetsLinearLayout
+<app.simple.buyer.util.views.WindowInsetsRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/base_layout"
@@ -7,18 +7,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorBackground"
+        android:clipToPadding="false"
+        />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/add_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorToolbar"
+        app:elevation="0dp"
         >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:theme="@style/ToolBarStyle"
             >
 
             <LinearLayout
@@ -44,7 +52,6 @@
                     android:id="@+id/doneButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/margin_default"
                     android:background="@color/colorTransparent"
                     android:focusable="true"
                     android:text="Готово"
@@ -54,12 +61,12 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerList"
+    <View
+        android:id="@+id/shadow_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:colorBackground"
-        android:clipToPadding="false"
-        />
+        android:layout_height="@dimen/appbar_shadow_size"
+        android:layout_below="@id/add_appbar"
+        android:background="@drawable/dropshadow"
+        android:visibility="invisible"/>
 
-</app.simple.buyer.util.views.WindowInsetsLinearLayout>
+</app.simple.buyer.util.views.WindowInsetsRelativeLayout>

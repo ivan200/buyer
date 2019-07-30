@@ -9,7 +9,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="colorToolbar">#bfe1e3ea</item>
+        <item name="colorToolbar">#f2e1e3ea</item>
         <item name="colorToolbarText">@color/colorTextBlack</item>
         <item name="colorStatusBar">@color/colorPrimaryDark</item>
         <item name="bgSelectable">@drawable/layer_list</item>

@@ -51,6 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/colorToolbar"
+                    app:elevation="0dp"
                     >
 
                     <androidx.appcompat.widget.Toolbar
@@ -60,6 +61,15 @@
                         />
 
                 </com.google.android.material.appbar.AppBarLayout>
+
+                <View
+                    android:layout_below="@id/menu_toolbar_super"
+                    android:id="@+id/menu_shadow_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/appbar_shadow_size"
+                    android:visibility="invisible"
+                    android:background="@drawable/dropshadow" />
+
             </RelativeLayout>
         </com.google.android.material.navigation.NavigationView>
 
