@@ -16,18 +16,16 @@ import com.google.android.material.appbar.AppBarLayout
 
 
 
-class FragmentAddItem : BaseFragment() {
-    override val layoutId: Int
-        get() = R.layout.fragment_add_item
+class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
 
     override val title: Int
         get() = R.string.app_name
 
-    private val base_layout by lazy { view!!.findViewById<RelativeLayout>(R.id.base_layout) }
-    private val add_appbar by lazy { view!!.findViewById<AppBarLayout>(R.id.add_appbar) }
-    private val editText by lazy { view!!.findViewById<EditText>(R.id.editText) }
-    private val recyclerList by lazy { view!!.findViewById<RecyclerView>(R.id.recyclerList) }
-    private val shadow by lazy { view!!.findViewById<View>(R.id.shadow_view) }
+    private val base_layout by lazy { mView.findViewById<RelativeLayout>(R.id.base_layout) }
+    private val add_appbar by lazy { mView.findViewById<AppBarLayout>(R.id.add_appbar) }
+    private val editText by lazy { mView.findViewById<EditText>(R.id.editText) }
+    private val recyclerList by lazy { mView.findViewById<RecyclerView>(R.id.recyclerList) }
+    private val shadow by lazy { mView.findViewById<View>(R.id.shadow_view) }
     private var shadowToggler: ShadowRecyclerSwitcher? = null
 
     private lateinit var adapter: FoodAdapter

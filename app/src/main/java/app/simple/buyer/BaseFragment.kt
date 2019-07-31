@@ -18,44 +18,36 @@ import app.simple.buyer.util.hide
 import app.simple.buyer.util.show
 import com.google.android.material.appbar.AppBarLayout
 
-abstract class BaseFragment : Fragment(), IEmptyView {
+abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), IEmptyView {
     abstract val title: Int
-    abstract val layoutId: Int
     abstract fun initialize(view: View)
 
     val mActivity  by lazy { activity as BaseActivity }
     val realm by lazy { mActivity.realm }
 
     override val emptyData: EmptyData? = null
-    override val emptyView by lazy { view!!.findViewById<View?>(R.id.emptyView) }
-    override val emptyImageView by lazy { view!!.findViewById<ImageView?>(R.id.emptyImageView) }
-    override val emptyTextTitle by lazy { view!!.findViewById<TextView?>(R.id.emptyTextTitle) }
-    override val emptyTextSubTitle by lazy { view!!.findViewById<TextView?>(R.id.emptyTextSubTitle) }
+    override val emptyView by lazy { mView.findViewById<View?>(R.id.emptyView) }
+    override val emptyImageView by lazy { mView.findViewById<ImageView?>(R.id.emptyImageView) }
+    override val emptyTextTitle by lazy { mView.findViewById<TextView?>(R.id.emptyTextTitle) }
+    override val emptyTextSubTitle by lazy { mView.findViewById<TextView?>(R.id.emptyTextSubTitle) }
 
-    val toolbar by lazy { view!!.findViewById<Toolbar?>(R.id.toolbar) }
-    val app_bar_layout by lazy { view!!.findViewById<AppBarLayout?>(R.id.app_bar_layout) }
-    var linkToView: View? = null
-    var initCount = 0
+    val toolbar by lazy { mView.findViewById<Toolbar?>(R.id.toolbar) }
+    val app_bar_layout by lazy { mView.findViewById<AppBarLayout?>(R.id.app_bar_layout) }
+
+    lateinit var mView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        if(linkToView == null){
-            linkToView = inflater.inflate(layoutId, container, false)
-        }
-        initCount++
-        return linkToView
-    }
+        if(!::mView.isInitialized){
+            mView = super.onCreateView(inflater, container, savedInstanceState)!!
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if(initCount <2) {
             if (toolbar != null) {
                 mActivity.setSupportActionBar(toolbar)
                 mActivity.title = getText(title)
-                toolbar!!.setNavigationOnClickListener { mActivity.onBackPressed() }
+                toolbar?.setNavigationOnClickListener { mActivity.onBackPressed() }
             }
-            initialize(linkToView!!)
+            initialize(mView)
         }
+        return mView
     }
 
     override fun toggleEmptyScreen(show: Boolean) {

@@ -25,30 +25,28 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
 
-class FragmentMain : BaseFragment(), Toolbar.OnMenuItemClickListener {
-    override val layoutId: Int
-        get() = R.layout.fragment_main
+class FragmentMain : BaseFragment(R.layout.fragment_main), Toolbar.OnMenuItemClickListener {
 
     override val title: Int
         get() = R.string.app_name
 
-    private val main_base_layout by lazy { view!!.findViewById<LinearLayout>(R.id.main_base_layout) }
+    private val main_base_layout by lazy { mView.findViewById<LinearLayout>(R.id.main_base_layout) }
 
-    private val drawer_layout by lazy { view!!.findViewById<DrawerLayout>(R.id.drawer_layout) }
+    private val drawer_layout by lazy { mView.findViewById<DrawerLayout>(R.id.drawer_layout) }
 
-    private val menu_toolbar by lazy { view!!.findViewById<Toolbar>(R.id.menu_toolbar) }
-    private val menu_recycler by lazy { view!!.findViewById<RecyclerView>(R.id.menu_recycler) }
-    private val menu_toolbar_super by lazy { view!!.findViewById<AppBarLayout>(R.id.menu_toolbar_super) }
-    private val menu_recycler_super by lazy { view!!.findViewById<FrameLayout>(R.id.menu_recycler_super) }
+    private val menu_toolbar by lazy { mView.findViewById<Toolbar>(R.id.menu_toolbar) }
+    private val menu_recycler by lazy { mView.findViewById<RecyclerView>(R.id.menu_recycler) }
+    private val menu_toolbar_super by lazy { mView.findViewById<AppBarLayout>(R.id.menu_toolbar_super) }
+    private val menu_recycler_super by lazy { mView.findViewById<FrameLayout>(R.id.menu_recycler_super) }
 
-    private val recyclerView by lazy { view!!.findViewById<RecyclerView>(R.id.main_recycler) }
-    private val shadow by lazy { view!!.findViewById<View>(R.id.shadow_view) }
+    private val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.main_recycler) }
+    private val shadow by lazy { mView.findViewById<View>(R.id.shadow_view) }
     private var mainShadowToggler: ShadowRecyclerSwitcher? = null
     private var menuShadowToggler: ShadowRecyclerSwitcher? = null
 
-    private val nav_view by lazy { view!!.findViewById<NavigationView>(R.id.nav_view) }
-    private val fab by lazy { view!!.findViewById<FloatingActionButton>(R.id.fab) }
-    private val menu_shadow by lazy { view!!.findViewById<View>(R.id.menu_shadow_view) }
+    private val nav_view by lazy { mView.findViewById<NavigationView>(R.id.nav_view) }
+    private val fab by lazy { mView.findViewById<FloatingActionButton>(R.id.fab) }
+    private val menu_shadow by lazy { mView.findViewById<View>(R.id.menu_shadow_view) }
 
     private val navigateAddItem = Navigation.createNavigateOnClickListener(R.id.action_fragmentMain_to_fragmentAddItem, Bundle())
     private val navigateEditLists = Navigation.createNavigateOnClickListener(R.id.action_fragmentMain_to_fragmentEditLists, Bundle())

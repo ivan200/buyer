@@ -3,7 +3,7 @@ package app.simple.buyer.fragments
 import android.content.res.Configuration
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,18 +15,15 @@ import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class FragmentEditLists : BaseFragment() {
-    override val layoutId: Int
-        get() = R.layout.fragment_edit_lists
-
+class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists) {
     override val title: Int
         get() = R.string.app_name
 
-    private val lists_fab by lazy { view!!.findViewById<FloatingActionButton>(R.id.lists_fab) }
-    private val lists_base_layout by lazy { view!!.findViewById<LinearLayout>(R.id.lists_base_layout) }
-    private val rv_edit_lists by lazy { view!!.findViewById<RecyclerView>(R.id.rv_edit_lists) }
+    private val lists_fab by lazy { mView.findViewById<FloatingActionButton>(R.id.lists_fab) }
+    private val lists_base_layout by lazy { mView.findViewById<RelativeLayout>(R.id.lists_base_layout) }
+    private val rv_edit_lists by lazy { mView.findViewById<RecyclerView>(R.id.rv_edit_lists) }
 
-    private val shadow by lazy { view!!.findViewById<View>(R.id.shadow_view) }
+    private val shadow by lazy { mView.findViewById<View>(R.id.shadow_view) }
     private var shadowToggler: ShadowRecyclerSwitcher? = null
 
     override fun initialize(view: View) {

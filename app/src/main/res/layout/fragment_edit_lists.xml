@@ -31,12 +31,4 @@
 
     <include layout="@layout/view_toolbar"/>
 
-    <View
-        android:id="@+id/shadow_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/appbar_shadow_size"
-        android:layout_below="@id/app_bar_layout"
-        android:background="@drawable/dropshadow"
-        android:visibility="invisible"/>
-
 </app.simple.buyer.util.views.WindowInsetsRelativeLayout>
