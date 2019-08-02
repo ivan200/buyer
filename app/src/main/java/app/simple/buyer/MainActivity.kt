@@ -6,10 +6,7 @@ import androidx.navigation.findNavController
 import app.simple.buyer.util.database.Database
 
 
-class MainActivity : BaseActivity() {
-
-    override val layoutId: Int
-        get() = R.layout.activity_main
+class MainActivity : BaseActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +24,9 @@ class MainActivity : BaseActivity() {
 //    }
 
     override fun onBackPressed() {
-        findNavController(R.id.fragment_main).let { if (!it.popBackStack()) finish() }
+        findNavController(R.id.fragment_main).let {
+
+            if (!it.popBackStack()) finish()
+        }
     }
 }

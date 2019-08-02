@@ -47,15 +47,6 @@
                     android:textColor="?android:textColorPrimary"
                     android:textColorHint="?attr/colorTextHint"
                     android:singleLine="true"/>
-
-                <Button
-                    android:id="@+id/doneButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorTransparent"
-                    android:focusable="true"
-                    android:text="Готово"
-                    />
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>

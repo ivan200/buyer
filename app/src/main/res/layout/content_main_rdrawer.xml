@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<app.simple.buyer.util.views.WindowInsetsLinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    tools:context="app.simple.buyer.MainActivity">
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+        android:id="@+id/drawer_right_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:openDrawer="start"
+        tools:openDrawer="end"
         >
 
-        <include layout="@layout/content_main_rdrawer"/>
+        <include layout="@layout/content_main"/>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:layout_gravity="end"
             android:fitsSystemWindows="false"
             >
 
             <fragment
-                android:id="@+id/fragment_main_menu"
-                class="app.simple.buyer.fragments.FragmentMainMenu"
+                android:id="@+id/fragment_right_panel"
+                class="app.simple.buyer.fragments.FragmentAddItem"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:layout="@layout/fragment_main_menu"
+                tools:layout="@layout/fragment_add_item"
                 />
 
         </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
-</app.simple.buyer.util.views.WindowInsetsLinearLayout>
+
+</FrameLayout>

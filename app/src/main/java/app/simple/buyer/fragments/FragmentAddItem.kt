@@ -4,7 +4,7 @@ import android.content.res.Configuration
 import android.view.View
 import android.widget.EditText
 import android.widget.RelativeLayout
-import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
@@ -31,15 +31,10 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
     private lateinit var adapter: FoodAdapter
 
     override fun initialize(view: View) {
-        mActivity.supportActionBar?.apply {
-            setDisplayShowHomeEnabled(true)
-            setDisplayHomeAsUpEnabled(true)
-        }
-        ViewCompat.setOnApplyWindowInsetsListener(base_layout) { _, insets ->
-            setRecyclerPaddings(recyclerList, insets)
-            add_appbar.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
-            insets.consumeSystemWindowInsets()
-        }
+//        mActivity.supportActionBar?.apply {
+//            setDisplayShowHomeEnabled(true)
+//            setDisplayHomeAsUpEnabled(true)
+//        }
         setRecyclerPaddings(recyclerList)
 
         adapter = FoodAdapter(BuyItem.getListAsync(realm, ""))
@@ -50,6 +45,12 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
         editText.addTextChangedListener(Utils.simpleTextWatcher (this::onTextChanged))
 
         shadowToggler = ShadowRecyclerSwitcher(recyclerList, shadow)
+    }
+
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+        setRecyclerPaddings(recyclerList, insets)
+        add_appbar.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
+        return super.onApplyWindowInsets(v, insets)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -66,13 +67,13 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
 
     override fun onResume() {
         super.onResume()
-        editText.post {
-            Utils.showKeyBoard2(editText)
-        }
+//        editText.post {
+//            Utils.showKeyBoard2(editText)
+//        }
     }
 
     override fun onPause() {
-        Utils.hideKeyboard2(mActivity, editText)
+//        Utils.hideKeyboard2(mActivity, editText)
         super.onPause()
     }
 }

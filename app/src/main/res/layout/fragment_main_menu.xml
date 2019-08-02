@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<app.simple.buyer.util.views.WindowInsetsRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_base_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/menu_recycler_super"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorBackground">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/menu_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorBackground"
+            android:clipToPadding="false"
+            />
+    </FrameLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/menu_toolbar_super"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorToolbar"
+        app:elevation="0dp"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/menu_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <View
+        android:id="@+id/menu_shadow_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/appbar_shadow_size"
+        android:layout_below="@id/menu_toolbar_super"
+        android:background="@drawable/dropshadow"
+        android:visibility="invisible"/>
+
+
+</app.simple.buyer.util.views.WindowInsetsRelativeLayout>

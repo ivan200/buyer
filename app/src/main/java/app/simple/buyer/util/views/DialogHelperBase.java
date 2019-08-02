@@ -95,7 +95,7 @@ public abstract class DialogHelperBase {
         }
 
         if ((errorIcon == null && throwable != null) || (errorIcon != null && errorIcon)) {
-            int errorIconId = getErrorIconId();
+            int errorIconId = getErrorIconId(builder.getContext());
             if (errorIconId == 0) {
                 errorIconId = android.R.drawable.stat_notify_error;
             }
@@ -231,7 +231,7 @@ public abstract class DialogHelperBase {
         return false;
     }
 
-    protected int getErrorIconId(){
+    protected int getErrorIconId(Context context){
         TypedValue typedValueAttr = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.alertDialogIcon, typedValueAttr, true);
         return typedValueAttr.resourceId;

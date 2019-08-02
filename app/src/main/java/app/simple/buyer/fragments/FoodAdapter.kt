@@ -10,9 +10,7 @@ import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.util.views.RealmRecyclerViewAdapter
 import io.realm.OrderedRealmCollection
 
-class FoodAdapter (data: OrderedRealmCollection<BuyItem>) :
-        RealmRecyclerViewAdapter<BuyItem, FoodAdapter.FoodHolder>(data, true) {
-
+class FoodAdapter(data: OrderedRealmCollection<BuyItem>) : RealmRecyclerViewAdapter<BuyItem, FoodAdapter.FoodHolder>(data, true) {
     init {
         setHasStableIds(true)
     }
@@ -22,13 +20,14 @@ class FoodAdapter (data: OrderedRealmCollection<BuyItem>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.cell_main_menu, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.cell_add_item, parent, false)
         return FoodHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: FoodHolder, position: Int) {
         holder.bind(getItem(position)!!)
     }
+
 
 
     inner class FoodHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {

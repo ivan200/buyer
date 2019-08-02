@@ -31,6 +31,8 @@ inline val <T : Any> T.logger: Logger get() = Logger.getLogger(this.TAG)
 //Realm
 //
 
+
+
 fun <T : RealmObject> RealmResults<out T>.copy(): List<T> {
     return this.realm.copyFromRealm(this)
 }

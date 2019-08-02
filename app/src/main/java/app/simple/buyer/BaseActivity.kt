@@ -8,8 +8,7 @@ import app.simple.buyer.util.views.DialogHelper
 import io.realm.Realm
 
 
-abstract class BaseActivity : AppCompatActivity() {
-    abstract val layoutId: Int
+abstract class BaseActivity(val layoutId: Int) : AppCompatActivity() {
 
     var realm: Realm = Realm.getDefaultInstance()
     private var onResumeHandler: Function0<Unit>? = null
@@ -24,7 +23,7 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
     }
-
+    
     override fun onResume() {
         super.onResume()
 

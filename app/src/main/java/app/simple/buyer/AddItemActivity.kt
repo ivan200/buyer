@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -21,7 +20,6 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     private val toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
-    private val doneButton by lazy { findViewById<Button>(R.id.doneButton) }
     private val editText by lazy { findViewById<EditText>(R.id.editText) }
     private val recyclerList by lazy { findViewById<RecyclerView>(R.id.recyclerList) }
 
@@ -37,11 +35,11 @@ class AddItemActivity : AppCompatActivity() {
 
 
 //        var equalTo = realm.where(BuyItem::class.java).equalTo("name", "ffdsfdsf").findAll()
-        doneButton.setOnClickListener {
-            addItem(editText.text.toString())
-            onBackPressed()
-            overridePendingTransition(0, 0)
-        }
+//        doneButton.setOnClickListener {
+//            addItem(editText.text.toString())
+//            onBackPressed()
+//            overridePendingTransition(0, 0)
+//        }
 
         editText.setOnEditorActionListener { textView, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {

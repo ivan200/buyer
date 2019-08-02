@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -18,22 +20,22 @@ import app.simple.buyer.util.hide
 import app.simple.buyer.util.show
 import com.google.android.material.appbar.AppBarLayout
 
-abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), IEmptyView {
+abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), IEmptyView, OnApplyWindowInsetsListener {
     abstract val title: Int
+
     abstract fun initialize(view: View)
-
     val mActivity  by lazy { activity as BaseActivity }
-    val realm by lazy { mActivity.realm }
 
+    val realm by lazy { mActivity.realm }
     override val emptyData: EmptyData? = null
+
     override val emptyView by lazy { mView.findViewById<View?>(R.id.emptyView) }
     override val emptyImageView by lazy { mView.findViewById<ImageView?>(R.id.emptyImageView) }
     override val emptyTextTitle by lazy { mView.findViewById<TextView?>(R.id.emptyTextTitle) }
     override val emptyTextSubTitle by lazy { mView.findViewById<TextView?>(R.id.emptyTextSubTitle) }
-
     val toolbar by lazy { mView.findViewById<Toolbar?>(R.id.toolbar) }
-    val app_bar_layout by lazy { mView.findViewById<AppBarLayout?>(R.id.app_bar_layout) }
 
+    val app_bar_layout by lazy { mView.findViewById<AppBarLayout?>(R.id.app_bar_layout) }
     lateinit var mView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -45,9 +47,15 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
                 mActivity.title = getText(title)
                 toolbar?.setNavigationOnClickListener { mActivity.onBackPressed() }
             }
+
+            ViewCompat.setOnApplyWindowInsetsListener(mView, this)
             initialize(mView)
         }
         return mView
+    }
+
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+        return insets.consumeSystemWindowInsets()
     }
 
     override fun toggleEmptyScreen(show: Boolean) {
@@ -79,7 +87,6 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
             }
         }
     }
-
 
     fun getToolbarHeight(): Int {
         var toolbarHeight = 0

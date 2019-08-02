@@ -8,9 +8,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.util.Consumer
 import app.simple.buyer.R
 import app.simple.buyer.util.database.Prefs
+import app.simple.buyer.util.logger
 import com.google.android.material.textfield.TextInputEditText
 import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * Created by Zakharovi on 24.01.2018.
@@ -66,10 +66,5 @@ class DialogHelper(val activity: Activity) : DialogHelperBase(activity) {
             logger.log(Level.FINE, e.message, e)
             editText.error = e.message
         }
-    }
-
-
-    companion object {
-        private val logger = Logger.getLogger(DialogHelper::class.java.name)
     }
 }

@@ -12,18 +12,9 @@
         tools:layout="@layout/fragment_main"
         >
         <action
-            android:id="@+id/action_fragmentMain_to_fragmentAddItem"
-            app:destination="@id/fragmentAddItem"/>
-        <action
             android:id="@+id/action_fragmentMain_to_fragmentEditLists"
             app:destination="@id/fragmentEditLists"/>
     </fragment>
-    <fragment
-        android:id="@+id/fragmentAddItem"
-        android:name="app.simple.buyer.fragments.FragmentAddItem"
-        android:label="FragmentAddItem"
-        tools:layout="@layout/fragment_add_item"
-        />
     <fragment
         android:id="@+id/fragmentEditLists"
         android:name="app.simple.buyer.fragments.FragmentEditLists"

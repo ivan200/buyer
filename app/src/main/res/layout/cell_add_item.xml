@@ -5,24 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/height_subheader"
+    android:gravity="center_vertical"
+    android:background="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
-
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_add"
         android:layout_width="@dimen/size_icon_clickable_area"
         android:layout_height="@dimen/size_icon_clickable_area"
-        android:background="?android:attr/selectableItemBackground"
         android:visibility="visible"
         android:scaleType="center"
         app:srcCompat="@drawable/ic_add_circle"
-        android:tint="@color/colorCheckboxGreen"
+        android:tint="@color/colorTextWhiteDisabled"
         />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:paddingBottom="@dimen/margin_half"
@@ -44,6 +44,7 @@
         android:paddingRight="@dimen/margin_default"
         android:paddingTop="@dimen/margin_half"
         android:text="2"
+        android:visibility="gone"
         android:textSize="@dimen/text_list_item_default"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -51,7 +52,7 @@
         android:layout_width="@dimen/size_icon_clickable_area"
         android:layout_height="@dimen/size_icon_clickable_area"
         android:background="?android:attr/selectableItemBackground"
-        android:visibility="visible"
+        android:visibility="gone"
         android:scaleType="center"
         app:srcCompat="@drawable/ic_clear"
         android:tint="@color/colorCheckboxRed"

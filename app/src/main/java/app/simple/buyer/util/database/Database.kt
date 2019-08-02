@@ -3,6 +3,7 @@ package app.simple.buyer.util.database
 import android.content.Context
 import android.os.AsyncTask
 import app.simple.buyer.Constants
+import app.simple.buyer.R
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.util.count
@@ -53,7 +54,7 @@ object Database {
         val realm = Realm.getDefaultInstance()
 
         val items = arrayListOf<BuyItem>()
-        val inputStream = context.resources.openRawResource(app.simple.buyer.R.raw.food)
+        val inputStream = context.resources.openRawResource(R.raw.food)
         val inputReader = InputStreamReader(inputStream)
         val bufReader = BufferedReader(inputReader)
         var line = bufReader.readLine()
