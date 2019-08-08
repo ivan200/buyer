@@ -9,9 +9,6 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.acra.ACRA
 import org.acra.annotation.AcraCore
-import java.util.logging.ConsoleHandler
-import java.util.logging.Level
-import java.util.logging.Logger
 
 
 /**
@@ -27,12 +24,15 @@ class BuyerApp : Application() {
         initRealm(this)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
-        val consoleHandler = ConsoleHandler()
-        consoleHandler.level = Level.FINEST
-        Logger.getLogger("").apply {
-            level = Level.FINEST
-            addHandler(consoleHandler)
-        }
+//        val consoleHandler = ConsoleHandler()
+//        consoleHandler.level = Level.FINEST
+//        Logger.getLogger("").apply {
+//            level = Level.FINEST
+//            addHandler(consoleHandler)
+//        }
+
+
+
 
 //        LogManager.getLogManager().reset()
 //        val rootLogger = LogManager.getLogManager().getLogger("")

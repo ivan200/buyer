@@ -23,7 +23,7 @@ abstract class BaseActivity(val layoutId: Int) : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
     }
-    
+
     override fun onResume() {
         super.onResume()
 

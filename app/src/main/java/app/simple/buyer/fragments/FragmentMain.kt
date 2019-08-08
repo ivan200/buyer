@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.util.ShadowRecyclerSwitcher
+import app.simple.buyer.util.TAG
 import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
@@ -23,6 +24,13 @@ import com.google.android.material.navigation.NavigationView
 
 
 class FragmentMain : BaseFragment(R.layout.fragment_main) {
+
+    enum class DrawerPos {
+        START_OPENING,
+        FINISH_OPENING,
+        START_CLOSING,
+        FINISH_CLOSING
+    }
 
     override val title: Int
         get() = R.string.app_name
@@ -55,6 +63,26 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
         fab.setOnClickListener { v ->
             rightDrawer.openDrawer(GravityCompat.END)
         }
+
+        val rightToggle = object : ActionBarDrawerToggle(mActivity, rightDrawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            override fun onDrawerStateChanged(newState: Int) {
+                super.onDrawerStateChanged(newState)
+                val drawerOpen = rightDrawer.isDrawerOpen(GravityCompat.END)
+                val pos = when {
+                    !drawerOpen && (newState == DrawerLayout.STATE_SETTLING || newState == DrawerLayout.STATE_DRAGGING) -> DrawerPos.START_OPENING
+                    drawerOpen && newState == DrawerLayout.STATE_IDLE -> DrawerPos.FINISH_OPENING
+                    drawerOpen && (newState == DrawerLayout.STATE_SETTLING || newState == DrawerLayout.STATE_DRAGGING) -> DrawerPos.START_CLOSING
+                    !drawerOpen && newState == DrawerLayout.STATE_IDLE -> DrawerPos.FINISH_CLOSING
+                    else -> null
+                }
+                if(pos != null) {
+                    val fragmentAddItem = (this@FragmentMain).childFragmentManager.fragments.find { it.TAG == FragmentAddItem::class.java.simpleName } as? FragmentAddItem
+                    fragmentAddItem?.posChanged(pos)
+                }
+            }
+        }
+        rightDrawer.addDrawerListener(rightToggle)
+
         adapter = MultiCellTypeAdapter(mActivity, this::showError)
         recyclerView.layoutManager = LinearLayoutManager(mActivity)
         recyclerView.adapter = adapter

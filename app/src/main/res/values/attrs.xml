@@ -8,6 +8,7 @@
         <attr name="colorFab" format="color"/>
         <attr name="colorSectionHeader" format="color"/>
         <attr name="bgSelectable" format="reference"/>
+        <attr name="icAdd" format="reference"/>
 
         <attr name="colorText" format="color"/>
         <attr name="colorTextDisabled" format="color"/>

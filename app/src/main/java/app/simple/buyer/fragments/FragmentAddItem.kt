@@ -1,7 +1,9 @@
 package app.simple.buyer.fragments
 
 import android.content.res.Configuration
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.RelativeLayout
 import androidx.core.view.WindowInsetsCompat
@@ -13,7 +15,6 @@ import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.Utils
 import com.google.android.material.appbar.AppBarLayout
-
 
 
 class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
@@ -44,6 +45,12 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
 
         editText.addTextChangedListener(Utils.simpleTextWatcher (this::onTextChanged))
 
+        editText.setOnEditorActionListener { v, actionId, event ->
+            if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_NEXT) {
+                (v as EditText).text.clear()
+            }
+            false
+        }
         shadowToggler = ShadowRecyclerSwitcher(recyclerList, shadow)
     }
 
@@ -63,6 +70,18 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
             recyclerList.scrollToPosition(0)
         }
         adapter.updateDataNoClear(BuyItem.getListAsync(realm, text.trim()))
+    }
+
+    fun posChanged(pos: FragmentMain.DrawerPos){
+        when(pos){
+            FragmentMain.DrawerPos.START_OPENING -> Utils.showKeyBoard2(editText)
+            FragmentMain.DrawerPos.FINISH_OPENING -> Utils.showKeyBoard2(editText)
+            FragmentMain.DrawerPos.START_CLOSING -> Utils.hideKeyboard2(mActivity, editText)
+            FragmentMain.DrawerPos.FINISH_CLOSING -> {
+                editText.text.clear()
+                Utils.hideKeyboard2(mActivity, editText)
+            }
+        }
     }
 
     override fun onResume() {

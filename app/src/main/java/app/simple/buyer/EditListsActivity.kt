@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.util.Consumer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.simple.buyer.adapters.EditListsRecyclerViewAdapter
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.OrderType
 import app.simple.buyer.util.database.Prefs
@@ -28,7 +27,7 @@ class EditListsActivity : AppCompatActivity() {
         const val ActivityCode = 124
     }
 
-    var adapter: EditListsRecyclerViewAdapter? = null
+//    var adapter: EditListsRecyclerViewAdapter? = null
 
     private var menu: Menu? = null
 
@@ -64,9 +63,9 @@ class EditListsActivity : AppCompatActivity() {
 //                    .setAction("Action", null).show()
         }
 
-        adapter = EditListsRecyclerViewAdapter(BuyList.getAllOrdered())
+//        adapter = EditListsRecyclerViewAdapter(BuyList.getAllOrdered())
 
-        rv.adapter = adapter
+//        rv.adapter = adapter
         rv.setHasFixedSize(true)
         rv.layoutManager = LinearLayoutManager(this)
     }
@@ -145,13 +144,13 @@ class EditListsActivity : AppCompatActivity() {
             R.id.item_order_hand -> {
                 menu?.setGroupVisible(R.id.group_normal_mode, false)
                 menu?.setGroupVisible(R.id.group_reorder_mode, true)
-                adapter?.enableReorderMode(true)
+//                adapter?.enableReorderMode(true)
                 item.isChecked = true
             }
             R.id.item_action_clear -> {
                 menu?.setGroupVisible(R.id.group_reorder_mode, false)
                 menu?.setGroupVisible(R.id.group_normal_mode, true)
-                adapter?.enableReorderMode(false)
+//                adapter?.enableReorderMode(false)
             }
 
             android.R.id.home -> {

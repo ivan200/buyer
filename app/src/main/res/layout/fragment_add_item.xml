@@ -27,27 +27,23 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:paddingStart="0dp"
+            android:paddingLeft="0dp"
+            android:paddingEnd="@dimen/margin_default"
+            android:paddingRight="@dimen/margin_default"
             >
 
-            <LinearLayout
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editText"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_toolbar"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/margin_default"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="Что добавить"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPersonName"
-                    android:textColor="?android:textColorPrimary"
-                    android:textColorHint="?attr/colorTextHint"
-                    android:singleLine="true"/>
-            </LinearLayout>
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:hint="Что добавить"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences"
+                android:singleLine="true"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?attr/colorTextHint"/>
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
