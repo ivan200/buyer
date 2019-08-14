@@ -15,7 +15,8 @@ import app.simple.buyer.util.showIf
 import app.simple.buyer.util.views.RealmRecyclerViewAdapter
 import io.realm.OrderedRealmCollection
 
-class FoodAdapter(data: OrderedRealmCollection<BuyItem>) : RealmRecyclerViewAdapter<BuyItem, FoodAdapter.FoodHolder>(data, true) {
+class FoodAdapter(data: OrderedRealmCollection<BuyItem>,
+                  val onItemClicked: Function0<Unit>) : RealmRecyclerViewAdapter<BuyItem, FoodAdapter.FoodHolder>(data, true) {
     init {
         setHasStableIds(true)
     }
@@ -49,8 +50,6 @@ class FoodAdapter(data: OrderedRealmCollection<BuyItem>) : RealmRecyclerViewAdap
         }
 
         fun bind(data: BuyItem?) {
-
-
             tvTitle.text = data?.name
             updateView()
         }
@@ -63,7 +62,7 @@ class FoodAdapter(data: OrderedRealmCollection<BuyItem>) : RealmRecyclerViewAdap
         override fun onClick(v: View?) {
             count++
             updateView()
-
+            this@FoodAdapter.onItemClicked.invoke()
 //            Prefs.currentDocId = dataVar.id
 //
 //            navigateOnClickListener.onClick(v)
@@ -89,5 +88,4 @@ class FoodAdapter(data: OrderedRealmCollection<BuyItem>) : RealmRecyclerViewAdap
             }
         }
     }
-
 }

@@ -1,10 +1,8 @@
 package app.simple.buyer.fragments
 
-import android.content.res.Configuration
 import android.view.View
-import android.view.ViewGroup
 import android.widget.RelativeLayout
-import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
@@ -31,22 +29,7 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists) {
             setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }
-        ViewCompat.setOnApplyWindowInsetsListener(lists_base_layout) { _, insets ->
-            val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
 
-            app_bar_layout?.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
-            setRecyclerPaddings(rv_edit_lists, insets)
-
-            val ll = lists_fab.layoutParams as ViewGroup.MarginLayoutParams
-
-            ll.bottomMargin = margin + insets.systemWindowInsetBottom
-            ll.rightMargin = margin + insets.systemWindowInsetRight
-            ll.leftMargin = margin + insets.systemWindowInsetLeft
-            lists_fab.layoutParams = ll
-
-            insets.consumeSystemWindowInsets()
-        }
-        setRecyclerPaddings(rv_edit_lists)
 
         val adapter = MultiCellTypeAdapter(mActivity, this::showError)
         rv_edit_lists.layoutManager = LinearLayoutManager(mActivity)
@@ -56,9 +39,9 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists) {
         shadowToggler = ShadowRecyclerSwitcher(rv_edit_lists, shadow, Prefs(mActivity).mainMenuScrollPosition) { pos -> Prefs(mActivity).mainMenuScrollPosition = pos }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        setRecyclerPaddings(rv_edit_lists)
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+        setRecyclerPaddings(rv_edit_lists, app_bar_layout, lists_fab, insets)
+        return super.onApplyWindowInsets(v, insets)
     }
 
 }

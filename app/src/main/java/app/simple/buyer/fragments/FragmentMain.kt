@@ -1,10 +1,7 @@
 package app.simple.buyer.fragments
 
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
@@ -25,7 +22,7 @@ import com.google.android.material.navigation.NavigationView
 
 class FragmentMain : BaseFragment(R.layout.fragment_main) {
 
-    enum class DrawerPos {
+    enum class DrawerPosition {
         START_OPENING,
         FINISH_OPENING,
         START_CLOSING,
@@ -58,8 +55,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        setRecyclersPaddings()
-
         fab.setOnClickListener { v ->
             rightDrawer.openDrawer(GravityCompat.END)
         }
@@ -69,15 +64,15 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
                 super.onDrawerStateChanged(newState)
                 val drawerOpen = rightDrawer.isDrawerOpen(GravityCompat.END)
                 val pos = when {
-                    !drawerOpen && (newState == DrawerLayout.STATE_SETTLING || newState == DrawerLayout.STATE_DRAGGING) -> DrawerPos.START_OPENING
-                    drawerOpen && newState == DrawerLayout.STATE_IDLE -> DrawerPos.FINISH_OPENING
-                    drawerOpen && (newState == DrawerLayout.STATE_SETTLING || newState == DrawerLayout.STATE_DRAGGING) -> DrawerPos.START_CLOSING
-                    !drawerOpen && newState == DrawerLayout.STATE_IDLE -> DrawerPos.FINISH_CLOSING
+                    !drawerOpen && (newState == DrawerLayout.STATE_SETTLING || newState == DrawerLayout.STATE_DRAGGING) -> DrawerPosition.START_OPENING
+                    drawerOpen && newState == DrawerLayout.STATE_IDLE -> DrawerPosition.FINISH_OPENING
+                    drawerOpen && (newState == DrawerLayout.STATE_SETTLING || newState == DrawerLayout.STATE_DRAGGING) -> DrawerPosition.START_CLOSING
+                    !drawerOpen && newState == DrawerLayout.STATE_IDLE -> DrawerPosition.FINISH_CLOSING
                     else -> null
                 }
                 if(pos != null) {
                     val fragmentAddItem = (this@FragmentMain).childFragmentManager.fragments.find { it.TAG == FragmentAddItem::class.java.simpleName } as? FragmentAddItem
-                    fragmentAddItem?.posChanged(pos)
+                    fragmentAddItem?.rightDrawerPositionChanged(pos)
                 }
             }
         }
@@ -91,39 +86,12 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
         mainShadowToggler = ShadowRecyclerSwitcher(recyclerView, shadow, Prefs(mActivity).mainScrollPosition) { pos -> Prefs(mActivity).mainScrollPosition = pos }
     }
 
-    //Выставление отступов у вьюх так как на вью прозрачный тулбар, статусбар, и навигейшенбар
-    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+        setRecyclerPaddings(recyclerView, app_bar_layout, fab, insets)
         childFragmentManager.fragments.forEach {
             (it as? BaseFragment)?.onApplyWindowInsets(v, insets)
         }
-
-        setRecyclersPaddings(insets)
-        app_bar_layout?.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
-
-        val ll = fab.layoutParams as ViewGroup.MarginLayoutParams
-        val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
-        ll.bottomMargin = margin + insets.systemWindowInsetBottom
-        ll.rightMargin = margin + insets.systemWindowInsetRight
-        ll.leftMargin = margin + insets.systemWindowInsetLeft
-        fab.layoutParams = ll
         return super.onApplyWindowInsets(v, insets)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        setRecyclersPaddings()
-    }
-
-    fun setRecyclersPaddings(insets: WindowInsetsCompat? = null){
-        val toolbarHeight = getToolbarHeight()
-        val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
-
-        //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
-        if (Build.VERSION.SDK_INT < 21) {
-            recyclerView.setPadding(recyclerView.paddingLeft, toolbarHeight, recyclerView.paddingRight, resources.getDimensionPixelOffset(R.dimen.size_fab) + margin * 2)
-        } else if(insets != null){
-            recyclerView.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop + toolbarHeight,
-                    insets.systemWindowInsetRight, insets.systemWindowInsetBottom + resources.getDimensionPixelOffset(R.dimen.size_fab) + margin * 2)
-        }
-    }
 }

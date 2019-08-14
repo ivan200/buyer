@@ -12,7 +12,7 @@
     <string name="title_add_item_activity">Добавление продукта</string>
 
 
-
+    <string name="lists_title">Списки</string>
 
     <string name="dialog_add_list_title">Добавление списка</string>
     <string name="dialog_add_list_hint">Название списка</string>

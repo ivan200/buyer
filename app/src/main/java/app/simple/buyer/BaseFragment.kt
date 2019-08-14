@@ -2,6 +2,7 @@ package app.simple.buyer
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.util.hide
 import app.simple.buyer.util.show
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), IEmptyView, OnApplyWindowInsetsListener {
     abstract val title: Int
@@ -48,14 +50,27 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
                 toolbar?.setNavigationOnClickListener { mActivity.onBackPressed() }
             }
 
-            ViewCompat.setOnApplyWindowInsetsListener(mView, this)
+            if (Build.VERSION.SDK_INT >= 21) {
+                ViewCompat.setOnApplyWindowInsetsListener(mView, this)
+            } else{
+                //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
+                onApplyWindowInsets(mView, null)
+            }
             initialize(mView)
         }
         return mView
     }
 
-    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
-        return insets.consumeSystemWindowInsets()
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (Build.VERSION.SDK_INT < 21) {
+            //На телефонах со старыми api при изменении лейаута onApplyWindowInsetsListener не сработает, потому вызываем ручками
+            onApplyWindowInsets(mView, null)
+        }
+    }
+
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+        return insets?.consumeSystemWindowInsets()
     }
 
     override fun toggleEmptyScreen(show: Boolean) {
@@ -101,17 +116,38 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
         mActivity.showError(throwable)
     }
 
-    fun setRecyclerPaddings(rView: RecyclerView, insets: WindowInsetsCompat? = null){
+
+
+    fun setRecyclerPaddings(rView: RecyclerView?, appBar: AppBarLayout?, fab: FloatingActionButton?,
+                            insets: WindowInsetsCompat? = null, usePaddingLeft: Boolean = true, usePaddingRight: Boolean = true){
         val toolbarHeight = getToolbarHeight()
         val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
 
-        //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
-        if (Build.VERSION.SDK_INT < 21) {
-            rView.setPadding(rView.paddingLeft, toolbarHeight, rView.paddingRight, resources.getDimensionPixelOffset(R.dimen.size_fab) + margin * 2)
-        } else if(insets != null){
-            rView.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop + toolbarHeight,
-                    insets.systemWindowInsetRight, insets.systemWindowInsetBottom + resources.getDimensionPixelOffset(R.dimen.size_fab) + margin * 2)
+        val fabOffset = if(fab == null) 0 else resources.getDimensionPixelOffset(R.dimen.size_fab) + margin * 2
+
+        if(insets != null) {
+            val rtl = resources.getBoolean(R.bool.is_rtl)
+            val useLeft = if(rtl) usePaddingRight else usePaddingLeft
+            val useRight = if(rtl) usePaddingLeft else usePaddingRight
+
+            val insetLeft = if(useLeft) insets.systemWindowInsetLeft else 0
+            val insetRight =  if(useRight) insets.systemWindowInsetRight else 0
+
+            appBar?.setPadding(insetLeft, insets.systemWindowInsetTop, insetRight, 0)
+
+            if(fab != null){
+                val ll = fab.layoutParams as ViewGroup.MarginLayoutParams
+                ll.bottomMargin = margin + insets.systemWindowInsetBottom
+                ll.rightMargin = margin + insetRight
+                ll.leftMargin = margin + insetLeft
+                fab.layoutParams = ll
+            }
+
+            rView?.setPadding(insetLeft, insets.systemWindowInsetTop + toolbarHeight,
+                    insetRight, insets.systemWindowInsetBottom + fabOffset)
+        } else{
+            //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
+            rView?.setPadding(rView.paddingLeft, toolbarHeight, rView.paddingRight, fabOffset)
         }
     }
-
 }

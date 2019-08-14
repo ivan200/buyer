@@ -9,47 +9,45 @@ import androidx.appcompat.app.AlertDialog
 
 abstract class DialogHelperBase(private val context: Context) {
 
-    private var title: CharSequence? = null
-    private var message: CharSequence? = null
-    private var positiveButton: CharSequence? = null
-    private var negativeButton: CharSequence? = null
-    private var neutralButton: CharSequence? = null
+    var title: CharSequence? = null                 ; private set
+    var message: CharSequence? = null               ; private set
+    var positiveButton: CharSequence? = null        ; private set
+    var negativeButton: CharSequence? = null        ; private set
+    var neutralButton: CharSequence? = null         ; private set
+    var positiveResult: Function0<Unit>? = null     ; private set
+    var negativeResult: Function0<Unit>? = null     ; private set
+    var neutralResult: Function0<Unit>? = null      ; private set
+    var cancelResult: Function0<Unit>? = null       ; private set
+    var throwable: Throwable? = null                ; private set
+    var errorIcon: Boolean? = null                  ; private set
+    var cancellable: Boolean? = null                ; private set
+    var items: Array<String>? = null                ; private set
+    var checkedItem = -1                            ; private set
+    var itemChosen: Function1<Int, Unit>? = null    ; private set
+    var checkedItems: BooleanArray? = null          ; private set
 
-    private var positiveResult: Function0<Unit>? = null
-    private var negativeResult: Function0<Unit>? = null
-    private var neutralResult: Function0<Unit>? = null
-    private var cancelResult: Function0<Unit>? = null
-    private var throwable: Throwable? = null
-    private var errorIcon: Boolean? = null
-    private var cancellable: Boolean? = null
-
-    private var items: Array<String>? = null
-    private var checkedItem = -1
-    private var itemChosen: Function1<Int, Unit>? = null
-    private var checkedItems: BooleanArray? = null
-
-    fun withTitle(title: CharSequence)                      = apply { this.title = title }
-    fun withMessage(message: CharSequence)                  = apply { this.message = message;                                     }
-    fun withPositiveButton(positiveButton: CharSequence)    = apply { this.positiveButton = positiveButton;                       }
-    fun withNegativeButton(negativeButton: CharSequence)    = apply { this.negativeButton = negativeButton;                       }
-    fun withNeutralButton(neutralButton: CharSequence)      = apply { this.neutralButton = neutralButton;                         }
-    fun withTitle(titleId: Int)                             = apply { this.title = context.getString(titleId);                    }
-    fun withMessage(messageId: Int)                         = apply { this.message = context.getString(messageId);                }
-    fun withPositiveButton(positiveButtonId: Int)           = apply { this.positiveButton = context.getString(positiveButtonId);  }
-    fun withNegativeButton(negativeButtonId: Int)           = apply { this.negativeButton = context.getString(negativeButtonId);  }
-    fun withNeutralButton(neutralButtonId: Int)             = apply { this.neutralButton = context.getString(neutralButtonId);    }
-    fun withPositiveResult(positiveResult: Function0<Unit>) = apply { this.positiveResult = positiveResult;                       }
-    fun withNegativeResult(negativeResult: Function0<Unit>) = apply { this.negativeResult = negativeResult;                       }
-    fun withNeutralResult(neutralResult: Function0<Unit>)   = apply { this.neutralResult = neutralResult;                         }
-    fun withCancelResult(cancelResult: Function0<Unit>)     = apply { this.cancelResult = cancelResult;                           }
-    fun withThrowable(throwable: Throwable)                 = apply { this.throwable = throwable;                                 }
-    fun withCancellable(cancellable: Boolean)               = apply { this.cancellable = cancellable;                             }
-    fun withErrorIcon()                                     = apply { this.errorIcon = true;                                      }
-    fun withoutErrorIcon()                                  = apply { this.errorIcon = false;                                     }
-    fun withItems(items: Array<String>)                     = apply { this.items = items;                                         }
-    fun withItemsChecked(checkedItems : BooleanArray)       = apply { this.checkedItems = checkedItems;                           }
-    fun withItemChecked(checkedItem: Int)                   = apply { this.checkedItem = checkedItem;                             }
-    fun withItemResult(itemChosen: Function1<Int, Unit>?)   = apply { this.itemChosen = itemChosen;                               }
+    fun withTitle(title: CharSequence)                      = apply { this.title            = title                               }
+    fun withMessage(message: CharSequence)                  = apply { this.message          = message                             }
+    fun withPositiveButton(positiveButton: CharSequence)    = apply { this.positiveButton   = positiveButton                      }
+    fun withNegativeButton(negativeButton: CharSequence)    = apply { this.negativeButton   = negativeButton                      }
+    fun withNeutralButton(neutralButton: CharSequence)      = apply { this.neutralButton    = neutralButton                       }
+    fun withTitle(titleId: Int)                             = apply { this.title            = context.getString(titleId)          }
+    fun withMessage(messageId: Int)                         = apply { this.message          = context.getString(messageId)        }
+    fun withPositiveButton(positiveButtonId: Int)           = apply { this.positiveButton   = context.getString(positiveButtonId) }
+    fun withNegativeButton(negativeButtonId: Int)           = apply { this.negativeButton   = context.getString(negativeButtonId) }
+    fun withNeutralButton(neutralButtonId: Int)             = apply { this.neutralButton    = context.getString(neutralButtonId)  }
+    fun withPositiveResult(positiveResult: Function0<Unit>) = apply { this.positiveResult   = positiveResult                      }
+    fun withNegativeResult(negativeResult: Function0<Unit>) = apply { this.negativeResult   = negativeResult                      }
+    fun withNeutralResult(neutralResult: Function0<Unit>)   = apply { this.neutralResult    = neutralResult                       }
+    fun withCancelResult(cancelResult: Function0<Unit>)     = apply { this.cancelResult     = cancelResult                        }
+    fun withThrowable(throwable: Throwable)                 = apply { this.throwable        = throwable                           }
+    fun withCancellable(cancellable: Boolean)               = apply { this.cancellable      = cancellable                         }
+    fun withErrorIcon()                                     = apply { this.errorIcon        = true                                }
+    fun withoutErrorIcon()                                  = apply { this.errorIcon        = false                               }
+    fun withItems(items: Array<String>)                     = apply { this.items            = items                               }
+    fun withItemsChecked(checkedItems : BooleanArray)       = apply { this.checkedItems     = checkedItems                        }
+    fun withItemChecked(checkedItem: Int)                   = apply { this.checkedItem      = checkedItem                         }
+    fun withItemResult(itemChosen: Function1<Int, Unit>?)   = apply { this.itemChosen       = itemChosen                          }
 
 
     fun show() {
@@ -57,10 +55,7 @@ abstract class DialogHelperBase(private val context: Context) {
 
         val builder = AlertDialog.Builder(context)
 
-        var curTitle = title
-        if (TextUtils.isEmpty(curTitle)) {
-            curTitle = context.getString(android.R.string.dialog_alert_title)
-        }
+        var curTitle = title ?: context.getString(android.R.string.dialog_alert_title)
 
         if (!TextUtils.isEmpty(curTitle)) {
             builder.setTitle(curTitle)
@@ -96,21 +91,21 @@ abstract class DialogHelperBase(private val context: Context) {
             context.getString(android.R.string.ok)
         else
             positiveButton
-        if (!TextUtils.isEmpty(positiveButtonText)) {
+        if (!positiveButtonText.isNullOrEmpty()) {
             builder.setPositiveButton(positiveButtonText) { dialog, id ->
                 positiveResult?.invoke()
                 dialog.dismiss()
             }
         }
 
-        if (!TextUtils.isEmpty(negativeButton)) {
+        if (!negativeButton.isNullOrEmpty()) {
             builder.setNegativeButton(negativeButton) { dialog, id ->
                 negativeResult?.invoke()
                 dialog.dismiss()
             }
         }
 
-        if (!TextUtils.isEmpty(neutralButton)) {
+        if (!neutralButton.isNullOrEmpty()) {
             builder.setNeutralButton(neutralButton) { dialog, id ->
                 neutralResult?.invoke()
                 dialog.dismiss()
@@ -163,7 +158,7 @@ abstract class DialogHelperBase(private val context: Context) {
         }
         dialog.show()
 
-        if (!TextUtils.isEmpty(currMessage) && items == null) {
+        if (!currMessage.isNullOrEmpty() && items == null) {
             fixDialogViewMinHeight(dialog)
         }
     }

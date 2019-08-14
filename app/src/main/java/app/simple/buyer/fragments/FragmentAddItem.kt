@@ -1,6 +1,5 @@
 package app.simple.buyer.fragments
 
-import android.content.res.Configuration
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -32,13 +31,8 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
     private lateinit var adapter: FoodAdapter
 
     override fun initialize(view: View) {
-//        mActivity.supportActionBar?.apply {
-//            setDisplayShowHomeEnabled(true)
-//            setDisplayHomeAsUpEnabled(true)
-//        }
-        setRecyclerPaddings(recyclerList)
-
-        adapter = FoodAdapter(BuyItem.getListAsync(realm, ""))
+        adapter = FoodAdapter(BuyItem.getListAsync(realm, ""), this::onItemAdded)
+        recyclerList.setHasFixedSize(true)
         recyclerList.itemAnimator = null
         recyclerList.layoutManager = LinearLayoutManager(mActivity)
         recyclerList.adapter = adapter
@@ -54,45 +48,38 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
         shadowToggler = ShadowRecyclerSwitcher(recyclerList, shadow)
     }
 
-    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
-        setRecyclerPaddings(recyclerList, insets)
-        add_appbar.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, 0)
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+        setRecyclerPaddings(recyclerList, add_appbar, null, insets, usePaddingLeft = false, usePaddingRight = true)
         return super.onApplyWindowInsets(v, insets)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        setRecyclerPaddings(recyclerList)
+    var blockItemUpdateOnce = false
+
+    fun onItemAdded(){
+        blockItemUpdateOnce = true
+        editText.text.clear()
     }
 
     fun onTextChanged(text: String){
+        if(blockItemUpdateOnce){
+            blockItemUpdateOnce = false
+            return
+        }
         if((recyclerList.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() > 0){
             recyclerList.scrollToPosition(0)
         }
         adapter.updateDataNoClear(BuyItem.getListAsync(realm, text.trim()))
     }
 
-    fun posChanged(pos: FragmentMain.DrawerPos){
+    fun rightDrawerPositionChanged(pos: FragmentMain.DrawerPosition){
         when(pos){
-            FragmentMain.DrawerPos.START_OPENING -> Utils.showKeyBoard2(editText)
-            FragmentMain.DrawerPos.FINISH_OPENING -> Utils.showKeyBoard2(editText)
-            FragmentMain.DrawerPos.START_CLOSING -> Utils.hideKeyboard2(mActivity, editText)
-            FragmentMain.DrawerPos.FINISH_CLOSING -> {
+            FragmentMain.DrawerPosition.START_OPENING -> Utils.showKeyBoard2(editText)
+            FragmentMain.DrawerPosition.FINISH_OPENING -> Utils.showKeyBoard2(editText)
+            FragmentMain.DrawerPosition.START_CLOSING -> Utils.hideKeyboard2(mActivity, editText)
+            FragmentMain.DrawerPosition.FINISH_CLOSING -> {
                 editText.text.clear()
                 Utils.hideKeyboard2(mActivity, editText)
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        editText.post {
-//            Utils.showKeyBoard2(editText)
-//        }
-    }
-
-    override fun onPause() {
-//        Utils.hideKeyboard2(mActivity, editText)
-        super.onPause()
     }
 }
