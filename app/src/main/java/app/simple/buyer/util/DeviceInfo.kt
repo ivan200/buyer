@@ -239,7 +239,7 @@ object DeviceInfo {
     @SuppressLint("MissingPermission", "NewApi")
     private fun getCellInfo(context: Context): String? {
         var additional_info = ""
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
 
             val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager ?: return null
             //User must have Manifest.permission.ACCESS_COARSE_LOCATION
@@ -262,7 +262,7 @@ object DeviceInfo {
                         + "physical cell " + cellIdentityLte.pci + "\n"
                         + "Tracking area code " + cellIdentityLte.tac + "\n")
             } else if (cellInfo is CellInfoWcdma) {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     val cellIdentityWcdma = cellInfo.cellIdentity
                     additional_info = ("cell identity " + cellIdentityWcdma.cid + "\n"
                             + "Mobile country code " + cellIdentityWcdma.mcc + "\n"
@@ -552,100 +552,48 @@ object DeviceInfo {
 
     fun getDeviceAvailableSpaceMB(f: File): Float {
         val stat = StatFs(f.path)
-        val bytesAvailable: Long
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            bytesAvailable = stat.blockSizeLong * stat.availableBlocksLong
+        val bytesAvailable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            stat.blockSizeLong * stat.availableBlocksLong
         } else {
-            bytesAvailable = stat.blockSize.toLong() * stat.availableBlocks.toLong()
+            stat.blockSize.toLong() * stat.availableBlocks.toLong()
         }
         return bytesAvailable / (1024f * 1024f)
     }
 
-    //Получение вообще всех установленных приложений
-    fun getDeviceInstalledApps(context: Context, includeSystem: Boolean): List<String> {
-        val packages = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
-        val allApps = ArrayList<String>()
-        for (pkg in packages) {
-            allApps.add(pkg.packageName)
-        }
-        if (includeSystem) {
-            return allApps
-        }
-        //убираем системные
-        val appsNoSystem = ArrayList<String>()
-        for (app in allApps) {
-            if (!isSystemPackage(context, app)) {
-                appsNoSystem.add(app)
-            }
-        }
-        return appsNoSystem
+    //Получение вообще всех установленных приложений исключая системные
+    fun getDeviceInstalledApps(context: Context): List<String> {
+        return context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+                .filter {!isSystemPackage(it)}
+                .map { it.packageName }
     }
 
-    //Получение всех приложений, работающих в данный момент (включая или не включая системные)
-    fun getDeviceRunningApps(context: Context, includeSystem: Boolean): List<String> {
+    //Получение всех приложений, работающих в данный момент (не включая системные)
+    fun getDeviceRunningApps(context: Context): List<String> {
         val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningApps: MutableSet<String> = mutableSetOf()
 
-        var runningApps: MutableList<String> = ArrayList()
+        try { activityManager.runningAppProcesses } catch (ex: Exception) { null }
+                ?.flatMap { it.pkgList.asList() }
+                ?.let { runningApps.addAll(it) }
 
-        //получаем работающие приложения
-        try {
-            val runAppsList = activityManager.runningAppProcesses
-            for (process in runAppsList) {
-                for (pkg in process.pkgList) {
-                    runningApps.add(pkg)
-                }
-            }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
+        try { activityManager.getRunningTasks(1000) } catch (ex: Exception) { null }
+                ?.map { it.topActivity.packageName }
+                ?.let { runningApps.addAll(it) }
 
-        //Из всех работающих задач получаем приложения, которые их запустили
-        //Может вызвать securityException на api<18 (требуется "android.permission.GET_TASKS")
-        try {
-            val runningTasks = activityManager.getRunningTasks(1000)
-            for (task in runningTasks) {
-                runningApps.add(task.topActivity.packageName)
-            }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
+        try { activityManager.getRunningServices(1000) } catch (ex: Exception) { null }
+                ?.map { it.service.packageName }
+                ?.let { runningApps.addAll(it) }
 
-        //получаем все работающие сервисы
-        try {
-            val runningServices = activityManager.getRunningServices(1000)
-            for (runningService in runningServices) {
-                runningApps.add(runningService.service.packageName)
-            }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-
-        //убираем повторяющиеся
-        runningApps = ArrayList(HashSet(runningApps))
-
-        //Убираем системные
-        if (!includeSystem) {
-            for (i in runningApps.indices.reversed()) {
-                val app = runningApps[i]
-                if (isSystemPackage(context, app)) {
-                    runningApps.removeAt(i)
-                }
-            }
-        }
-        return runningApps
+        return runningApps.filter { !isSystemPackage(context, it) }
     }
 
-    //Проверка, является ли переданное приложение системным, или нет
-    private fun isSystemPackage(context: Context, app: String): Boolean {
-        val packageManager = context.packageManager
-        try {
-            val pkgInfo = packageManager.getPackageInfo(app, 0)
-            return pkgInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
+    //Проверка, явлсется ли переданное приложение системным, или нет
+    fun isSystemPackage(context: Context, app: String): Boolean {
+        return try {context.packageManager.getPackageInfo(app, 0)} catch (ex: Exception) {null}
+                ?.let { isSystemPackage(it.applicationInfo) } == true
+    }
 
-        return false
+    fun isSystemPackage(applicationInfo: ApplicationInfo): Boolean {
+        return applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
     }
 }

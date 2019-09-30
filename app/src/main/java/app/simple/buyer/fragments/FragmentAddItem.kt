@@ -71,12 +71,12 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
         adapter.updateDataNoClear(BuyItem.getListAsync(realm, text.trim()))
     }
 
-    fun rightDrawerPositionChanged(pos: FragmentMain.DrawerPosition){
+    fun rightDrawerPositionChanged(pos: FragmentMain.DrawerState){
         when(pos){
-            FragmentMain.DrawerPosition.START_OPENING -> Utils.showKeyBoard2(editText)
-            FragmentMain.DrawerPosition.FINISH_OPENING -> Utils.showKeyBoard2(editText)
-            FragmentMain.DrawerPosition.START_CLOSING -> Utils.hideKeyboard2(mActivity, editText)
-            FragmentMain.DrawerPosition.FINISH_CLOSING -> {
+            FragmentMain.DrawerState.START_OPENING -> Utils.showKeyBoard2(editText)
+            FragmentMain.DrawerState.FINISH_OPENING -> Utils.showKeyBoard2(editText)
+            FragmentMain.DrawerState.START_CLOSING -> Utils.hideKeyboard2(mActivity, editText)
+            FragmentMain.DrawerState.FINISH_CLOSING -> {
                 editText.text.clear()
                 Utils.hideKeyboard2(mActivity, editText)
             }

@@ -2,16 +2,16 @@ package app.simple.buyer.util.database
 
 import android.content.Context
 import android.os.AsyncTask
-import app.simple.buyer.Constants
 import app.simple.buyer.R
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyList
+import app.simple.buyer.entities.BuyListItem
+import app.simple.buyer.util.contains
 import app.simple.buyer.util.count
 import app.simple.buyer.util.update
 import io.realm.Realm
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.util.*
 
 
 object Database {
@@ -41,6 +41,7 @@ object Database {
 
         AsyncTask.execute {
             initItems(context)
+            initLists(context)
         }
     }
 
@@ -59,14 +60,16 @@ object Database {
         val bufReader = BufferedReader(inputReader)
         var line = bufReader.readLine()
 
-        var catId = 0L
+        var parent: BuyItem? = null
         while (!line.isNullOrBlank()) {
-
-            val newItem = createBuyItem(line.trim())
-            if(!line.startsWith('\t')){
-                catId = newItem.id
+            val newItem = BuyItem(line.trim())
+            if (!line.startsWith('\t')) {
+                parent = newItem
             } else {
-                newItem.parentId = catId
+                parent?.let {
+                    newItem.parentItem = it
+                    it.subItems.add(newItem)
+                }
             }
 
             items.add(newItem)
@@ -82,63 +85,39 @@ object Database {
 
 
     //Добавление элемента покупок по имени в определённый список
-    fun checkAddItem(realm: Realm, currentListId: Long, itemName: String){
+    fun checkAddItem(realm: Realm, currentList: BuyList, itemName: String, context: Context){
         //Проверяем, есть ли такой элемент в словаре
-        val item = BuyItem.getByName(realm, itemName)
-        if(item != null){
-            checkAddItem(realm, currentListId, item)
-        } else{
-            //Если нет, то создаём и пихаем в словарик
-            val newBuyItem = createBuyItem(itemName)
-            newBuyItem.parentId = Constants.CUSTOM_CAT_ID
+        var item = BuyItem.getByName(realm, itemName)
+        if(item == null){
+            //Ищем категорию других товаров, если нет то создаём
+            val other = context.getString(R.string.cat_other)
+            val otherCat = BuyItem.getByName(realm, other) ?: BuyItem(other)
+
+            item = BuyItem(itemName, otherCat)
+            otherCat.subItems.add(item)
+
             realm.executeTransaction {
-                newBuyItem.update(it)
+                otherCat.update(it)
+                item.update(it)
             }
-            checkAddItem(realm, currentListId, newBuyItem)
+        }
+        //Если в списке в текущем списке нет элемента с таким же названием, добавляем
+        if(!currentList.items.contains {it.buyItem?.id == item.id}){
+            val buyListItem = BuyListItem(item, currentList)
+            currentList.items.add(buyListItem)
+
+            realm.executeTransaction {
+                buyListItem.update(it)
+                currentList.update(it)
+            }
         }
     }
 
-    //Добавление элемента покупок когда у нас уже точно есть элемент в словарике
-    fun checkAddItem(realm: Realm, currentListId: Long, buyItem: BuyItem){
-
-//        val item = BuyListItem.getByName(realm, itemName)
-//
-//        val createBuyItem = createBuyListItem(buyItem.id, currentListId)
-
-
-
-
-
-
-
+    fun initLists(context: Context){
+        val newBuyList = BuyList("Продукты")
+        Prefs(context).currentListId = newBuyList.id
     }
 
-    fun initLists(){
-        createBuyList("Продукты")
-
-
-
-
-    }
-
-    fun createBuyItem(foodName: String): BuyItem {
-        return BuyItem().apply {
-            id = PrimaryKeyFactory.nextKey<BuyItem>()
-            name = foodName
-            searchName = BuyItem.smoothName(foodName)
-            wordCount = foodName.count { c -> c.isWhitespace() } + 1
-            orderCombineString = getOrderString()
-        }
-    }
-
-    fun createBuyList(listName: String): BuyList {
-        return BuyList().apply {
-            id = PrimaryKeyFactory.nextKey<BuyList>()
-            name = listName
-            modified = Date()
-            created = Date()
-        }
-    }
 
 //    fun createBuyListItem(buyItemId: Long, buyListId: Long): BuyListItem {
 //        return BuyListItem().apply {

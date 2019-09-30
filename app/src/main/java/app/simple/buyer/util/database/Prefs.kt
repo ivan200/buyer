@@ -8,7 +8,7 @@ import kotlin.reflect.KProperty
 
 class Prefs(context: Context) {
 
-    class AnyPref<T : Any>(val context: Context, val default: T) {
+    class AnyPref<T : Any>(val context: Context,  val default: T) {
         @Suppress("UNCHECKED_CAST")
         operator fun getValue(thisRef: Any, property: KProperty<*>) = PreferenceManager.getDefaultSharedPreferences(context).get(property.name, default) as T
         operator fun setValue(thisRef: Any, property: KProperty<*>, value: T) = PreferenceManager.getDefaultSharedPreferences(context).put(property.name, value)
@@ -44,7 +44,7 @@ class Prefs(context: Context) {
         }
     }
 
-    var currentListId by AnyPref(context, 0L)
+    var currentListId by AnyPref(context, -1L)
     var listsOrderType by AnyPref(context, OrderType.CREATED)
     var listsSortAscending by AnyPref(context, true)
     var darkTheme by AnyPref(context, true)

@@ -1,21 +1,6 @@
 package app.simple.buyer
 
-import android.graphics.Color
-import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.util.Consumer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import app.simple.buyer.entities.BuyList
-import app.simple.buyer.entities.OrderType
-import app.simple.buyer.util.database.Prefs
-import app.simple.buyer.util.views.DialogHelper
-import app.simple.buyer.util.views.MenuTintUtils
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import io.realm.Sort
 
 
 /**
@@ -23,6 +8,7 @@ import io.realm.Sort
  */
 
 class EditListsActivity : AppCompatActivity() {
+    /*
     companion object {
         const val ActivityCode = 124
     }
@@ -71,7 +57,7 @@ class EditListsActivity : AppCompatActivity() {
     }
 
 
-    private fun addList(name: String) {
+    private fun addList(name: String, realm: Realm) {
         var listByName = BuyList.getByName(name)
         if (listByName != null) {
             throw RuntimeException(baseContext.getString(R.string.dialog_add_list_error))
@@ -192,5 +178,5 @@ class EditListsActivity : AppCompatActivity() {
 //
 //        mPopupWindow.showAsDropDown(view, 0, 0 - view.height)
 //    }
-
+*/
 }

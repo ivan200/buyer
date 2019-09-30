@@ -1,12 +1,12 @@
 package app.simple.buyer.util.views
 
 import android.content.Context
-import android.text.TextUtils
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class DialogHelperBase(private val context: Context) {
 
     var title: CharSequence? = null                 ; private set
@@ -54,14 +54,9 @@ abstract class DialogHelperBase(private val context: Context) {
         throwable?.printStackTrace()
 
         val builder = AlertDialog.Builder(context)
+        builder.setTitle(title ?: context.getString(android.R.string.dialog_alert_title))
 
-        var curTitle = title ?: context.getString(android.R.string.dialog_alert_title)
-
-        if (!TextUtils.isEmpty(curTitle)) {
-            builder.setTitle(curTitle)
-        }
-
-        if (errorIcon == null && throwable != null || errorIcon != null && errorIcon!!) {
+        if (errorIcon == true || (errorIcon == null && throwable != null)) {
             var errorIconId = getErrorIconId(context)
             if (errorIconId == 0) {
                 errorIconId = android.R.drawable.stat_notify_error
@@ -82,12 +77,10 @@ abstract class DialogHelperBase(private val context: Context) {
                 }
             }
         } else {
-            if (!TextUtils.isEmpty(currMessage)) {
-                builder.setMessage(currMessage)
-            }
+            builder.setMessage(currMessage)
         }
 
-        val positiveButtonText = if (items == null && TextUtils.isEmpty(positiveButton))
+        val positiveButtonText = if (items == null && positiveButton.isNullOrEmpty())
             context.getString(android.R.string.ok)
         else
             positiveButton

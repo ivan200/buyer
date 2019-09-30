@@ -1,16 +1,15 @@
 package app.simple.buyer.fragments
 
-import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
+import app.simple.buyer.fragments.FragmentMain.DrawerState.*
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.TAG
 import app.simple.buyer.util.database.Prefs
@@ -19,10 +18,9 @@ import app.simple.buyer.util.views.MultiCellTypeAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
-
 class FragmentMain : BaseFragment(R.layout.fragment_main) {
 
-    enum class DrawerPosition {
+    enum class DrawerState {
         START_OPENING,
         FINISH_OPENING,
         START_CLOSING,
@@ -40,8 +38,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
     private var mainShadowToggler: ShadowRecyclerSwitcher? = null
     private val nav_view by lazy { mView.findViewById<NavigationView>(R.id.nav_view) }
     private val fab by lazy { mView.findViewById<FloatingActionButton>(R.id.fab) }
-
-    private val navigateEditLists = Navigation.createNavigateOnClickListener(R.id.action_fragmentMain_to_fragmentEditLists, Bundle())
 
     var adapter: MultiCellTypeAdapter? = null
 
@@ -63,17 +59,14 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)
                 val drawerOpen = rightDrawer.isDrawerOpen(GravityCompat.END)
-                val pos = when {
-                    !drawerOpen && (newState == DrawerLayout.STATE_SETTLING || newState == DrawerLayout.STATE_DRAGGING) -> DrawerPosition.START_OPENING
-                    drawerOpen && newState == DrawerLayout.STATE_IDLE -> DrawerPosition.FINISH_OPENING
-                    drawerOpen && (newState == DrawerLayout.STATE_SETTLING || newState == DrawerLayout.STATE_DRAGGING) -> DrawerPosition.START_CLOSING
-                    !drawerOpen && newState == DrawerLayout.STATE_IDLE -> DrawerPosition.FINISH_CLOSING
-                    else -> null
-                }
-                if(pos != null) {
-                    val fragmentAddItem = (this@FragmentMain).childFragmentManager.fragments.find { it.TAG == FragmentAddItem::class.java.simpleName } as? FragmentAddItem
-                    fragmentAddItem?.rightDrawerPositionChanged(pos)
-                }
+
+                val pos = if (newState == DrawerLayout.STATE_IDLE) {
+                    if (drawerOpen) FINISH_OPENING else FINISH_CLOSING
+                } else if (drawerOpen) START_CLOSING else START_OPENING
+
+                val fragmentAddItem = (this@FragmentMain).childFragmentManager.fragments
+                        .find { it.TAG == FragmentAddItem::class.java.simpleName } as? FragmentAddItem
+                fragmentAddItem?.rightDrawerPositionChanged(pos)
             }
         }
         rightDrawer.addDrawerListener(rightToggle)

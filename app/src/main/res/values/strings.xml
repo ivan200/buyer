@@ -14,6 +14,8 @@
 
     <string name="lists_title">Списки</string>
 
+    <string name="cat_other">Другое</string>
+
     <string name="dialog_add_list_title">Добавление списка</string>
     <string name="dialog_add_list_hint">Название списка</string>
     <string name="dialog_add_list_error">Данный список уже существует</string>

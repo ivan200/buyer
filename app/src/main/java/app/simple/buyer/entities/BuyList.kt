@@ -2,9 +2,10 @@ package app.simple.buyer.entities
 
 import android.content.Context
 import app.simple.buyer.util.database.Prefs
+import app.simple.buyer.util.database.PrimaryKeyFactory
+import app.simple.buyer.util.update
 import io.realm.*
 import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
 import java.util.*
 
 /**
@@ -12,79 +13,84 @@ import java.util.*
  */
 
 //Список покупок, который мы составляем
-open class BuyList : RealmObject() {
-    //Уникальный id
+open class BuyList() : RealmObject() {
+    constructor(name: String) : this() {
+        this.id = PrimaryKeyFactory.nextKey<BuyList>()
+        this.name = name
+    }
+
+    /** Уникальный id */
     @PrimaryKey
-    @Required
-    var id: Long? = null
+    var id: Long = 0
 
-    //Название списка
-    var name: String? = null
+    /** Название списка */
+    var name: String = ""
 
-    //Позиция при нестандартной сортировке
+    /** Дата создания списка */
+    var created: Date = Date()
+
+    /** Дата модификации списка */
+    var modified: Date = Date()
+
+    /** Позиция при нестандартной сортировке */
     var sortPosition: Long = 0
 
-    //Позиция при ручной сортировке
+    /** Позиция при ручной сортировке */
     var handSortPosition: Long = 0
 
-    //Дата создания списка
-    var created: Date? = null
-
-    //Дата модификации списка
-    var modified: Date? = null
-
-    //Сколько раз просматривался, или популярность
+    /** Сколько раз просматривался, или популярность */
     var populatity: Long = 0
 
-    //Скрыт список, или нет (перед удалением)
+    /** Скрыт список, или нет (перед удалением) */
     var isHidden: Boolean = false
 
-    //тип персональной сортировки данного списка (обычно сортировка внутри списка распространяется на все списки)
+    /** тип персональной сортировки данного списка (обычно сортировка внутри списка распространяется на все списки) */
     var personalOrderType: Int = OrderType.CREATED
 
-    //элементы списка покупок
+    /** элементы списка покупок */
     var items: RealmList<BuyListItem> = RealmList()
 
+
     companion object {
-        private fun getQuery() : RealmQuery<BuyList> {
-            return Realm.getDefaultInstance().where(BuyList::class.java)
+        private fun getQuery(realm: Realm) : RealmQuery<BuyList> {
+            return realm.where(BuyList::class.java)
         }
 
-        fun getAll() : RealmResults<BuyList> {
-            return getQuery().findAll()
+        fun getAll(realm: Realm) : RealmResults<BuyList> {
+            return getQuery(realm).findAll()
         }
-        fun getAllOrdered() : OrderedRealmCollection<BuyList> {
-            return getQuery().findAll().sort("sortPosition")
+        fun getAllOrdered(realm: Realm) : OrderedRealmCollection<BuyList> {
+            return getQuery(realm).findAll().sort("sortPosition")
         }
-        fun getAllOrderedByHand() : OrderedRealmCollection<BuyList> {
-            return getQuery().findAll().sort("handSortPosition")
+        fun getAllOrderedByHand(realm: Realm) : OrderedRealmCollection<BuyList> {
+            return getQuery(realm).findAll().sort("handSortPosition")
         }
 
-        fun clearHandOrder(){
-            Realm.getDefaultInstance().executeTransactionAsync {
-                getAllOrdered().forEach { buyList -> buyList.handSortPosition = buyList.sortPosition }
+        fun clearHandOrder(realm: Realm){
+            realm.executeTransactionAsync {
+                getAllOrdered(realm).forEach { buyList -> buyList.handSortPosition = buyList.sortPosition }
             }
         }
 
-        fun orderBy(context: Context, orderType: Int, sortOrder: Sort) {
+        fun orderBy(realm: Realm, context: Context, orderType: Int, sortOrder: Sort) {
             Prefs(context).listsSortAscending = if(sortOrder == Sort.ASCENDING) Sort.ASCENDING.value else Sort.DESCENDING.value
             Prefs(context).listsOrderType = orderType
             when (orderType) {
                 OrderType.ALPHABET -> {
-                    orderByField("name", sortOrder)
+                    orderByField(realm, "name", sortOrder)
                 }
                 OrderType.POPULARITY -> {
-                    orderByField("populatity", sortOrder)
+                    orderByField(realm, "populatity", sortOrder)
                 }
                 OrderType.CREATED -> {
-                    orderByField("created", sortOrder)
+                    orderByField(realm, "created", sortOrder)
                 }
                 OrderType.MODIFIED -> {
-                    orderByField("modified", sortOrder)
+                    orderByField(realm, "modified", sortOrder)
                 }
                 OrderType.SIZE -> {
-                    Realm.getDefaultInstance().executeTransactionAsync {
-                        val sort = getAllOrdered().sortedBy { l -> BuyListItem.countInList(l.id!!) }
+                    realm.executeTransactionAsync {
+                        val sort = getAllOrdered(realm).sortedBy { l -> BuyListItem.countInList(it, l.id) }
                         val indices = if (sortOrder == Sort.ASCENDING) sort.indices else sort.indices.reversed()
                         for ((k, i) in indices.withIndex()) {
                             sort[i]?.sortPosition = k.toLong()
@@ -95,30 +101,23 @@ open class BuyList : RealmObject() {
         }
 
         //Сортировка по одному из полей
-        private fun orderByField(fieldName: String, sortOrder: Sort) {
-            Realm.getDefaultInstance().executeTransactionAsync {
-                val sort = getAllOrdered().sort(fieldName, sortOrder)
+        private fun orderByField(realm: Realm, fieldName: String, sortOrder: Sort) {
+            realm.executeTransactionAsync {
+                val sort = getAllOrdered(realm).sort(fieldName, sortOrder)
                 for (i in sort.indices) {
                     sort[i]?.sortPosition = i.toLong()
                 }
             }
         }
 
-        fun getByName(name: String) : BuyList? {
-            return getQuery().equalTo("name", name).findFirst()
+        fun getByName(realm: Realm, name: String) : BuyList? {
+            return getQuery(realm).equalTo("name", name).findFirst()
         }
-        fun count(): Long {
-            return getQuery().count()
-        }
-        fun addAsync(name: String) {
-            var newList = BuyList()
-            newList.id = BuyList.count()+1
-            newList.name = name
-            newList.created = Date()
-            newList.modified = Date()
-            newList.sortPosition = BuyList.count()+1
-            Realm.getDefaultInstance().executeTransactionAsync {
-                Realm.getDefaultInstance().copyToRealm(newList)
+
+        fun addAsync(realm: Realm, name: String) {
+            val newList = BuyList(name)
+            realm.executeTransactionAsync {
+                newList.update(it)
             }
         }
     }

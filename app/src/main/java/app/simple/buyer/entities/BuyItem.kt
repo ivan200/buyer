@@ -1,5 +1,6 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.util.database.PrimaryKeyFactory
 import io.realm.*
 import io.realm.annotations.PrimaryKey
 import java.util.*
@@ -10,44 +11,54 @@ import java.util.*
  */
 
 //Вещь, которую можно купить
-open class BuyItem : RealmObject() {
-    //Уникальный id
+open class BuyItem() : RealmObject() {
+
+    constructor(name: String, parentItem: BuyItem? = null) : this() {
+        this.id = PrimaryKeyFactory.nextKey<BuyItem>()
+        this.name = name
+        this.parentItem = parentItem
+
+        searchName = smoothName(name)
+        wordCount = name.count { c -> c.isWhitespace() } + 1
+        orderCombineString = getOrderString()
+    }
+
+    /** Уникальный id */
     @PrimaryKey
     var id: Long = 0
 
-    //Название
-    var name: String? = null
+    /** Название */
+    var name: String = ""
 
-    //Название без заглавных и букв ё
-    var searchName: String? = null
+    /** Сколько раз добавлялась, или популярность */
+    var populatity : Long = 0L
 
-    //Количество слов в названии (количество пробелов + 1)
+    /** Ссылка на верхнюю категорию (если есть) */
+    var parentItem: BuyItem? = null
+
+    /** Цена, запоминается */
+    var price: String = ""
+
+    /** Название без заглавных и букв ё */
+    var searchName: String = ""
+        private set
+
+    /** Количество слов в названии (количество пробелов + 1) */
     var wordCount: Int = 0
+        private set
 
-    //Сколько раз добавлялась, или популярность
-    var populatity = 0L
-
-    //Ссылка на верхнюю категорию (если есть)
-    var parentId = 0L
-
-    //Уровень категории
-    var level = 0.0f
-
-    //Цена, запоминается
-    var price = 0.0f
-
-    //строка с данными для сортировки по ней (сортируется сначала по популярности, затем по количеству слов, затем по алфавиту
+    /** строка с данными для сортировки по ней (сортируется сначала по популярности, затем по количеству слов, затем по алфавиту */
     var orderCombineString: String? = null
+        private set
 
     fun getOrderString() =  String.format("%05d" , populatity) + wordCount.toString() + searchName
 
-
-    //все элементы из разных списков с таким же именем
-    var items: RealmList<BuyListItem> = RealmList()
+    /** все подкатегории */
+    var subItems: RealmList<BuyItem> = RealmList()
 
     companion object {
 
-        //сглаживание имени (земеняем буквы ё, и ументшаем регистр, для поиска)
+        //сглаживание имени (заменяем буквы ё и уменьшаем регистр для поиска)
         fun smoothName(name: String): String {
             return name.replace('ё', 'е')
                     .replace('Ё', 'Е')

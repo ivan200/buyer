@@ -12,11 +12,11 @@ import app.simple.buyer.util.getColorCompat
 import app.simple.buyer.util.getColorResCompat
 import app.simple.buyer.util.hide
 import app.simple.buyer.util.showIf
-import app.simple.buyer.util.views.RealmRecyclerViewAdapter
+import app.simple.buyer.util.views.RealmRecyclerViewAdapter2
 import io.realm.OrderedRealmCollection
 
 class FoodAdapter(data: OrderedRealmCollection<BuyItem>,
-                  val onItemClicked: Function0<Unit>) : RealmRecyclerViewAdapter<BuyItem, FoodAdapter.FoodHolder>(data, true) {
+                  val onItemClicked: Function0<Unit>) : RealmRecyclerViewAdapter2<BuyItem, FoodAdapter.FoodHolder>(data, true) {
     init {
         setHasStableIds(true)
     }

@@ -16,16 +16,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         } catch (e: Throwable) {
             showError(e)
         }
-
     }
-
-//    fun onInsetsChanged(){
-//        logger.log(Level.FINE, "changed")
-//    }
 
     override fun onBackPressed() {
         findNavController(R.id.fragment_main).let {
-
             if (!it.popBackStack()) finish()
         }
     }
