@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.ImageView
 import androidx.annotation.*
 import androidx.collection.LongSparseArray
@@ -224,6 +225,17 @@ fun <T : View> T.hideIf(condition: () -> Boolean): T {
 fun <T : View> T.invisibleIf(condition: () -> Boolean): T {
     return if (condition()) invisible() else show()
 }
+
+fun <T : View> T.onClick(function: () -> Unit): T {
+    setOnClickListener { function() }
+    return this
+}
+
+fun <T : CompoundButton> T.onCheckedChanged(function: (CompoundButton, Boolean) -> Unit): T {
+    setOnCheckedChangeListener(function)
+    return this
+}
+
 
 /**
  * Extension method to get a view as bitmap.

@@ -15,7 +15,7 @@
         tools:openDrawer="start"
         >
 
-        <include layout="@layout/content_main_rdrawer"/>
+        <include layout="@layout/content_main"/>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
@@ -31,6 +31,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout="@layout/fragment_main_menu"
+                />
+
+        </com.google.android.material.navigation.NavigationView>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:fitsSystemWindows="false"
+            >
+
+            <fragment
+                android:id="@+id/fragment_right_panel"
+                class="app.simple.buyer.fragments.FragmentAddItem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout="@layout/fragment_add_item"
                 />
 
         </com.google.android.material.navigation.NavigationView>

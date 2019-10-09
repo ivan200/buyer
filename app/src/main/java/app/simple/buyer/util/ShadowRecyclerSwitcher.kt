@@ -4,9 +4,14 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class ShadowRecyclerSwitcher(recyclerView: RecyclerView, val shadowView: View, scrollPos: Int = RecyclerView.NO_POSITION, val onScrollChanged: Function1<Int, Unit>? = null ) {
+class ShadowRecyclerSwitcher(
+        recyclerView: RecyclerView,
+        val shadowView: View,
+        scrollPos: Int = RecyclerView.NO_POSITION,
+        val onScrollChanged: Function1<Int, Unit>? = null) {
     private var scrollPosItem = 0
     private var shadowVisible = false
+
     init {
         scrollPosItem = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
         shadowVisible = shadowView.visibility == View.VISIBLE

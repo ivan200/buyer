@@ -1,12 +1,17 @@
 package app.simple.buyer.util
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Point
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.StatFs
 import android.provider.Settings
@@ -15,10 +20,15 @@ import android.telephony.CellInfoLte
 import android.telephony.CellInfoWcdma
 import android.telephony.TelephonyManager
 import android.text.TextUtils
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Surface
 import android.view.WindowManager
-import java.io.*
+import androidx.annotation.RequiresPermission
+import java.io.BufferedReader
+import java.io.File
+import java.io.IOException
+import java.io.InputStreamReader
 import java.math.BigInteger
 import java.net.InetSocketAddress
 import java.net.NetworkInterface
@@ -27,11 +37,13 @@ import java.text.MessageFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.math.sqrt
 
 /**
  * Created by Zakharovi on 10.01.2018.
  */
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 object DeviceInfo {
     val deviceLanguage: String
         get() = Locale.getDefault().displayLanguage
@@ -64,20 +76,20 @@ object DeviceInfo {
 
     val deviceCpuUsageUser: String
         get() {
-            val cpu_usage = cpuUsageStatistic
-            return if (cpu_usage == null) "" else cpu_usage[0].toString()
+            val cpuUsage = cpuUsageStatistic
+            return if (cpuUsage == null) "" else cpuUsage[0].toString()
         }
 
     val deviceCpuUsageSystem: String
         get() {
-            val cpu_sys = cpuUsageStatistic
-            return if (cpu_sys == null) "" else cpu_sys[1].toString()
+            val cpuSys = cpuUsageStatistic
+            return if (cpuSys == null) "" else cpuSys[1].toString()
         }
 
     val deviceCpuIDLE: String
         get() {
-            val cpu_usage = cpuUsageStatistic
-            return if (cpu_usage == null) "" else cpu_usage[2].toString()
+            val cpuUsage = cpuUsageStatistic
+            return if (cpuUsage == null) "" else cpuUsage[2].toString()
         }
 
     val deviceOSInfo: String
@@ -96,22 +108,16 @@ object DeviceInfo {
 
     val deviceKernelVersion: String
         get() {
-            try {
+            return try {
                 val p = Runtime.getRuntime().exec("uname -a")
-                var `is`: InputStream? = null
-                if (p.waitFor() == 0) {
-                    `is` = p.inputStream
-                } else {
-                    `is` = p.errorStream
-                }
+                val `is` = if (p.waitFor() == 0) p.inputStream else p.errorStream
                 val br = BufferedReader(InputStreamReader(`is`!!), 1024)
                 val line = br.readLine()
                 br.close()
-                return line
+                line
             } catch (ex: Exception) {
-                return "ERROR: " + ex.message
+                "ERROR: " + ex.message
             }
-
         }
 
 
@@ -132,7 +138,7 @@ object DeviceInfo {
      *
      * @return address or empty string
      */
-    private val IPV4_BASIC_PATTERN_STRING = "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}" + // initial 3 fields, 0-255 followed by .
+    private const val IPV4_BASIC_PATTERN_STRING = "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}" + // initial 3 fields, 0-255 followed by .
             "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])" // final field, 0-255
     private val IPV4_PATTERN = Pattern.compile("^$IPV4_BASIC_PATTERN_STRING$")
 
@@ -159,7 +165,7 @@ object DeviceInfo {
                 tempString = tempString.replace("IRQ".toRegex(), "")
                 tempString = tempString.replace("%".toRegex(), "")
                 for (i in 0..9) {
-                    tempString = tempString!!.replace("  ".toRegex(), " ")
+                    tempString = tempString!!.replace(" {2}".toRegex(), " ")
                 }
                 tempString = tempString!!.trim { it <= ' ' }
                 val myString = tempString.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -175,28 +181,80 @@ object DeviceInfo {
                 Log.e("executeTop", "error in getting cpu statics")
                 return null
             }
-
         }
 
     // TCP/HTTP/DNS (depending on the port, 53=DNS, 80=HTTP, etc.)
     //need android.permission.INTERNET
-    val isDeviceHasInternet: Boolean
+    val isDeviceHasInternetBySocket: Boolean
         get() {
-            try {
+            return try {
                 val timeoutMs = 1500
                 val sock = Socket()
-                val sockaddr = InetSocketAddress("8.8.8.8", 53)
-                sock.connect(sockaddr, timeoutMs)
+                val sockAddress = InetSocketAddress("8.8.8.8", 53)
+                sock.connect(sockAddress, timeoutMs)
                 sock.close()
-                return true
+                true
             } catch (e: IOException) {
-                return false
+                false
             }
-
         }
 
+
+    enum class InternetType(val rating: Int) {
+        NO_INTERNET(0),
+        OTHER(1),
+        MOBILE(2),
+        WIFI(3);
+
+        fun max(iType: InternetType): InternetType {
+            return if(this.rating < iType.rating) iType else this
+        }
+    }
+
+    //need android.permission.ACCESS_NETWORK_STATE and android.permission.INTERNET
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET])
+    @Suppress("DEPRECATION")
+    @SuppressLint("MissingPermission")
+    fun isDeviceHasInternetByManager(context: Context): InternetType {
+        var maxType = InternetType.NO_INTERNET
+
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cm.allNetworks
+                    ?.map {cm.getNetworkCapabilities(it)}
+                    ?.filter { it != null
+                            && it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                            && it.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)}
+                    ?.forEach {
+                        if (it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                            maxType = maxType.max(InternetType.MOBILE)
+                        }
+                        if (it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                            maxType = maxType.max(InternetType.WIFI)
+                        }
+                        maxType = maxType.max(InternetType.OTHER)
+                    }
+        } else {
+            cm.allNetworkInfo
+                    ?.filter { it.isConnected }
+                    ?.forEach {
+                        maxType = when (it.type) {
+                            ConnectivityManager.TYPE_MOBILE -> maxType.max(InternetType.MOBILE)
+                            ConnectivityManager.TYPE_WIFI -> maxType.max(InternetType.WIFI)
+                            else -> maxType.max(InternetType.OTHER)
+                        }
+                    }
+        }
+        return maxType
+    }
+
+    @Suppress("DEPRECATION")
     fun getDeviceLocalCountryCode(context: Context): String {
-        return context.resources.configuration.locale.country
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !context.resources.configuration.locales.isEmpty) {
+            context.resources.configuration.locales.get(0).country
+        } else {
+            context.resources.configuration.locale.country
+        }
     }
 
     fun getDeviceType(context: Context): String {
@@ -215,33 +273,24 @@ object DeviceInfo {
         return if (keyboardPresent) "Hardware keyboard" else "Software keyboard"
     }
 
-    @SuppressLint("MissingPermission")
+    @Suppress("DEPRECATION")
+    @SuppressLint("MissingPermission", "HardwareIds")
     fun getDeviceTelephonyInfo(context: Context): String {
-        val m_telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        val DeviceId: String
-        val SubscriberId: String
-        val NetworkOperator: String
-        val OsVersion: String
-        val SimOperatorName: String
-        DeviceId = m_telephonyManager.deviceId
-        SubscriberId = m_telephonyManager.subscriberId
-        NetworkOperator = m_telephonyManager.networkOperator
-        OsVersion = m_telephonyManager.deviceSoftwareVersion
-        SimOperatorName = m_telephonyManager.simOperatorName
-
-        return "DeviceId : " + DeviceId +
-                "\nSubscriberId : " + SubscriberId +
-                "\nNetworkOperator : " + NetworkOperator +
-                "\nSoftwareVersion : " + OsVersion +
-                "\nSimOperatorName : " + SimOperatorName
+        val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        return "DeviceId : " + tm.deviceId +
+                "\nSubscriberId : " +  tm.subscriberId +
+                "\nNetworkOperator : " + tm.networkOperator +
+                "\nSoftwareVersion : " + tm.deviceSoftwareVersion +
+                "\nSimOperatorName : " + tm.simOperatorName
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission", "NewApi")
     private fun getCellInfo(context: Context): String? {
-        var additional_info = ""
-        if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        var additionalInfo = ""
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 
-            val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager ?: return null
+            val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             //User must have Manifest.permission.ACCESS_COARSE_LOCATION
 
             val cellInfos = tm.allCellInfo
@@ -250,13 +299,13 @@ object DeviceInfo {
             if (cellInfo is CellInfoGsm) {
                 val cellInfoGsm: CellInfoGsm? = null
                 val cellIdentityGsm = cellInfoGsm!!.cellIdentity
-                additional_info = ("cell identity " + cellIdentityGsm.cid + "\n"
+                additionalInfo = ("cell identity " + cellIdentityGsm.cid + "\n"
                         + "Mobile country code " + cellIdentityGsm.mcc + "\n"
                         + "Mobile network code " + cellIdentityGsm.mnc + "\n"
                         + "local area " + cellIdentityGsm.lac + "\n")
             } else if (cellInfo is CellInfoLte) {
                 val cellIdentityLte = cellInfo.cellIdentity
-                additional_info = ("cell identity " + cellIdentityLte.ci + "\n"
+                additionalInfo = ("cell identity " + cellIdentityLte.ci + "\n"
                         + "Mobile country code " + cellIdentityLte.mcc + "\n"
                         + "Mobile network code " + cellIdentityLte.mnc + "\n"
                         + "physical cell " + cellIdentityLte.pci + "\n"
@@ -264,7 +313,7 @@ object DeviceInfo {
             } else if (cellInfo is CellInfoWcdma) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     val cellIdentityWcdma = cellInfo.cellIdentity
-                    additional_info = ("cell identity " + cellIdentityWcdma.cid + "\n"
+                    additionalInfo = ("cell identity " + cellIdentityWcdma.cid + "\n"
                             + "Mobile country code " + cellIdentityWcdma.mcc + "\n"
                             + "Mobile network code " + cellIdentityWcdma.mnc + "\n"
                             + "local area " + cellIdentityWcdma.lac + "\n")
@@ -272,9 +321,10 @@ object DeviceInfo {
 
             }
         }
-        return additional_info
+        return additionalInfo
     }
 
+    @Suppress("SameParameterValue")
     private fun getTime(date: Date, timezone: TimeZone, pattern: String): String {
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = timezone
@@ -289,12 +339,12 @@ object DeviceInfo {
             deviceUid = "12356789" // for emulator testing
         } else {
             try {
-                var _data = deviceUid.toByteArray()
-                val _digest = java.security.MessageDigest.getInstance("MD5")
-                _digest.update(_data)
-                _data = _digest.digest()
-                val _bi = BigInteger(_data).abs()
-                deviceUid = _bi.toString(36)
+                var data = deviceUid.toByteArray()
+                val digest = java.security.MessageDigest.getInstance("MD5")
+                digest.update(data)
+                data = digest.digest()
+                val bi = BigInteger(data).abs()
+                deviceUid = bi.toString(36)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -303,44 +353,35 @@ object DeviceInfo {
     }
 
     private fun capitalize(s: String?): String {
-        if (s == null || s.isEmpty()) {
-            return ""
-        }
-        val first = s[0]
-        return if (Character.isUpperCase(first)) {
-            s
-        } else {
-            Character.toUpperCase(first) + s.substring(1)
-        }
+        if (s.isNullOrEmpty()) return ""
+        return  if (Character.isUpperCase(s[0])) s else Character.toUpperCase(s[0]) + s.substring(1)
     }
 
     @SuppressLint("NewApi")
     fun getDeviceMemoryTotal(activity: Context): Long {
-        try {
+        return try {
             val mi = ActivityManager.MemoryInfo()
             val activityManager = activity.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             activityManager.getMemoryInfo(mi)
 
-            return mi.totalMem / 1048576L
+            mi.totalMem / 1048576L
         } catch (e: Exception) {
             e.printStackTrace()
-            return 0
+            0
         }
-
     }
 
     fun getDeviceMemoryFree(activity: Context): Long {
-        try {
+        return try {
             val mi = ActivityManager.MemoryInfo()
             val activityManager = activity.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             activityManager.getMemoryInfo(mi)
 
-            return mi.availMem / 1048576L
+            mi.availMem / 1048576L
         } catch (e: Exception) {
             e.printStackTrace()
-            return 0
+            0
         }
-
     }
 
     fun getDeviceMemoryUsed(context: Context): Long {
@@ -355,7 +396,6 @@ object DeviceInfo {
      */
     private fun getMACAddress(interfaceName: String?): String {
         try {
-
             val interfaces = Collections.list(NetworkInterface.getNetworkInterfaces())
             for (intf in interfaces) {
                 if (interfaceName != null) {
@@ -366,7 +406,7 @@ object DeviceInfo {
                 val buf = StringBuilder()
                 for (idx in mac.indices)
                     buf.append(String.format("%02X:", mac[idx]))
-                if (buf.length > 0)
+                if (buf.isNotEmpty())
                     buf.deleteCharAt(buf.length - 1)
                 return buf.toString()
             }
@@ -376,11 +416,11 @@ object DeviceInfo {
         // for now eat exceptions
         return ""
         /*
-             * try { // this is so Linux hack return
-             * loadFileAsString("/sys/class/net/" +interfaceName +
-             * "/address").toUpperCase().trim(); } catch (IOException ex) { return
-             * null; }
-             */
+        * try { // this is so Linux hack return
+        * loadFileAsString("/sys/class/net/" +interfaceName +
+        * "/address").toUpperCase().trim(); } catch (IOException ex) { return
+        * null; }
+        */
     }
 
     private fun isIPv4Address(input: String): Boolean {
@@ -389,49 +429,41 @@ object DeviceInfo {
 
     private fun getIPAddress(useIPv4: Boolean): String {
         try {
-            val interfaces = Collections.list(NetworkInterface.getNetworkInterfaces())
-            for (intf in interfaces) {
-                val addrs = Collections.list(intf.inetAddresses)
-                for (addr in addrs) {
-                    if (!addr.isLoopbackAddress) {
-                        val sAddr = addr.hostAddress.toUpperCase()
-                        //TODO 3.0.0
-                        val isIPv4 = isIPv4Address(sAddr)
-                        if (useIPv4) {
-                            if (isIPv4)
-                                return sAddr
-                        } else {
-                            if (!isIPv4) {
-                                val delim = sAddr.indexOf('%') // drop ip6 port
-                                // suffix
-                                return if (delim < 0) sAddr else sAddr.substring(0, delim)
+            NetworkInterface.getNetworkInterfaces().toList()
+                    .flatMap { it.inetAddresses.toList() }
+                    .filter { !it.isLoopbackAddress }
+                    .map { it.hostAddress.toUpperCase(Locale.getDefault()) }
+                    .forEach {
+                        val isIPv4 = isIPv4Address(it)
+                        when {
+                            isIPv4 && useIPv4 -> return it
+                            !isIPv4 && !useIPv4 -> {
+                                val delimiter = it.indexOf('%') // drop ip6 port
+                                return if (delimiter < 0) it else it.substring(0, delimiter)
                             }
                         }
                     }
-                }
-            }
-        } catch (ex: Exception) {
-        }
-        // for now eat exceptions
+        } catch (_: Exception) {
+        }// for now eat exceptions
         return ""
     }
 
     private fun executeTop(): String? {
-        var p: java.lang.Process? = null
-        var `in`: BufferedReader? = null
+        var p: Process? = null
+        var reader: BufferedReader? = null
         var returnString: String? = null
         try {
             p = Runtime.getRuntime().exec("top -n 1")
-            `in` = BufferedReader(InputStreamReader(p!!.inputStream))
+            reader = BufferedReader(InputStreamReader(p!!.inputStream))
             while (returnString == null || returnString.contentEquals("")) {
-                returnString = `in`.readLine()
+                returnString = reader.readLine()
             }
         } catch (e: IOException) {
             Log.e("executeTop", "error in getting first line of top")
             e.printStackTrace()
         } finally {
             try {
-                `in`!!.close()
+                reader!!.close()
                 p!!.destroy()
             } catch (e: IOException) {
                 Log.e("executeTop", "error in closing and destroying top process")
@@ -442,37 +474,47 @@ object DeviceInfo {
         return returnString
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission")
     fun getDeviceNetworkType(activity: Context): String {
-        var networkStatus = ""
-
         val connMgr = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
         // check for wifi
-
-        val wifi = connMgr?.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+        val wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
         // check for mobile data
-        val mobile = connMgr?.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+        val mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
 
-        if (wifi != null && wifi.isAvailable) {
-            networkStatus = "Wifi"
+        return if (wifi != null && wifi.isAvailable) {
+            "Wifi"
         } else if (mobile != null && mobile.isAvailable) {
-            networkStatus = getDataType(activity)
+            getDataType(activity)
         } else {
-            networkStatus = "noNetwork"
+            "noNetwork"
         }
-        return networkStatus
     }
 
     //<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     fun getDeviceTelephonyNetworkType(context: Context): String? {
         val mTelephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        val networkType = mTelephonyManager.networkType
-        when (networkType) {
-            TelephonyManager.NETWORK_TYPE_GSM -> return "gsm"
-            TelephonyManager.NETWORK_TYPE_GPRS, TelephonyManager.NETWORK_TYPE_EDGE, TelephonyManager.NETWORK_TYPE_CDMA, TelephonyManager.NETWORK_TYPE_1xRTT, TelephonyManager.NETWORK_TYPE_IDEN -> return "cdma" //"2g";
-            TelephonyManager.NETWORK_TYPE_UMTS, TelephonyManager.NETWORK_TYPE_EVDO_0, TelephonyManager.NETWORK_TYPE_EVDO_A, TelephonyManager.NETWORK_TYPE_HSDPA, TelephonyManager.NETWORK_TYPE_HSUPA, TelephonyManager.NETWORK_TYPE_HSPA, TelephonyManager.NETWORK_TYPE_EVDO_B, TelephonyManager.NETWORK_TYPE_EHRPD, TelephonyManager.NETWORK_TYPE_HSPAP, TelephonyManager.NETWORK_TYPE_TD_SCDMA -> return "wcdma" //"3g";
-            TelephonyManager.NETWORK_TYPE_LTE -> return "lte" //"4g";
-            else -> return null
+        return when (mTelephonyManager.networkType) {
+            TelephonyManager.NETWORK_TYPE_GSM -> "gsm"
+            TelephonyManager.NETWORK_TYPE_GPRS,
+            TelephonyManager.NETWORK_TYPE_EDGE,
+            TelephonyManager.NETWORK_TYPE_CDMA,
+            TelephonyManager.NETWORK_TYPE_1xRTT,
+            TelephonyManager.NETWORK_TYPE_IDEN -> "cdma" //"2g";
+            TelephonyManager.NETWORK_TYPE_UMTS,
+            TelephonyManager.NETWORK_TYPE_EVDO_0,
+            TelephonyManager.NETWORK_TYPE_EVDO_A,
+            TelephonyManager.NETWORK_TYPE_HSDPA,
+            TelephonyManager.NETWORK_TYPE_HSUPA,
+            TelephonyManager.NETWORK_TYPE_HSPA,
+            TelephonyManager.NETWORK_TYPE_EVDO_B,
+            TelephonyManager.NETWORK_TYPE_EHRPD,
+            TelephonyManager.NETWORK_TYPE_HSPAP,
+            TelephonyManager.NETWORK_TYPE_TD_SCDMA -> "wcdma" //"3g";
+            TelephonyManager.NETWORK_TYPE_LTE -> "lte" //"4g";
+            else -> null
         }
     }
 
@@ -481,15 +523,15 @@ object DeviceInfo {
     }
 
     fun getDeviceInch(activity: Context): Double {
-        try {
+        return try {
             val displayMetrics = activity.resources.displayMetrics
 
             val yInches = displayMetrics.heightPixels / displayMetrics.ydpi
             val xInches = displayMetrics.widthPixels / displayMetrics.xdpi
-            val diagonalInches = Math.sqrt((xInches * xInches + yInches * yInches).toDouble())
-            return diagonalInches
+            val diagonalInches = sqrt((xInches * xInches + yInches * yInches).toDouble())
+            diagonalInches
         } catch (e: Exception) {
-            return -1.0
+            0.0
         }
     }
 
@@ -509,16 +551,37 @@ object DeviceInfo {
                 displayMetrics.density)
     }
 
-    fun getDeviceOrientation(context: Context): String {
-        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val rotation = wm.defaultDisplay.rotation
-        when (rotation) {
+
+    fun getDeviceOrientation(context: Context): Int {
+        (context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager)
+                ?.defaultDisplay
+                ?.let {
+                    return when {
+                        it.width == it.height -> Configuration.ORIENTATION_SQUARE
+                        it.width < it.height -> Configuration.ORIENTATION_PORTRAIT
+                        else -> Configuration.ORIENTATION_LANDSCAPE
+                    }
+                }
+        return Configuration.ORIENTATION_UNDEFINED
+    }
+
+
+    fun getDeviceOrientationString(context: Context): String {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+        when (wm?.defaultDisplay?.rotation) {
             Surface.ROTATION_0 -> return "Portrait"
             Surface.ROTATION_90 -> return "Landscape left"
             Surface.ROTATION_180 -> return "Upside down"
             Surface.ROTATION_270 -> return "Landscape right"
         }
         return ""
+    }
+
+    fun isDeviceInPortraitMode(context: Context): Boolean {
+        val orientation = context.resources.configuration.orientation
+        return if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            false
+        } else orientation == Configuration.ORIENTATION_PORTRAIT
     }
 
     private fun getDataType(activity: Context): String {
@@ -550,6 +613,7 @@ object DeviceInfo {
         return type
     }
 
+    @Suppress("DEPRECATION")
     fun getDeviceAvailableSpaceMB(f: File): Float {
         val stat = StatFs(f.path)
         val bytesAvailable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -560,15 +624,16 @@ object DeviceInfo {
         return bytesAvailable / (1024f * 1024f)
     }
 
-    //Получение вообще всех установленных приложений исключая системные
-    fun getDeviceInstalledApps(context: Context): List<String> {
+    //Получение вообще всех установленных приложений
+    fun getDeviceInstalledApps(context: Context, includeSystem: Boolean = false): List<String> {
         return context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-                .filter {!isSystemPackage(it)}
+                .filter { if (includeSystem) true else !isSystemPackage(it) }
                 .map { it.packageName }
     }
 
-    //Получение всех приложений, работающих в данный момент (не включая системные)
-    fun getDeviceRunningApps(context: Context): List<String> {
+    //Получение всех приложений, работающих в данный момент
+    @Suppress("DEPRECATION")
+    fun getDeviceRunningApps(context: Context, includeSystem: Boolean = false): List<String> {
         val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val runningApps: MutableSet<String> = mutableSetOf()
 
@@ -584,10 +649,10 @@ object DeviceInfo {
                 ?.map { it.service.packageName }
                 ?.let { runningApps.addAll(it) }
 
-        return runningApps.filter { !isSystemPackage(context, it) }
+        return if(includeSystem) runningApps.toList() else runningApps.filter { !isSystemPackage(context, it) }
     }
 
-    //Проверка, явлсется ли переданное приложение системным, или нет
+    //Проверка, является ли переданное приложение системным, или нет
     fun isSystemPackage(context: Context, app: String): Boolean {
         return try {context.packageManager.getPackageInfo(app, 0)} catch (ex: Exception) {null}
                 ?.let { isSystemPackage(it.applicationInfo) } == true
@@ -595,5 +660,60 @@ object DeviceInfo {
 
     fun isSystemPackage(applicationInfo: ApplicationInfo): Boolean {
         return applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+    }
+
+
+    //Получение всех приложений, что откликаются на определённое действие
+    //например, получение всех несистемных приложений камеры:
+    //DeviceInfo.getDeviceAppsForAction(context, MediaStore.ACTION_IMAGE_CAPTURE, false);
+    fun getDeviceAppsForAction(context: Context, action: String, includeSystem: Boolean = false): List<String> {
+        val apps: MutableSet<String> = mutableSetOf()
+
+        val listApps = context.packageManager.queryIntentActivities(Intent(action), 0)
+        apps.addAll(listApps.map { it.activityInfo.packageName })
+
+        return if(includeSystem) apps.toList() else apps.filter { !isSystemPackage(context, it) }
+    }
+
+    fun getDeviceDisplaySizePixels(activity: Activity): Point {
+        val d = activity.windowManager.defaultDisplay
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            val realDisplayMetrics = DisplayMetrics()
+            d.getRealMetrics(realDisplayMetrics)
+            Point(realDisplayMetrics.widthPixels, realDisplayMetrics.heightPixels)
+        } else {
+            val displayMetrics = DisplayMetrics()
+            d.getMetrics(displayMetrics)
+            Point(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        }
+    }
+
+    val deviceGUID: String
+        get() {
+            val deviceData = Build.FINGERPRINT
+            // Only devices with API >= 9 have android.os.Build.SERIAL
+            // http://developer.android.com/reference/android/os/Build.html#SERIAL
+            // If a user upgrades software or roots their device, there will be a duplicate entry
+            var serial = ""
+            return try {
+                serial = Build::class.java.getField("SERIAL").get(null).toString()
+                UUID(deviceData.hashCode().toLong(), serial.hashCode().toLong()).toString()
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                UUID(deviceData.hashCode().toLong(), serial.hashCode().toLong()).toString()
+            }
+
+        }
+
+    /**
+     * Gets the device unique id called IMEI. Sometimes, this returns 00000000000000000 for the
+     * rooted devices.
+     */
+    @Suppress("DEPRECATION")
+    @SuppressLint("MissingPermission", "HardwareIds")
+    fun getDeviceImei(ctx: Context): String {
+        // use application level context to avoid unnecessary leaks.
+        val telephonyManager = ctx.applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        return telephonyManager.deviceId
     }
 }

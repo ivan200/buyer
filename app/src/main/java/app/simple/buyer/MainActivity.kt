@@ -20,6 +20,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     override fun onBackPressed() {
         findNavController(R.id.fragment_main).let {
+
             if (!it.popBackStack()) finish()
         }
     }

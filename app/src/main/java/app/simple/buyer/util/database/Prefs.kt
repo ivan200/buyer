@@ -2,8 +2,11 @@ package app.simple.buyer.util.database
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Parcelable
 import android.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import app.simple.buyer.entities.OrderType
+import com.google.gson.Gson
 import kotlin.reflect.KProperty
 
 class Prefs(context: Context) {
@@ -27,7 +30,7 @@ class Prefs(context: Context) {
                 is Boolean -> putBoolean(key, value)
                 is Float -> putFloat(key, value)
                 is MutableSet<*> -> putStringSet(key, (value as? MutableSet<*>)?.filterIsInstance<String>()?.toMutableSet())
-                else ->throw NotImplementedError() //putString(key, Gson().toJson(value))
+                else -> throw NotImplementedError() //putString(key, Gson().toJson(value))
             }
         }
 
@@ -49,6 +52,21 @@ class Prefs(context: Context) {
     var listsSortAscending by AnyPref(context, true)
     var darkTheme by AnyPref(context, true)
 
+
+
+
     var mainScrollPosition by AnyPref(context, 0)
+    var mainScrollOffset by AnyPref(context, 0)
+
+
     var mainMenuScrollPosition by AnyPref(context, 0)
+    var mainMenuScrollOffset by AnyPref(context, 0)
+
+
+    private var mainMenuStateString by AnyPref(context, "")
+    var mainMenuState: Parcelable?
+        get() = Gson().fromJson(mainMenuStateString, LinearLayoutManager.SavedState::class.java)
+        set(value) {
+            mainMenuStateString = Gson().toJson(value)
+        }
 }

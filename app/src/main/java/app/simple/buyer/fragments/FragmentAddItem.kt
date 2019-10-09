@@ -1,5 +1,6 @@
 package app.simple.buyer.fragments
 
+import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -21,16 +22,18 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
     override val title: Int
         get() = R.string.app_name
 
-    private val base_layout by lazy { mView.findViewById<RelativeLayout>(R.id.base_layout) }
-    private val add_appbar by lazy { mView.findViewById<AppBarLayout>(R.id.add_appbar) }
-    private val editText by lazy { mView.findViewById<EditText>(R.id.editText) }
-    private val recyclerList by lazy { mView.findViewById<RecyclerView>(R.id.recyclerList) }
-    private val shadow by lazy { mView.findViewById<View>(R.id.shadow_view) }
+    private val base_layout get() = mView.findViewById<RelativeLayout>(R.id.base_layout)
+    private val add_appbar get() = mView.findViewById<AppBarLayout>(R.id.add_appbar)
+    private val editText get() = mView.findViewById<EditText>(R.id.editText)
+    private val recyclerList get() = mView.findViewById<RecyclerView>(R.id.recyclerList)
+    private val shadow get() = mView.findViewById<View>(R.id.shadow_view)
     private var shadowToggler: ShadowRecyclerSwitcher? = null
 
     private lateinit var adapter: FoodAdapter
 
-    override fun initialize(view: View) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         adapter = FoodAdapter(BuyItem.getListAsync(realm, ""), this::onItemAdded)
         recyclerList.setHasFixedSize(true)
         recyclerList.itemAnimator = null

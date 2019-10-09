@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
@@ -23,40 +24,38 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), IEmptyView, OnApplyWindowInsetsListener {
-    abstract val title: Int
+    @StringRes
+    open val title = R.string.app_name
+    open val titleString: String? = null
 
-    abstract fun initialize(view: View)
-    val mActivity  by lazy { activity as BaseActivity }
+    val mActivity get() = activity as BaseActivity
+    val realm get() = mActivity.realm
 
-    val realm by lazy { mActivity.realm }
     override val emptyData: EmptyData? = null
 
-    override val emptyView by lazy { mView.findViewById<View?>(R.id.emptyView) }
-    override val emptyImageView by lazy { mView.findViewById<ImageView?>(R.id.emptyImageView) }
-    override val emptyTextTitle by lazy { mView.findViewById<TextView?>(R.id.emptyTextTitle) }
-    override val emptyTextSubTitle by lazy { mView.findViewById<TextView?>(R.id.emptyTextSubTitle) }
-    val toolbar by lazy { mView.findViewById<Toolbar?>(R.id.toolbar) }
+    override val emptyView get() = mView.findViewById<View?>(R.id.emptyView)
+    override val emptyImageView get() = mView.findViewById<ImageView?>(R.id.emptyImageView)
+    override val emptyTextTitle get() = mView.findViewById<TextView?>(R.id.emptyTextTitle)
+    override val emptyTextSubTitle get() = mView.findViewById<TextView?>(R.id.emptyTextSubTitle)
+    val toolbar get() = mView.findViewById<Toolbar?>(R.id.toolbar)
 
-    val app_bar_layout by lazy { mView.findViewById<AppBarLayout?>(R.id.app_bar_layout) }
+    val app_bar_layout get() = mView.findViewById<AppBarLayout?>(R.id.app_bar_layout)
     lateinit var mView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if(!::mView.isInitialized){
-            mView = super.onCreateView(inflater, container, savedInstanceState)!!
+        mView = super.onCreateView(inflater, container, savedInstanceState)!!
 
-            if (toolbar != null) {
-                mActivity.setSupportActionBar(toolbar)
-                mActivity.title = getText(title)
-                toolbar?.setNavigationOnClickListener { mActivity.onBackPressed() }
-            }
+        toolbar?.let {
+            mActivity.setSupportActionBar(it)
+            mActivity.title = titleString ?: getString(title)
+            it.setNavigationOnClickListener { mActivity.onBackPressed() }
+        }
 
-            if (Build.VERSION.SDK_INT >= 21) {
-                ViewCompat.setOnApplyWindowInsetsListener(mView, this)
-            } else{
-                //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
-                onApplyWindowInsets(mView, null)
-            }
-            initialize(mView)
+        if (Build.VERSION.SDK_INT >= 21) {
+            ViewCompat.setOnApplyWindowInsetsListener(mView, this)
+        } else {
+            //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
+            onApplyWindowInsets(mView, null)
         }
         return mView
     }

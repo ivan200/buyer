@@ -26,29 +26,54 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
     override val title: Int
         get() = R.string.lists_title
 
-    private val menu_base_layout by lazy { mView.findViewById<RelativeLayout>(R.id.menu_base_layout) }
-    private val menu_toolbar by lazy { mView.findViewById<Toolbar>(R.id.menu_toolbar) }
-    private val menu_recycler by lazy { mView.findViewById<RecyclerView>(R.id.menu_recycler) }
-    private val menu_toolbar_super by lazy { mView.findViewById<AppBarLayout>(R.id.menu_toolbar_super) }
-    private val menu_recycler_super by lazy { mView.findViewById<FrameLayout>(R.id.menu_recycler_super) }
+    private val menu_base_layout get() = mView.findViewById<RelativeLayout>(R.id.menu_base_layout)
+    private val menu_toolbar get() = mView.findViewById<Toolbar>(R.id.menu_toolbar)
+    private val menu_recycler get() = mView.findViewById<RecyclerView>(R.id.menu_recycler)
+    private val menu_toolbar_super  get() = mView.findViewById<AppBarLayout>(R.id.menu_toolbar_super)
+    private val menu_recycler_super  get() = mView.findViewById<FrameLayout>(R.id.menu_recycler_super)
 
-    private val menu_shadow by lazy { mView.findViewById<View>(R.id.menu_shadow_view) }
+    private val menu_shadow get() = mView.findViewById<View>(R.id.menu_shadow_view)
     private var menuShadowToggler: ShadowRecyclerSwitcher? = null
 
     private val navigateEditLists = Navigation.createNavigateOnClickListener(R.id.action_fragmentMain_to_fragmentEditLists, Bundle())
 
-    override fun initialize(view: View) {
+    private lateinit var layoutManager: LinearLayoutManager
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         setHasOptionsMenu(true)
         menu_toolbar.title = getText(title)
         menu_toolbar.setOnClickListener(navigateEditLists)
         menu_toolbar?.setOnMenuItemClickListener(this)
 
         val adapterMenu = MultiCellTypeAdapter(mActivity, this::showError)
-        menu_recycler.layoutManager = LinearLayoutManager(mActivity)
+
+        layoutManager = LinearLayoutManager(mActivity)
+        menu_recycler.layoutManager = layoutManager
         menu_recycler.adapter = adapterMenu
         adapterMenu.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
 
-        menuShadowToggler = ShadowRecyclerSwitcher(menu_recycler, menu_shadow, Prefs(mActivity).mainMenuScrollPosition) { pos -> Prefs(mActivity).mainMenuScrollPosition = pos }
+        menuShadowToggler = ShadowRecyclerSwitcher(menu_recycler, menu_shadow, Prefs(mActivity).mainMenuScrollPosition)
+
+        val positionIndex = layoutManager.findFirstVisibleItemPosition()
+        val offset =  menu_recycler.getChildAt(0)?.let { it.top - menu_recycler.paddingTop } ?: 0
+
+
+        if (positionIndex != -1) {
+            layoutManager.scrollToPositionWithOffset(positionIndex, offset)
+        }
+    }
+
+    override fun onPause() {
+        Prefs(mActivity).mainMenuState = layoutManager.onSaveInstanceState()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        layoutManager.onRestoreInstanceState(Prefs(mActivity).mainMenuState)
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
@@ -72,4 +97,5 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
         }
         return true
     }
+
 }
