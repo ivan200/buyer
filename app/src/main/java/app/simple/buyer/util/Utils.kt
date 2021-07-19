@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
@@ -27,6 +28,8 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -54,9 +57,11 @@ object Utils {
      * Keyboard
      **/
 
+    fun hasNoHardwareKeyboard(view: View) = view.context.resources.configuration.keyboard == Configuration.KEYBOARD_NOKEYS
+
     fun hideKeyboard(activity: Activity) {
         val focusedView = activity.currentFocus
-        if (focusedView != null) {
+        if (focusedView != null && hasNoHardwareKeyboard(focusedView)) {
             val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(focusedView.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
         }
@@ -65,27 +70,29 @@ object Utils {
     fun hideKeyboard2(activity: Activity, editText: EditText) {
         editText.clearFocus()
         val focusedView = activity.currentFocus
-        if (focusedView != null) {
+        if (focusedView != null && hasNoHardwareKeyboard(focusedView)) {
             val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(focusedView.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
         }
     }
 
     fun hideKeyboardFrom(view: View) {
-        val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
+        if (hasNoHardwareKeyboard(view)) {
+            val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
+        }
     }
 
     fun showKeyboard(activity: Activity, editText: EditText) {
         val focusedView = activity.currentFocus
-        if (focusedView != null) {
+        if (focusedView != null && hasNoHardwareKeyboard(focusedView)) {
             val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.showSoftInput(editText, InputMethodManager.RESULT_UNCHANGED_SHOWN)
         }
     }
 
     fun showKeyBoard2(editText: View?) {
-        if (editText != null && editText.requestFocus()) {
+        if (editText != null && editText.requestFocus() && hasNoHardwareKeyboard(editText)) {
             val inputMethodManager = editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
         }
@@ -94,32 +101,6 @@ object Utils {
     /**
      * Resources
      **/
-
-    //Перекрашивание цвета оверскролла на всех RecyclerView на api<21. Достаточно вызвать 1 раз в onCreate приложения
-    fun changeOverScrollGlowColor(res: Resources, colorID: Int) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            changeResColor(res, "overscroll_glow", colorID)
-            changeResColor(res, "overscroll_edge", colorID)
-        }
-    }
-
-    //Перекрашивание системного ресурса используемого в приложении в определённый цвет
-    @Suppress("DEPRECATION")
-    private fun changeResColor(res: Resources, resId: String, colorID: Int) {
-        try {
-            val drawableId = res.getIdentifier(resId, "drawable", "android")
-            val drawable = res.getDrawable(drawableId)
-            drawable.setColorFilter(res.getColor(colorID), PorterDuff.Mode.SRC_ATOP)
-        } catch (ignored: Exception) {
-        }
-    }
-
-    fun tintDrawable(drawable: Drawable, @ColorInt color: Int) : Drawable{
-        val wrappedDrawable = DrawableCompat.wrap(drawable)
-        DrawableCompat.setTint(wrappedDrawable, color)
-        return DrawableCompat.unwrap(wrappedDrawable)
-    }
-
     fun tintDrawableWithMatrix(drawable: Drawable, @ColorInt iColor: Int) {
         val r = Color.red(iColor)
         val g = Color.green(iColor)
@@ -224,91 +205,6 @@ object Utils {
             return bitmap
         } else {
             throw IllegalArgumentException("unsupported drawable type")
-        }
-    }
-
-    //Получение ресурса, привязаного к теме через аттрибуты
-    @AnyRes
-    fun getResIdFromAttribute(context: Context, @AttrRes attr: Int): Int {
-        if (attr == 0)
-            return 0
-        val typedValueAttr = TypedValue()
-        context.theme.resolveAttribute(attr, typedValueAttr, true)
-        return typedValueAttr.resourceId
-    }
-
-    //Получение ресурса цвета, привязаного к теме через аттрибуты, например android.R.attr.textColorPrimary
-    @ColorInt
-    fun getColorIdFromAttribute(context: Context, @AttrRes colorAttr: Int): Int {
-        val resolvedAttr = TypedValue()
-        context.theme.resolveAttribute(colorAttr, resolvedAttr, true)
-        val colorRes = resolvedAttr.run { if (resourceId != 0) resourceId else data }
-        return ContextCompat.getColor(context, colorRes)
-    }
-
-    //Обращение яркости цвета в html строке (color: и background-color:)
-    fun invertStyleBrightness(str: String): String {
-        val styleName = "color:"
-        var index = str.indexOf(styleName)
-        if (index < 0) {
-            return str
-        }
-
-        val colorMapper = hashMapOf<String, String>()
-        val fixedString = StringBuilder()
-        var i1: Int
-        var i2 = 0
-        while (index >= 0) {
-            fixedString.append(str.substring(i2, index))
-            i1 = str.indexOf('#', index)
-            i2 = str.indexOf(';', index)
-            if (i1 >= 0 && i2 >= 0 && i2 > i1 && i2-i1 < 10) {
-                fixedString.append(str.substring(index, i1))
-                val subStrColor = str.substring(i1, i2)
-                if(!colorMapper.containsKey(subStrColor)){
-                    colorMapper[subStrColor] = invertColorBrightness(subStrColor)
-                }
-                val reversedColor = colorMapper[subStrColor]
-                fixedString.append(reversedColor)
-            } else {
-                fixedString.append(str.substring(index, i1))
-            }
-            index = str.indexOf(styleName, index + 1)
-        }
-        fixedString.append(str.substring(if (i2 >= 0) i2 else index, str.length - 1))
-
-        return fixedString.toString()
-    }
-
-    //Обращение яркости цвета в формате строки, для использования на тёмной теме цветов светлой
-    fun invertColorBrightness(color: String): String {
-        return try {
-            val oldColor = Color.parseColor(color)
-            val newColor = invertColorBrightness(oldColor)
-            if (Color.alpha(newColor) == 255) {
-                String.format("#%06X", 0xFFFFFF and newColor)
-            } else {
-                String.format("#%08X", newColor)
-            }
-        } catch (ex: Exception) {
-            color
-        }
-    }
-
-    //Обращение яркости цвета, для нормального использования на тёмной теме цветов светлой
-    fun invertColorBrightness(color: Int): Int {
-        return try {
-            val outLab = DoubleArray(3)
-            ColorUtils.colorToLAB(color, outLab)
-            outLab[0] = 100 - outLab[0] * 0.85
-            val newColor = ColorUtils.LABToColor(outLab[0], outLab[1], outLab[2])
-            if (Color.alpha(color) == 255) {
-                newColor
-            } else {
-                Color.argb(Color.alpha(color), Color.red(newColor), Color.green(newColor), Color.blue(newColor))
-            }
-        } catch (ex: Exception) {
-            color
         }
     }
 
@@ -442,168 +338,6 @@ object Utils {
     }
 
     /**
-     * Time
-     **/
-
-    fun substractSeconds(date: Date): Date {
-        val cal = Calendar.getInstance()
-        cal.time = date
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
-        return cal.time
-    }
-
-    fun substractHours(date: Date?): Date? {
-        if(date == null) return null
-        val cal = Calendar.getInstance()
-        cal.time = date
-        cal.set(Calendar.HOUR_OF_DAY, 0)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
-        return cal.time
-    }
-
-    fun maximizeHours(date: Date?): Date? {
-        if(date == null) return null
-        val cal = Calendar.getInstance()
-        cal.time = date
-        cal.set(Calendar.HOUR_OF_DAY, 23)
-        cal.set(Calendar.MINUTE, 59)
-        cal.set(Calendar.SECOND, 59)
-        cal.set(Calendar.MILLISECOND, 0)
-        return cal.time
-    }
-
-    fun isSameDay(date1: Date, date2: Date): Boolean {
-        val cal1 = Calendar.getInstance()
-        val cal2 = Calendar.getInstance()
-        cal1.time = date1
-        cal2.time = date2
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
-                && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
-    }
-
-    fun getYesterday(currentDate: Date): Date {
-        val calendar = Calendar.getInstance()
-        calendar.time = currentDate
-        calendar.add(Calendar.DATE, -1)
-        return calendar.time
-    }
-
-    //Получение двухбуквенного названия дня недели (ПН, ВС)
-    fun getTwoSymbolDayOfWeekName(cal: Calendar): String {
-        var dayName: String
-        if (Locale.getDefault().language.toLowerCase() == "en" || Locale.getDefault().language.toLowerCase() == "ru") {
-            dayName = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault())
-            dayName = if (dayName.length > 2) dayName.substring(0, 2) else dayName
-        } else {
-            dayName = SimpleDateFormat("EEEEE", Locale.getDefault()).format(cal.time)
-        }
-        return dayName.toUpperCase()
-    }
-
-    //Получение номера дня недели из календаря (со сдвигом на первый день недели используемый в разных локалицациях)
-    //пн = 1, вс = 7
-    fun getDayOfWeek(cal: Calendar): Int {
-        val dayDiff = cal.firstDayOfWeek - 1
-        var dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - dayDiff
-        if (dayOfWeek <= 0) {
-            dayOfWeek += 7
-        }
-        return dayOfWeek
-    }
-
-    //Получение имени текущего месяца из календаря
-    fun getMonthName(context: Context, calendar: Calendar, isShort: Boolean = false): String {
-        var flags = DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_NO_MONTH_DAY or DateUtils.FORMAT_NO_YEAR
-        if (isShort) {
-            flags = flags or DateUtils.FORMAT_ABBREV_MONTH
-        }
-        var formatDateTime = DateUtils.formatDateTime(context, calendar.timeInMillis, flags)
-
-        formatDateTime = formatDateTime[0].toUpperCase() + formatDateTime.substring(1)
-        return formatDateTime
-    }
-
-    /**
-     * Strings
-     **/
-
-    //Сравнение похоже выглядящих строк английской и русской локали
-    fun equalsIgnoreLocale(o1: String?, o2: String?): Boolean {
-        if (o1 == null && o2 == null) {
-            return true
-        }
-        if (o1 == null || o2 == null) {
-            return false
-        }
-        if (o1.length != o2.length) {
-            return false
-        }
-        val enChars = "еуорахсЕТУОРАНКХСВМ"
-        val ruChars = "eyopaxcETYOPAHKXCBM"
-        val enRuChars = enChars + ruChars
-        val ruEnChars = ruChars + enChars
-        val chars1 = o1.toCharArray()
-        val chars2 = o2.toCharArray()
-        for (i in chars1.indices) {
-            val aChar1 = chars1[i]
-            val aChar2 = chars2[i]
-            if (aChar1 != aChar2) {
-                val i1 = enRuChars.indexOf(aChar1)
-                val i2 = ruEnChars.indexOf(aChar2)
-                if (i1 < 0 || i2 < 0 || i1 != i2) {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-
-    //Оставляет от текства только числа
-    fun getDigitText(s: String): String {
-        return s.filter { it.isDigit() }
-    }
-
-    /**
-     * Files
-     **/
-
-    //Получение расширения у имени файла
-    fun getFileExt(fileName: String?): String {
-        var extension = ""
-        if(fileName.isNullOrEmpty()){
-            return extension
-        }
-        val dot = fileName.lastIndexOf('.')
-        val slash = max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'))
-        if (dot > slash && dot + 1 < fileName.length) {
-            extension = fileName.substring(dot + 1)
-            val maxExtLength = 5
-            if (extension.length > maxExtLength) {
-                extension = extension.substring(0, maxExtLength)
-            }
-        }
-        return extension.toLowerCase()
-    }
-
-    //Удаление каталога со всем что есть внутри
-    fun deleteDir(dir: File?) {
-        if (dir == null) return
-        val files = dir.listFiles()
-        if (files != null)
-            for (file in files) {
-                if (file.isDirectory) {
-                    deleteDir(file)
-                } else {
-                    file.delete()
-                }
-            }
-        dir.delete()
-    }
-
-    /**
      * Views
      **/
 
@@ -616,30 +350,6 @@ object Utils {
             override fun afterTextChanged(s: Editable) {
                 onTextChanged?.invoke(s.toString())
             }
-        }
-    }
-
-    //Обработчик клавиатуры для поля ввода, который запрещает ввод пробелов, табуляции и т.п
-    fun filterSpaceTextWatcher(editText: EditText): TextWatcher {
-        return simpleTextWatcher { s ->
-            val result = s.replace("\\s".toRegex(), "")
-            if (s != result) {
-                val pos = editText.selectionStart - (s.length - result.length)
-                editText.setText(result)
-                editText.setSelection(max(0, min(pos, result.length)))
-            }
-        }
-    }
-
-    //Замостить фон у вью ресурсом
-    fun tileBackground(ctx: Context, @DrawableRes resIdOfTile: Int, view: View) {
-        try {
-            val bmp = BitmapFactory.decodeResource(ctx.resources, resIdOfTile)
-            val bitmapDrawable = BitmapDrawable(ctx.resources, bmp)
-            bitmapDrawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-            setBackground(view, bitmapDrawable)
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception while tiling the background of the view")
         }
     }
 
@@ -667,7 +377,6 @@ object Utils {
     /**
      * Other
      **/
-
     //Проверка на возможность использования отпечатка пальца на устройстве
     @SuppressLint("MissingPermission")
     fun isFingerprintAvailable(context: Context): Boolean {
@@ -689,4 +398,164 @@ object Utils {
 
         return Color.argb(255, red, green, blue)
     }
+
+    private fun resolveTransparentStatusBarFlag(flag: String): Int {
+        try {
+            val field = View::class.java.getField(flag)
+            if (field.type == Integer.TYPE) return field.getInt(null)
+        } catch (ignored: java.lang.Exception) {
+        }
+        return 0
+    }
+
+    fun setWindowFlag(win: Window, bits: Int, state: Boolean) {
+        val flags = win.attributes.flags
+        win.attributes.flags = if (state) flags or bits else flags and bits.inv()
+    }
+
+    fun setDecorFlag(win: Window, bits: Int, state: Boolean) {
+        val flags = win.decorView.systemUiVisibility
+        win.decorView.systemUiVisibility = if (state) flags or bits else flags and bits.inv()
+    }
+
+    fun transparentSystemBars(
+            window: Window,
+            transparentStatus: Boolean = true,
+            transparentNavigation: Boolean = true,
+            statusLightTheme: Boolean = false,
+            navigationLightTheme: Boolean = false
+    ) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        }
+        var windowFlag = 0
+        if (transparentStatus) windowFlag = windowFlag or WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+        if (transparentNavigation) windowFlag = windowFlag or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
+
+        var decorFlag = 0
+        if (transparentStatus) decorFlag = decorFlag or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        if (transparentNavigation) decorFlag = decorFlag or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+
+        if (statusLightTheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            decorFlag = decorFlag or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
+        if (navigationLightTheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            decorFlag = decorFlag or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        }
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(window, windowFlag, false)
+            window.statusBarColor = Color.TRANSPARENT
+            window.navigationBarColor = Color.TRANSPARENT
+        } else {
+            setWindowFlag(window, windowFlag, true)
+        }
+        window.decorView.systemUiVisibility = decorFlag
+    }
+
+
+    fun transparentStatus(window: Window, statusLightTheme: Boolean = false, drawSystemBar: Boolean = false) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setWindowFlag(window, WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS, true)
+
+            setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, drawSystemBar)
+            if (!drawSystemBar) {
+                window.statusBarColor = Color.TRANSPARENT
+            }
+        } else {
+            setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true)
+        }
+
+        setDecorFlag(window, View.SYSTEM_UI_FLAG_LAYOUT_STABLE, true)
+        setDecorFlag(window, View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN, true)
+        if (!drawSystemBar && statusLightTheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            setDecorFlag(window, View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR, statusLightTheme)
+        }
+    }
+
+    fun themeStatusBar(window: Window, @ColorInt color: Int, statusLightTheme: Boolean = false, drawSystemBar: Boolean = false) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setWindowFlag(window, WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS, true)
+        }
+
+        if(color == Color.TRANSPARENT){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, drawSystemBar)
+                if (!drawSystemBar) {
+                    window.statusBarColor = Color.TRANSPARENT
+                }
+            } else {
+                setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true)
+            }
+            setDecorFlag(window, View.SYSTEM_UI_FLAG_LAYOUT_STABLE, true)
+            setDecorFlag(window, View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN, true)
+            if (!drawSystemBar && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setDecorFlag(window, View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR, statusLightTheme)
+            }
+        } else {
+            setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.statusBarColor = color
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setDecorFlag(window, View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR, statusLightTheme)
+                }
+            }
+        }
+    }
+
+    fun themeNavBar(
+            window: Window,
+            @ColorInt color: Int,
+            navigationLightTheme: Boolean = false,
+            drawSystemBar: Boolean = false
+    ) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setWindowFlag(window, WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS, true)
+        }
+
+        if(color == Color.TRANSPARENT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, drawSystemBar)
+                if (!drawSystemBar) {
+                    window.navigationBarColor = Color.TRANSPARENT
+                }
+            } else {
+                setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, true)
+            }
+
+            setDecorFlag(window, View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION, true)
+            if (!drawSystemBar && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                setDecorFlag(window, View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR, navigationLightTheme)
+            }
+        } else{
+            setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.navigationBarColor = color
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    setDecorFlag(window, View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR, navigationLightTheme)
+                }
+            }
+        }
+    }
+
+
+    fun getColorBrightness(@ColorInt color: Int): Double {
+        val outLab = DoubleArray(3)
+        ColorUtils.colorToLAB(color, outLab)
+        return outLab[0]
+    }
+
+    fun isColorBright(@ColorInt color: Int) = getColorBrightness(color) > 50
 }

@@ -3,6 +3,8 @@
     <declare-styleable name="CustomTheme">
         <attr name="colorToolbar" format="color"/>
         <attr name="colorToolbarText" format="color"/>
+        <attr name="colorToolbarIcon" format="color"/>
+        <attr name="colorOrderIcon" format="color"/>
         <attr name="colorStatusBar" format="color"/>
         <attr name="colorBackground" format="color"/>
         <attr name="colorFab" format="color"/>

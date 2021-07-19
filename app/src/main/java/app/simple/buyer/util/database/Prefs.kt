@@ -34,7 +34,7 @@ class Prefs(context: Context) {
             }
         }
 
-        private fun SharedPreferences.get(key: String, defaultValue: Any): Any {
+        private fun SharedPreferences.get(key: String, defaultValue: Any): Any? {
             return when (defaultValue) {
                 is String -> getString(key, defaultValue)
                 is Long -> getLong(key, defaultValue)
@@ -51,9 +51,6 @@ class Prefs(context: Context) {
     var listsOrderType by AnyPref(context, OrderType.CREATED)
     var listsSortAscending by AnyPref(context, true)
     var darkTheme by AnyPref(context, true)
-
-
-
 
     var mainScrollPosition by AnyPref(context, 0)
     var mainScrollOffset by AnyPref(context, 0)

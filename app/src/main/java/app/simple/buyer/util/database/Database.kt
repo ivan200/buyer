@@ -40,8 +40,10 @@ object Database {
         }
 
         AsyncTask.execute {
-            initItems(context)
-            initLists(context)
+            Realm.getDefaultInstance().apply {
+                initItems(context, this)
+                initLists(context, this)
+            }
         }
     }
 
@@ -51,7 +53,7 @@ object Database {
         }
     }
 
-    fun initItems(context: Context){
+    fun initItems(context: Context, realm: Realm){
         val realm = Realm.getDefaultInstance()
 
         val items = arrayListOf<BuyItem>()
@@ -113,8 +115,12 @@ object Database {
         }
     }
 
-    fun initLists(context: Context){
+    fun initLists(context: Context, realm: Realm){
         val newBuyList = BuyList("Продукты")
+        realm.executeTransaction {
+            newBuyList.update(it)
+        }
+
         Prefs(context).currentListId = newBuyList.id
     }
 

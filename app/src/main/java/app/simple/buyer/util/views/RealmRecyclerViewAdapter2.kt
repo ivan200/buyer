@@ -16,55 +16,65 @@ import io.realm.*
  *
  *
  * If the adapter contains Realm model classes with a primary key that is either an `int` or a `long`, call
- * `setHasStableIds(true)` in the constructor and override [.getItemId] as described by the Javadoc in that method.
+ * `setHasStableIds(true)` in the constructor and override [getItemId] as described by the Javadoc in that method.
  *
- * @param <T> type of [RealmModel] stored in the adapter.
- * @param <S> type of RecyclerView.ViewHolder used in the adapter.
+ * @param [T] type of [RealmModel] stored in the adapter.
+ * @param [S] type of [RecyclerView.ViewHolder] used in the adapter.
  * @see RecyclerView.Adapter.setHasStableIds
  * @see RecyclerView.Adapter.getItemId
-</S></T> */
-
-//https://github.com/realm/realm-android-adapters/blob/master/adapters/src/main/java/io/realm/RealmRecyclerViewAdapter.java
-//modified for add updateDataNoClear method
-abstract class RealmRecyclerViewAdapter2<T : RealmModel, S : RecyclerView.ViewHolder>
-/**
+ *
  * @param data collection data to be used by this adapter.
- * @param autoUpdate when it is `false`, the adapter won't be automatically updated when collection data
- * changes.
+ * @param hasAutoUpdates when it is `false`, the adapter won't be automatically updated when collection data changes.
  * @param updateOnModification when it is `true`, this adapter will be updated when deletions, insertions or
  * modifications happen to the collection data. When it is `false`, only
  * deletions and insertions will trigger the updates. This param will be ignored if
  * `autoUpdate` is `false`.
  */
-(data: OrderedRealmCollection<T>?, private val hasAutoUpdates: Boolean,
- private val updateOnModification: Boolean) : RecyclerView.Adapter<S>() {
+
+//https://github.com/realm/realm-android-adapters/blob/master/adapters/src/main/java/io/realm/RealmRecyclerViewAdapter.java
+//converted to kotlin and add updateDataNoClear method
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+abstract class RealmRecyclerViewAdapter2<T : RealmModel, S : RecyclerView.ViewHolder>(
+    data: OrderedRealmCollection<T>?,
+    private val hasAutoUpdates: Boolean,
+    private val updateOnModification: Boolean = true
+) :
+    RecyclerView.Adapter<S>() {
+
     private val listener: OrderedRealmCollectionChangeListener<OrderedRealmCollection<T>>?
+
     /**
-     * Returns data associated with this adapter.
-     *
-     * @return adapter data.
+     * Data associated with this adapter.
      */
-    var data: OrderedRealmCollection<T>? = null
+    var data: OrderedRealmCollection<T>? = data
         private set
 
     private val isDataValid: Boolean
         get() = data != null && data!!.isValid
 
-    private fun createListener(): OrderedRealmCollectionChangeListener<OrderedRealmCollection<T>> {
 
+    init {
+        check(!(data != null && !data.isManaged)) {
+            "Only use this adapter with managed RealmCollection, " +
+                    "for un-managed lists you can just use the BaseRecyclerViewAdapter"
+        }
+        this.listener = if (hasAutoUpdates) createListener() else null
+    }
+
+    private fun createListener(): OrderedRealmCollectionChangeListener<OrderedRealmCollection<T>> {
         return OrderedRealmCollectionChangeListener { collection, changeSet ->
-            if (changeSet.getState() == OrderedCollectionChangeSet.State.INITIAL) {
+            if (changeSet.state == OrderedCollectionChangeSet.State.INITIAL) {
                 notifyDataSetChanged()
                 return@OrderedRealmCollectionChangeListener
             }
             // For deletions, the adapter has to be notified in reverse order.
-            val deletions = changeSet.getDeletionRanges()
+            val deletions = changeSet.deletionRanges
             for (i in deletions.indices.reversed()) {
                 val range = deletions[i]
                 notifyItemRangeRemoved(range.startIndex + dataOffset(), range.length)
             }
 
-            val insertions = changeSet.getInsertionRanges()
+            val insertions = changeSet.insertionRanges
             for (range in insertions) {
                 notifyItemRangeInserted(range.startIndex + dataOffset(), range.length)
             }
@@ -73,7 +83,7 @@ abstract class RealmRecyclerViewAdapter2<T : RealmModel, S : RecyclerView.ViewHo
                 return@OrderedRealmCollectionChangeListener
             }
 
-            val modifications = changeSet.getChangeRanges()
+            val modifications = changeSet.changeRanges
             for (range in modifications) {
                 notifyItemRangeChanged(range.startIndex + dataOffset(), range.length)
             }
@@ -92,26 +102,10 @@ abstract class RealmRecyclerViewAdapter2<T : RealmModel, S : RecyclerView.ViewHo
         return 0
     }
 
-    /**
-     * This is equivalent to `RealmRecyclerViewAdapter(data, autoUpdate, true)`.
-     *
-     * @param data collection data to be used by this adapter.
-     * @param autoUpdate when it is `false`, the adapter won't be automatically updated when collection data
-     * changes.
-     * @see .RealmRecyclerViewAdapter2
-     */
-    constructor(data: OrderedRealmCollection<T>?, autoUpdate: Boolean) : this(data, autoUpdate, true) {}
-
-    init {
-        check(!(data != null && !data.isManaged)) { "Only use this adapter with managed RealmCollection, " + "for un-managed lists you can just use the BaseRecyclerViewAdapter" }
-        this.data = data
-        this.listener = if (hasAutoUpdates) createListener() else null
-    }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         if (hasAutoUpdates && isDataValid) {
-
             addListener(data!!)
         }
     }
@@ -119,13 +113,11 @@ abstract class RealmRecyclerViewAdapter2<T : RealmModel, S : RecyclerView.ViewHo
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         if (hasAutoUpdates && isDataValid) {
-
             removeListener(data!!)
         }
     }
 
     override fun getItemCount(): Int {
-
         return if (isDataValid) data!!.size else 0
     }
 
@@ -148,8 +140,9 @@ abstract class RealmRecyclerViewAdapter2<T : RealmModel, S : RecyclerView.ViewHo
 
         // To avoid exception, return null if there are some extra positions that the
         // child adapter is adding in getItemCount (e.g: to display footer view in recycler view)
-        if (data != null && index >= data!!.size) return null
-        return if (isDataValid) data!![index] else null
+        return data?.let {
+            if (index < it.size && isDataValid) it[index] else null
+        }
     }
 
     /**
@@ -165,42 +158,23 @@ abstract class RealmRecyclerViewAdapter2<T : RealmModel, S : RecyclerView.ViewHo
 
     fun updateDataNoClear(data: OrderedRealmCollection<T>?) {
         if (hasAutoUpdates) {
-            if (isDataValid) {
-
-                removeListener(this.data!!)
-            }
-            if (data != null) {
-                addListener(data)
-            }
+            this.data?.let(this::removeListener)
+            data?.let(this::addListener)
         }
         this.data = data
     }
 
-    private fun addListener(data: OrderedRealmCollection<T>) {
-        if (data is RealmResults<*>) {
-            val results = data as RealmResults<T>
-
-            results.addChangeListener(listener as OrderedRealmCollectionChangeListener<RealmResults<T>>)
-        } else if (data is RealmList<*>) {
-            val list = data as RealmList<T>
-
-            list.addChangeListener(listener as OrderedRealmCollectionChangeListener<RealmList<T>>)
-        } else {
-            throw IllegalArgumentException("RealmCollection not supported: " + data.javaClass)
-        }
+    @Suppress("UNCHECKED_CAST")
+    private fun addListener(data: OrderedRealmCollection<T>) = when (data) {
+        is RealmResults<T> -> data.addChangeListener(listener as OrderedRealmCollectionChangeListener<RealmResults<T>>)
+        is RealmList<T> -> data.addChangeListener(listener as OrderedRealmCollectionChangeListener<RealmList<T>>)
+        else -> throw IllegalArgumentException("RealmCollection not supported: " + data.javaClass)
     }
 
-    private fun removeListener(data: OrderedRealmCollection<T>) {
-        if (data is RealmResults<*>) {
-            val results = data as RealmResults<T>
-
-            results.removeChangeListener(listener as OrderedRealmCollectionChangeListener<RealmResults<T>>)
-        } else if (data is RealmList<*>) {
-            val list = data as RealmList<T>
-
-            list.removeChangeListener(listener as OrderedRealmCollectionChangeListener<RealmList<T>>)
-        } else {
-            throw IllegalArgumentException("RealmCollection not supported: " + data.javaClass)
-        }
+    @Suppress("UNCHECKED_CAST")
+    private fun removeListener(data: OrderedRealmCollection<T>) = when (data) {
+        is RealmResults<T> -> data.removeChangeListener(listener as OrderedRealmCollectionChangeListener<RealmResults<T>>)
+        is RealmList<T> -> data.removeChangeListener(listener as OrderedRealmCollectionChangeListener<RealmList<T>>)
+        else -> throw IllegalArgumentException("RealmCollection not supported: " + data.javaClass)
     }
 }

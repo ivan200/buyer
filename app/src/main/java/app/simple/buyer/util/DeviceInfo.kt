@@ -221,29 +221,28 @@ object DeviceInfo {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             cm.allNetworks
-                    ?.map {cm.getNetworkCapabilities(it)}
-                    ?.filter { it != null
-                            && it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                            && it.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)}
-                    ?.forEach {
-                        if (it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                            maxType = maxType.max(InternetType.MOBILE)
-                        }
-                        if (it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                            maxType = maxType.max(InternetType.WIFI)
-                        }
-                        maxType = maxType.max(InternetType.OTHER)
+                .mapNotNull { cm.getNetworkCapabilities(it) }
+                .filter {
+                    it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                            && it.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+                }.forEach {
+                    maxType = when {
+                        it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> maxType.max(InternetType.WIFI)
+                        it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> maxType.max(InternetType.MOBILE)
+                        else -> maxType.max(InternetType.OTHER)
                     }
+                }
         } else {
             cm.allNetworkInfo
-                    ?.filter { it.isConnected }
-                    ?.forEach {
-                        maxType = when (it.type) {
-                            ConnectivityManager.TYPE_MOBILE -> maxType.max(InternetType.MOBILE)
-                            ConnectivityManager.TYPE_WIFI -> maxType.max(InternetType.WIFI)
-                            else -> maxType.max(InternetType.OTHER)
-                        }
+                .filterNotNull()
+                .filter { it.isConnected }
+                .forEach {
+                    maxType = when (it.type) {
+                        ConnectivityManager.TYPE_MOBILE -> maxType.max(InternetType.MOBILE)
+                        ConnectivityManager.TYPE_WIFI -> maxType.max(InternetType.WIFI)
+                        else -> maxType.max(InternetType.OTHER)
                     }
+                }
         }
         return maxType
     }
@@ -396,20 +395,18 @@ object DeviceInfo {
      */
     private fun getMACAddress(interfaceName: String?): String {
         try {
-            val interfaces = Collections.list(NetworkInterface.getNetworkInterfaces())
-            for (intf in interfaces) {
-                if (interfaceName != null) {
-                    if (!intf.name.equals(interfaceName, ignoreCase = true))
-                        continue
-                }
-                val mac = intf.hardwareAddress ?: return ""
-                val buf = StringBuilder()
-                for (idx in mac.indices)
-                    buf.append(String.format("%02X:", mac[idx]))
-                if (buf.isNotEmpty())
-                    buf.deleteCharAt(buf.length - 1)
-                return buf.toString()
-            }
+            NetworkInterface.getNetworkInterfaces().toList()
+                    .filter { it.name == null || it.name.equals(interfaceName, ignoreCase = true)}
+                    .forEach {
+                        val mac = it.hardwareAddress ?: return ""
+                        val buf = StringBuilder()
+
+                        for (idx in mac.indices)
+                            buf.append(String.format("%02X:", mac[idx]))
+                        if (buf.isNotEmpty())
+                            buf.deleteCharAt(buf.length - 1)
+                        return buf.toString()
+                    }
         } catch (ex: Exception) {
             return ""
         }
@@ -494,6 +491,7 @@ object DeviceInfo {
     }
 
     //<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    @SuppressLint("MissingPermission")
     fun getDeviceTelephonyNetworkType(context: Context): String? {
         val mTelephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         return when (mTelephonyManager.networkType) {
@@ -584,6 +582,7 @@ object DeviceInfo {
         } else orientation == Configuration.ORIENTATION_PORTRAIT
     }
 
+    @SuppressLint("MissingPermission")
     private fun getDataType(activity: Context): String {
         var type = "Mobile Data"
         val tm = activity.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -642,7 +641,7 @@ object DeviceInfo {
                 ?.let { runningApps.addAll(it) }
 
         try { activityManager.getRunningTasks(1000) } catch (ex: Exception) { null }
-                ?.map { it.topActivity.packageName }
+                ?.mapNotNull { it.topActivity?.packageName }
                 ?.let { runningApps.addAll(it) }
 
         try { activityManager.getRunningServices(1000) } catch (ex: Exception) { null }

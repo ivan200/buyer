@@ -23,6 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- Declare notch support -->
+        <meta-data android:name="android.notch_support" android:value="true"/>
+
     </application>
 
 </manifest>

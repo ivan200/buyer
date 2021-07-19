@@ -110,7 +110,8 @@ inline fun <reified T : RealmModel> Realm.getAllAsync(): RealmResults<T> {
 //
 //Collections
 //
-fun <T : Number> T.ifZero(default: T): T = if(this.toFloat() == 0f) default else this
+fun <T: Number> T?.orElse(number: T) =
+        if (this != null && this != 0) this else number
 
 fun <T> T?.oneOf(vararg elements: T): Boolean {
     return elements.contains(this)
@@ -261,31 +262,15 @@ inline val Context.inflater: LayoutInflater get() = LayoutInflater.from(this)
  * Extension methods to Get resources for Context.
  */
 
-
-@ColorInt
-fun Context.getColorCompat(@ColorRes id: Int) = ContextCompat.getColor(this, id)
-
-@ColorInt
-fun Context.getColorResCompat(@AttrRes id: Int) = Utils.getColorIdFromAttribute(this, id)
-
 fun Context.getInteger(@IntegerRes id: Int) = resources.getInteger(id)
-fun Context.getDrawableCompat(@DrawableRes id: Int) = ContextCompat.getDrawable(this, id)
 fun Context.getDimensionPx(@DimenRes id: Int) = resources.getDimension(id)
 fun Context.getDimensionDp(@DimenRes id: Int) = resources.getDimension(id) / resources.displayMetrics.density
-
-@AnyRes
-fun Context.getResCompat(@AttrRes id: Int) = Utils.getResIdFromAttribute(this, id)
-
-fun ImageView.setImageResourceCompat(@AttrRes id: Int) {
-    this.setImageResource(Utils.getResIdFromAttribute(this.context, id))
-}
-
 
 
 /**
  * Extension method to check String equalsIgnoreCase
  */
-fun String.equalsIgnoreCase(other: String) = this.toLowerCase().contentEquals(other.toLowerCase())
+fun String.equalsIgnoreCase(other: String) = this.toLowerCase(Locale.getDefault()).contentEquals(other.toLowerCase(Locale.getDefault()))
 
 fun String.remove(substring: String) = replace(substring, "")
 

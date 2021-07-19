@@ -17,6 +17,7 @@ open class BuyListItem() : RealmObject() {
         this.id = PrimaryKeyFactory.nextKey<BuyListItem>()
         this.buyItem = buyItem
         this.buyList = buyList
+        this.listId = buyList.id
     }
 
     /** Уникальный id */
@@ -28,6 +29,9 @@ open class BuyListItem() : RealmObject() {
 
     /** id списка, в котором этот элемент */
     var buyList: BuyList? = null
+
+    /** id списка, в котором этот элемент */
+    var listId: Long = 0
 
     /** Дата создания элемента */
     var created: Date = Date()

@@ -43,7 +43,9 @@
                 android:inputType="textCapSentences"
                 android:singleLine="true"
                 android:textColor="?android:textColorPrimary"
-                android:textColorHint="?attr/colorTextHint"/>
+                android:textColorHint="?attr/colorTextHint"
+
+                />
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

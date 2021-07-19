@@ -31,7 +31,7 @@ open class BuyItem() : RealmObject() {
     var name: String = ""
 
     /** Сколько раз добавлялась, или популярность */
-    var populatity : Long = 0L
+    var populatity: Long = 0L
 
     /** Ссылка на верхнюю категорию (если есть) */
     var parentItem: BuyItem? = null
@@ -51,7 +51,7 @@ open class BuyItem() : RealmObject() {
     var orderCombineString: String? = null
         private set
 
-    fun getOrderString() =  String.format("%05d" , populatity) + wordCount.toString() + searchName
+    fun getOrderString() = String.format("%05d", populatity) + wordCount.toString() + searchName
 
     /** все подкатегории */
     var subItems: RealmList<BuyItem> = RealmList()
@@ -61,29 +61,29 @@ open class BuyItem() : RealmObject() {
         //сглаживание имени (заменяем буквы ё и уменьшаем регистр для поиска)
         fun smoothName(name: String): String {
             return name.replace('ё', 'е')
-                    .replace('Ё', 'Е')
-                    .toLowerCase(Locale("ru", "RU"))
+                .replace('Ё', 'Е')
+                .lowercase(Locale("ru", "RU"))
         }
 
-        private fun getQuery(realm: Realm) : RealmQuery<BuyItem> {
+        private fun getQuery(realm: Realm): RealmQuery<BuyItem> {
             return realm.where(BuyItem::class.java)
         }
 
-        fun getByName(realm: Realm, name: String) : BuyItem? {
-            return getQuery(realm).equalTo("searchName", smoothName(name)).findFirst()
+        fun getByName(realm: Realm, name: String): BuyItem? {
+            return getQuery(realm).equalTo(BuyItem::searchName.name, smoothName(name)).findFirst()
         }
 
-        fun getListAsync(realm: Realm, name: String) : RealmResults<BuyItem> {
+        fun getListAsync(realm: Realm, name: String): RealmResults<BuyItem> {
             val split = name.split(' ')
             var query = getQuery(realm)
 
             for (s in split) {
-                query = query.contains("searchName", smoothName(s))
+                query = query.contains(BuyItem::searchName.name, smoothName(s))
             }
 
             return query
-                    .sort("orderCombineString")
-                    .findAllAsync()
+                .sort(BuyItem::orderCombineString.name)
+                .findAllAsync()
         }
     }
 }

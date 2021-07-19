@@ -1,32 +1,35 @@
 package app.simple.buyer.fragments
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import android.widget.RelativeLayout
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
+import app.simple.buyer.databinding.FragmentEditListsBinding
+import app.simple.buyer.entities.BuyList
+import app.simple.buyer.entities.OrderType
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import app.simple.buyer.util.views.viewBinding
+import io.realm.Sort
 
-class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists) {
+class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.OnMenuItemClickListener {
     override val title: Int
         get() = R.string.app_name
 
-    private val lists_fab get() =  mView.findViewById<FloatingActionButton>(R.id.lists_fab)
-    private val lists_base_layout get() =  mView.findViewById<RelativeLayout>(R.id.lists_base_layout)
-    private val rv_edit_lists get() =  mView.findViewById<RecyclerView>(R.id.rv_edit_lists)
-
-    private val shadow by lazy { mView.findViewById<View>(R.id.shadow_view) }
+    private val shadowView get() = requireView().findViewById<View>(R.id.shadow_view)
+    private val binding by viewBinding(FragmentEditListsBinding::bind)
     private var shadowToggler: ShadowRecyclerSwitcher? = null
 
     private lateinit var layoutManager: LinearLayoutManager
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -35,17 +38,20 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists) {
             setDisplayHomeAsUpEnabled(true)
         }
 
-
         val adapter = MultiCellTypeAdapter(mActivity, this::showError)
 
         layoutManager = LinearLayoutManager(mActivity)
 
-        rv_edit_lists.layoutManager = layoutManager
-        rv_edit_lists.adapter = adapter
-        adapter.update((1..50).map { x-> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
+        binding.rvEditLists.layoutManager = layoutManager
+        binding.rvEditLists.adapter = adapter
+        adapter.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
 
-        shadowToggler = ShadowRecyclerSwitcher(rv_edit_lists, shadow, Prefs(mActivity).mainMenuScrollPosition)
+        shadowToggler = ShadowRecyclerSwitcher(binding.rvEditLists, shadowView, Prefs(mActivity).mainMenuScrollPosition)
+
+        setHasOptionsMenu(true)
+        toolbar?.setOnMenuItemClickListener(this)
     }
+
 
     override fun onPause() {
         Prefs(mActivity).mainMenuState = layoutManager.onSaveInstanceState()
@@ -57,10 +63,93 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists) {
         layoutManager.onRestoreInstanceState(Prefs(mActivity).mainMenuState)
     }
 
-
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
-        setRecyclerPaddings(rv_edit_lists, app_bar_layout, lists_fab, insets)
+        setRecyclerPaddings(binding.rvEditLists, appBarLayout, binding.listsFab, insets)
         return super.onApplyWindowInsets(v, insets)
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if (toolbar?.menu?.size() == 0) {
+            toolbar.inflateMenu(R.menu.order_edit_lists)
+            menu.setGroupVisible(R.id.group_normal_mode, true)
+            menu.setGroupVisible(R.id.group_reorder_mode, false)
+        }
+    }
+
+    fun checkItem(item: MenuItem, menu: Menu) {
+        for (i in 0 until menu.size()) {
+            val menuItem = menu.getItem(i)!!
+            menuItem.isCheckable = (menuItem.itemId == item.itemId)
+            menuItem.isChecked = (menuItem.itemId == item.itemId)
+            if (menuItem.hasSubMenu()) {
+                checkItem(item, menuItem.subMenu)
+            }
+        }
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        val sortType = if(Prefs(requireContext()).listsSortAscending)  Sort.ASCENDING else Sort.DESCENDING
+
+        when (item.itemId) {
+            R.id.item_sort_type -> {
+                val invertSort = if(sortType == Sort.ASCENDING)  Sort.DESCENDING else Sort.ASCENDING
+                BuyList.orderBy(realm, requireContext(), Prefs(requireContext()).listsOrderType, invertSort)
+                if (invertSort == Sort.ASCENDING) {
+                    item.setIcon(R.drawable.ic_sort_ascending)
+                } else {
+                    item.setIcon(R.drawable.ic_sort_descending)
+                }
+            }
+            R.id.item_order_alphabet -> {
+                BuyList.orderBy(realm, requireContext(), OrderType.ALPHABET, sortType)
+                checkItem(item, toolbar.menu)
+            }
+            R.id.item_order_popularity -> {
+                BuyList.orderBy(realm, requireContext(), OrderType.POPULARITY, sortType)
+                checkItem(item, toolbar.menu)
+            }
+            R.id.item_order_size -> {
+                BuyList.orderBy(realm, requireContext(), OrderType.SIZE, sortType)
+                checkItem(item, toolbar.menu)
+            }
+            R.id.item_order_create -> {
+                BuyList.orderBy(realm, requireContext(), OrderType.CREATED, sortType)
+                checkItem(item, toolbar.menu)
+            }
+            R.id.item_order_modify -> {
+                BuyList.orderBy(realm, requireContext(), OrderType.MODIFIED, sortType)
+                checkItem(item, toolbar.menu)
+            }
+            R.id.item_order_price -> {
+                BuyList.orderBy(realm, requireContext(), OrderType.PRICE, sortType)
+                checkItem(item, toolbar.menu)
+            }
+            R.id.item_order_hand -> {
+                toolbar.menu.setGroupVisible(R.id.group_normal_mode, false)
+                toolbar.menu.setGroupVisible(R.id.group_reorder_mode, true)
+//                adapter?.enableReorderMode(true)
+                item.isChecked = true
+            }
+            R.id.item_action_clear -> {
+                toolbar.menu.setGroupVisible(R.id.group_reorder_mode, false)
+                toolbar.menu.setGroupVisible(R.id.group_normal_mode, true)
+//                adapter?.enableReorderMode(false)
+            }
+//            android.R.id.home -> {
+//                onBackPressed()
+//                return true
+//            }
+        }
+
+
+//        val id = item.itemId
+//        if (id == android.R.id.home) {
+//            onBackPressed()
+//            overridePendingTransition(0, 0)
+//            return true
+//        }
+        return true
+    }
 }

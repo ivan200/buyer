@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.WindowManager
+import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
@@ -17,6 +18,7 @@ import app.simple.buyer.R
 import app.simple.buyer.fragments.FragmentMain.DrawerState.*
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.TAG
+import app.simple.buyer.util.Utils
 import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
@@ -35,12 +37,13 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
     override val title: Int
         get() = R.string.app_name
 
-    private val mDrawer get() = mView.findViewById<DrawerLayout>(R.id.drawer_layout)
+    private val mDrawer get() = requireView().findViewById<DrawerLayout>(R.id.drawer_layout)
 
-    private val recyclerView get() = mView.findViewById<RecyclerView>(R.id.main_recycler)
-    private val shadow get() = mView.findViewById<View>(R.id.shadow_view)
+    private val recyclerView get() = requireView().findViewById<RecyclerView>(R.id.main_recycler)
+    private val navbarBg get() = requireView().findViewById<LinearLayout>(R.id.nav_bar_layout_bg)
+    private val shadow get() = requireView().findViewById<View>(R.id.shadow_view)
     private var mainShadowToggler: ShadowRecyclerSwitcher? = null
-    private val fab get() = mView.findViewById<FloatingActionButton>(R.id.fab)
+    private val fab get() = requireView().findViewById<FloatingActionButton>(R.id.fab)
 
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
 
@@ -116,7 +119,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
-        setRecyclerPaddings(recyclerView, app_bar_layout, fab, insets)
+        setRecyclerPaddings(recyclerView, appBarLayout, fab, insets, navBarBg = navbarBg)
         childFragmentManager.fragments.forEach {
             (it as? BaseFragment)?.onApplyWindowInsets(v, insets)
         }
@@ -137,6 +140,12 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
                     .apply {
                         isAccessible = true
                         setInt(viewDragHelper, width/2)
+                    }
+
+            viewDragHelper.let { it::class.java.getDeclaredField("mTouchSlop") }
+                    .apply {
+                        isAccessible = true
+                        setInt(viewDragHelper, Utils.convertDpToPixel(16).toInt())
                     }
         } catch (e: Exception) {
             e.printStackTrace()

@@ -26,13 +26,13 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
     override val title: Int
         get() = R.string.lists_title
 
-    private val menu_base_layout get() = mView.findViewById<RelativeLayout>(R.id.menu_base_layout)
-    private val menu_toolbar get() = mView.findViewById<Toolbar>(R.id.menu_toolbar)
-    private val menu_recycler get() = mView.findViewById<RecyclerView>(R.id.menu_recycler)
-    private val menu_toolbar_super  get() = mView.findViewById<AppBarLayout>(R.id.menu_toolbar_super)
-    private val menu_recycler_super  get() = mView.findViewById<FrameLayout>(R.id.menu_recycler_super)
+    private val menu_base_layout get() = requireView().findViewById<RelativeLayout>(R.id.menu_base_layout)
+    private val menu_toolbar get() = requireView().findViewById<Toolbar>(R.id.menu_toolbar)
+    private val menu_recycler get() = requireView().findViewById<RecyclerView>(R.id.menu_recycler)
+    private val menu_toolbar_super  get() = requireView().findViewById<AppBarLayout>(R.id.menu_toolbar_super)
+    private val menu_recycler_super  get() = requireView().findViewById<FrameLayout>(R.id.menu_recycler_super)
 
-    private val menu_shadow get() = mView.findViewById<View>(R.id.menu_shadow_view)
+    private val menu_shadow get() = requireView().findViewById<View>(R.id.menu_shadow_view)
     private var menuShadowToggler: ShadowRecyclerSwitcher? = null
 
     private val navigateEditLists = Navigation.createNavigateOnClickListener(R.id.action_fragmentMain_to_fragmentEditLists, Bundle())
@@ -58,7 +58,6 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
 
         val positionIndex = layoutManager.findFirstVisibleItemPosition()
         val offset =  menu_recycler.getChildAt(0)?.let { it.top - menu_recycler.paddingTop } ?: 0
-
 
         if (positionIndex != -1) {
             layoutManager.scrollToPositionWithOffset(positionIndex, offset)

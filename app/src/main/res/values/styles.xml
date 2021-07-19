@@ -1,22 +1,25 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppThemeLight" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">?android:textColorSecondary</item>
-        <item name="colorControlActivated">@color/colorAccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">          @color/colorPrimary</item>
+        <item name="colorPrimaryDark">      @color/colorPrimaryDark</item>
+        <item name="colorAccent">           @color/colorAccent</item>
+        <item name="colorControlNormal">    ?android:textColorSecondary</item>
+        <item name="colorControlActivated"> @color/colorAccent</item>
+        <item name="windowActionBar">       false</item>
+        <item name="windowNoTitle">         true</item>
+        <item name="actionMenuTextColor">   ?attr/colorToolbarText</item>
 
-        <item name="colorToolbar">@color/colorBackgroundLightTransparent</item>
-        <item name="colorToolbarText">@color/colorTextBlack</item>
-        <item name="colorStatusBar">@color/colorPrimaryDark</item>
-        <item name="bgSelectable">@drawable/layer_list</item>
-        <item name="icAdd">@drawable/ic_add_black</item>
-        <item name="colorFab">@android:color/white</item>
-        <item name="colorSectionHeader">@color/ColorBackgroundGrey100</item>
-        <item name="colorBackground">@color/colorBackgroundLight</item>
+        <item name="colorToolbar">          @color/colorBackgroundLightTransparent</item>
+        <item name="colorToolbarText">      @color/colorTextBlack</item>
+        <item name="colorToolbarIcon">      @color/colorTextBlackSecondary</item>
+        <item name="colorOrderIcon">        @color/colorTextBlackSecondary</item>
+        <item name="colorStatusBar">        @color/colorPrimaryDark</item>
+        <item name="bgSelectable">          @drawable/layer_list</item>
+        <item name="icAdd">                 @drawable/ic_add_black</item>
+        <item name="colorFab">              @android:color/white</item>
+        <item name="colorSectionHeader">    @color/ColorBackgroundGrey100</item>
+        <item name="colorBackground">       @color/colorBackgroundLight</item>
 
         <item name="colorText">                 @color/colorTextBlack</item>
         <item name="colorTextDisabled">         @color/colorTextBlackDisabled</item>
@@ -33,22 +36,25 @@
     <style name="AppThemeLight.Translucent" parent="AppThemeLight"/>
 
     <style name="AppThemeDark" parent="Theme.AppCompat">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">?android:textColorSecondary</item>
-        <item name="colorControlActivated">@color/colorAccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">          @color/colorPrimary</item>
+        <item name="colorPrimaryDark">      @color/colorPrimaryDark</item>
+        <item name="colorAccent">           @color/colorAccent</item>
+        <item name="colorControlNormal">    ?android:textColorSecondary</item>
+        <item name="colorControlActivated"> @color/colorAccent</item>
+        <item name="windowActionBar">       false</item>
+        <item name="windowNoTitle">         true</item>
+        <item name="actionMenuTextColor">   ?attr/colorToolbarText</item>
 
-        <item name="colorToolbar">@color/colorBackgroundDarkTransparent</item>
-        <item name="colorToolbarText">@color/colorTextWhite</item>
-        <item name="colorStatusBar">@color/colorPrimaryDark</item>
-        <item name="bgSelectable">@drawable/layer_list_light</item>
-        <item name="icAdd">@drawable/ic_add_white</item>
-        <item name="colorFab">@color/ColorBackgroundGrey800</item>
-        <item name="colorSectionHeader">@color/ColorBackgroundGrey800</item>
-        <item name="colorBackground">@color/colorBackgroundDark</item>
+        <item name="colorToolbar">          @color/colorBackgroundDarkTransparent</item>
+        <item name="colorToolbarText">      @color/colorTextWhite</item>
+        <item name="colorToolbarIcon">      @color/colorTextWhiteSecondary</item>
+        <item name="colorOrderIcon">        @color/colorTextWhiteSecondary</item>
+        <item name="colorStatusBar">        @color/colorPrimaryDark</item>
+        <item name="bgSelectable">          @drawable/layer_list_light</item>
+        <item name="icAdd">                 @drawable/ic_add_white</item>
+        <item name="colorFab">              @color/ColorBackgroundGrey800</item>
+        <item name="colorSectionHeader">    @color/ColorBackgroundGrey800</item>
+        <item name="colorBackground">       @color/colorBackgroundDark</item>
 
         <item name="colorText">                 @color/colorTextWhite</item>
         <item name="colorTextDisabled">         @color/colorTextWhiteDisabled</item>
@@ -63,12 +69,12 @@
     <style name="AppThemeDark.Translucent" parent="AppThemeDark"/>
 
 
-    <style name="ToolBarStyle" parent="Theme.AppCompat">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:background">?attr/colorToolbar</item>
-        <item name="android:textColorPrimary">?attr/colorToolbarText</item>
-        <item name="android:textColorSecondary">?attr/colorToolbarText</item>
-        <item name="actionMenuTextColor">?attr/colorToolbarText</item>
-    </style>
+<!--    <style name="ToolBarStyle" parent="Theme.AppCompat">-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--        <item name="android:background">?attr/colorToolbar</item>-->
+<!--        <item name="android:textColorPrimary">?attr/colorToolbarText</item>-->
+<!--        <item name="android:textColorSecondary">?attr/colorToolbarText</item>-->
+<!--        <item name="actionMenuTextColor">?attr/colorToolbarText</item>-->
+<!--    </style>-->
 
 </resources>

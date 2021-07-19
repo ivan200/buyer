@@ -5,10 +5,12 @@ import android.widget.ImageView
 import android.widget.TextView
 
 interface IEmptyView {
-    val emptyView: View?
-    val emptyImageView: ImageView?
-    val emptyTextTitle: TextView?
-    val emptyTextSubTitle: TextView?
+    val emptyViewRoot: View?
+
+    val emptyView: View? get() = emptyViewRoot?.findViewById(R.id.emptyView)
+    val emptyImageView: ImageView? get() = emptyViewRoot?.findViewById(R.id.emptyImageView)
+    val emptyTextTitle: TextView? get() = emptyViewRoot?.findViewById(R.id.emptyTextTitle)
+    val emptyTextSubTitle: TextView? get() = emptyViewRoot?.findViewById(R.id.emptyTextSubTitle)
     val emptyData: EmptyData?
 
     fun toggleEmptyScreen(show: Boolean)

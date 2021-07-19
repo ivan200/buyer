@@ -3,17 +3,29 @@
     <!--На апи 26 стало возможным включать SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         потому для навигейшнбара мы выставляем бэкграунд какой и у обычных вью, чтоб он плавно переходил в боттомбар-->
 
+    <style name="AppThemeLight.Base" parent="AppThemeLight">
+        <item name="android:colorEdgeEffect">?attr/colorToolbar</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+    </style>
+
+
     <style name="AppThemeLight.ColoredStatus" parent="AppThemeLight.Base">
-        <item name="android:statusBarColor">?attr/colorStatusBar</item>
-        <item name="android:navigationBarColor">?android:colorBackground</item>
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+
+    <style name="AppThemeDark.Base" parent="AppThemeDark">
+        <item name="android:colorEdgeEffect">?attr/colorToolbar</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
     </style>
 
     <style name="AppThemeDark.ColoredStatus" parent="AppThemeDark.Base">
-        <item name="android:statusBarColor">?attr/colorStatusBar</item>
-        <item name="android:navigationBarColor">?android:colorBackground</item>
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 </resources>
