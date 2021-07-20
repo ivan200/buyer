@@ -8,11 +8,16 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcel
+import android.os.Parcelable
+import android.os.Parcelable.Creator
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
-import androidx.annotation.*
+import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
+import androidx.annotation.IntegerRes
 import androidx.collection.LongSparseArray
 import androidx.collection.SparseArrayCompat
 import androidx.core.content.ContextCompat
@@ -22,90 +27,13 @@ import java.util.*
 import java.util.logging.Logger
 import kotlin.collections.HashMap
 
+
 //
 //Logger
 //
 inline val <T : Any> T.TAG: String get() = this::class.java.simpleName
 inline val <T : Any> T.logger: Logger get() = Logger.getLogger(this.TAG)
 
-//
-//Realm
-//
-
-
-
-fun <T : RealmObject> RealmResults<out T>.copy(): List<T> {
-    return this.realm.copyFromRealm(this)
-}
-
-fun <T : RealmObject> T.copy(): T {
-    return this.realm.copyFromRealm(this)
-}
-
-inline fun <T> Iterable<T>.contains(function: (T) -> Boolean): Boolean {
-    for (item in this) if (function(item)) return true
-    return false
-}
-
-fun <T : RealmModel> T.update(realm: Realm) {
-    realm.insertOrUpdate(this)
-}
-
-fun <T : RealmModel> RealmResults<T>.update() {
-    this.realm.insertOrUpdate(this)
-}
-
-fun <T : RealmModel> Collection<T>.update(realm: Realm) {
-    realm.insertOrUpdate(this)
-}
-
-//при обновлении ячейки, убираем слушатель со старого объекта, добавляем его на новый, и возвращаем новый для переинициаизации
-fun <T : RealmObject> T?.reInitListener(obj: T?, listener: RealmChangeListener<T>): T? {
-    this?.removeChangeListener(listener)
-    obj?.addChangeListener(listener)
-    return obj
-}
-
-fun <T : RealmObject> T?.reInitListenerNonNull(obj: T, listener: RealmChangeListener<T>): T {
-    this?.removeChangeListener(listener)
-    obj.addChangeListener(listener)
-    return obj
-}
-
-
-fun <T : RealmModel> RealmResults<T>?.reInitListener(obj: RealmResults<T>?, listener: RealmChangeListener<RealmResults<T>>): RealmResults<T>? {
-    this?.removeChangeListener(listener)
-    obj?.addChangeListener(listener)
-    return obj
-}
-
-fun <T : RealmModel> RealmList<T>?.reInitListener(obj: RealmList<T>?, listener: RealmChangeListener<RealmList<T>>): RealmList<T>? {
-    this?.removeChangeListener(listener)
-    obj?.addChangeListener(listener)
-    return obj
-}
-
-inline fun <reified T: RealmModel> Realm.getById(id: Long): T? {
-    return this.where(T::class.java).equalTo("id", id).findFirst()
-}
-inline fun <reified T: RealmModel> Realm.getByIdAsync(id: Long): T {
-    return this.where(T::class.java).equalTo("id", id).findFirstAsync()
-}
-
-inline fun <reified T : RealmModel> Realm.getListByIds(ids: Array<Long>): RealmResults<T> {
-    return this.where(T::class.java).`in`("id", ids).findAll()
-}
-
-inline fun <reified T : RealmModel> Realm.getAll(): RealmResults<T> {
-    return this.where(T::class.java).findAll()
-}
-inline fun <reified T : RealmModel> Realm.count(): Long {
-    return this.where(T::class.java).count()
-}
-
-inline fun <reified T : RealmModel> Realm.getAllAsync(): RealmResults<T> {
-    return this.where(T::class.java).findAllAsync()
-}
 
 //
 //Collections
@@ -279,4 +207,30 @@ fun String.remove(substring: String) = replace(substring, "")
  */
 fun runOnUiThread(action: () -> Unit){
     if (Looper.getMainLooper().thread == Thread.currentThread()) action() else Handler(Looper.getMainLooper()).post { action() }
+}
+
+
+fun Parcelable?.toByteArray(): ByteArray? {
+    if(this == null) return null
+    val parcel = Parcel.obtain()
+    this.writeToParcel(parcel, 0)
+    val bytes = parcel.marshall()
+    parcel.recycle() // not sure if needed or a good idea
+    return bytes
+}
+
+fun <T : Parcelable?> ByteArray?.toParcelable1(creator: Creator<T>): T? {
+    if(this == null) return null
+    val parcel = Parcel.obtain()
+    parcel.unmarshall(this, 0, this.size)
+    parcel.setDataPosition(0) // this is extremely important!
+    return creator.createFromParcel(parcel)
+}
+
+
+fun <T : Parcelable> ByteArray.toParcelable(creator: Creator<T>): T {
+    val parcel = Parcel.obtain()
+    parcel.unmarshall(this, 0, this.size)
+    parcel.setDataPosition(0) // this is extremely important!
+    return creator.createFromParcel(parcel)
 }

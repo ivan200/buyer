@@ -1,5 +1,6 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.util.awaitFirst
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmQuery
@@ -32,15 +33,7 @@ open class User : RealmObject() {
     /** Тёмная тема */
     var darkTheme: Boolean = true
 
-    /** Позиция скролла текущего списка */
-    var mainScrollPosition: Int = 0
-    var mainScrollOffset: Int = 0
-
-    /** Позиция скролла левой панели со списками */
-    var mainMenuScrollPosition: Int = 0
-    var mainMenuScrollOffset: Int = 0
-
-    /** Текущее состояние левой панели для посстановления скролла */
+    /** Текущее состояние левой панели для восстановления скролла */
     var mainMenuState: ByteArray = ByteArray(0)
 
     companion object {
@@ -48,19 +41,22 @@ open class User : RealmObject() {
             return realm.where(User::class.java)
         }
 
-        fun get(realm: Realm): User {
-            val user = getQuery(realm).findFirst()
-            if(user == null){
-                val firstUser = User()
-                realm.insert(firstUser)
-            }
-            return getQuery(realm).findFirst()!!
+        fun get(realm: Realm): User? {
+            return getQuery(realm).findFirst()
         }
 
-        fun getAsync(realm: Realm): User? {
-            return getQuery(realm).findFirstAsync()
+        suspend fun getAwait(realm: Realm): User? {
+            return getQuery(realm).awaitFirst()
         }
 
+//        fun get(realm: Realm): User {
+//            val user = getQuery(realm).findFirst()
+//            if(user == null){
+//                val firstUser = User()
+//                realm.insert(firstUser)
+//            }
+//            return getQuery(realm).findFirst()!!
+//        }
     }
 }
 

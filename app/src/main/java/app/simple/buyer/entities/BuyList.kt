@@ -50,11 +50,8 @@ open class BuyList() : RealmObject() {
     /** элементы списка покупок */
     var items: RealmList<BuyListItem> = RealmList()
 
-
-    /** Позиция скролла списка */
-    var mainScrollPosition: Int = 0
-    /** Позиция отступа видимой ячейки */
-    var mainScrollOffset: Int = 0
+    /** Текущее состояние скролла каждого из списков */
+    var scrollState: ByteArray = ByteArray(0)
 
     companion object {
         private fun getQuery(realm: Realm) : RealmQuery<BuyList> {

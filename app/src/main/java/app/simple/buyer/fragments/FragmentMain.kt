@@ -109,7 +109,12 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
         recyclerView.adapter = adapter
         adapter!!.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
 
-        mainShadowToggler = ShadowRecyclerSwitcher(recyclerView, shadow, Prefs(mActivity).mainScrollPosition) { pos -> Prefs(mActivity).mainScrollPosition = pos }
+        mainShadowToggler = ShadowRecyclerSwitcher(
+            recyclerView,
+            shadow,
+//            Prefs(mActivity).mainScrollPosition
+        )
+//        { pos -> Prefs(mActivity).mainScrollPosition = pos }
     }
 
     fun getDrawerPos(newState: Int, drawerOpen: Boolean): DrawerState {

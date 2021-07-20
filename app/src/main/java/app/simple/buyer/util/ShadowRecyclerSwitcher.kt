@@ -1,5 +1,7 @@
 package app.simple.buyer.util
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -7,23 +9,22 @@ import androidx.recyclerview.widget.RecyclerView
 class ShadowRecyclerSwitcher(
         recyclerView: RecyclerView,
         val shadowView: View,
-        scrollPos: Int = RecyclerView.NO_POSITION,
-        val onScrollChanged: Function1<Int, Unit>? = null) {
+        val onScrollChanged: Function1<ByteArray, Unit>? = null) {
     private var scrollPosItem = 0
     private var shadowVisible = false
 
     init {
         scrollPosItem = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
         shadowVisible = shadowView.visibility == View.VISIBLE
-        if(scrollPos != RecyclerView.NO_POSITION) {
-            recyclerView.scrollToPosition(scrollPos)
-        }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
                 scrollPosItem = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                 checkAndToggleShadow(true)
-                onScrollChanged?.invoke(scrollPosItem)
+
+                onScrollChanged?.invoke(
+                    (recyclerView.layoutManager as LinearLayoutManager).onSaveInstanceState().toByteArray() ?: ByteArray(0)
+                )
             }
         })
         checkAndToggleShadow(false)
@@ -43,9 +44,30 @@ class ShadowRecyclerSwitcher(
     fun toggleShadow(show: Boolean, withAnimation: Boolean) {
         shadowVisible = show
         if (withAnimation) {
-            Utils.changeViewVisibilityWithAnimation(shadowView, show)
+            changeViewVisibilityWithAnimation(shadowView, show)
         } else {
             shadowView.visibility = if (show) View.VISIBLE else View.INVISIBLE
+        }
+    }
+
+    fun changeViewVisibilityWithAnimation(view: View,  show: Boolean){
+        view.clearAnimation()
+        if (show) {
+            view.animate().alpha(1.0f)
+                ?.setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationStart(animation: Animator?) {
+                        super.onAnimationStart(animation)
+                        view.visibility = View.VISIBLE
+                    }
+                })
+        } else {
+            view.animate().alpha(0.0f)
+                ?.setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        super.onAnimationEnd(animation)
+                        view.visibility = View.INVISIBLE
+                    }
+                })
         }
     }
 }

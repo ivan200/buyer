@@ -7,7 +7,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentEditListsBinding
@@ -15,12 +17,17 @@ import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.OrderType
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.database.Prefs
+import app.simple.buyer.util.toByteArray
+import app.simple.buyer.util.toParcelable
 import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
 import app.simple.buyer.util.views.viewBinding
 import io.realm.Sort
 
 class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.OnMenuItemClickListener {
+
+    private val model: EditListsViewModel by viewModels()
+
     override val title: Int
         get() = R.string.app_name
 
@@ -29,7 +36,7 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
     private var shadowToggler: ShadowRecyclerSwitcher? = null
 
     private lateinit var layoutManager: LinearLayoutManager
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -39,35 +46,25 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
         }
 
         val adapter = MultiCellTypeAdapter(mActivity, this::showError)
-
         layoutManager = LinearLayoutManager(mActivity)
-
         binding.rvEditLists.layoutManager = layoutManager
         binding.rvEditLists.adapter = adapter
+        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
         adapter.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
 
-        shadowToggler = ShadowRecyclerSwitcher(binding.rvEditLists, shadowView, Prefs(mActivity).mainMenuScrollPosition)
+        val menuState = model.getMainMenuState().toParcelable(LinearLayoutManager.SavedState.CREATOR)
+        layoutManager.onRestoreInstanceState(menuState)
+
+        shadowToggler = ShadowRecyclerSwitcher(binding.rvEditLists, shadowView, model::saveMainMenuState)
 
         setHasOptionsMenu(true)
         toolbar?.setOnMenuItemClickListener(this)
-    }
-
-
-    override fun onPause() {
-        Prefs(mActivity).mainMenuState = layoutManager.onSaveInstanceState()
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        layoutManager.onRestoreInstanceState(Prefs(mActivity).mainMenuState)
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
         setRecyclerPaddings(binding.rvEditLists, appBarLayout, binding.listsFab, insets)
         return super.onApplyWindowInsets(v, insets)
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -151,5 +148,15 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
 //            return true
 //        }
         return true
+    }
+
+    companion object{
+        private const val KEY_SCROLL_STATE = "SCROLL_STATE"
+        private fun getScrollState(savedInstanceState: Bundle): LinearLayoutManager.SavedState? =
+            savedInstanceState.getParcelable(KEY_SCROLL_STATE)
+        private fun saveScrollState(outState: Bundle, linearLayoutManager: LinearLayoutManager) =
+            outState.putParcelable(KEY_SCROLL_STATE,  linearLayoutManager.onSaveInstanceState())
+
+
     }
 }
