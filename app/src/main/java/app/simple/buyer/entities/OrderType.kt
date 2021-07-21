@@ -3,33 +3,31 @@ package app.simple.buyer.entities
 /**
  * Created by Zakharovi on 31.01.2018.
  */
-interface OrderType {
-    companion object {
-        /** Ручная сортировка **/
-        const val NOT_SET = -1
+enum class OrderType(val value: Int) {
+    /** Ручная сортировка **/
+    NOT_SET(-1),
 
-        /** Ручная сортировка **/
-        const val HAND = 0
+    /** Ручная сортировка **/
+    HAND(0),
 
-        /** Сортировка по алфавиту **/
-        const val ALPHABET = 1
+    /** Сортировка по алфавиту **/
+    ALPHABET(1),
 
-        /** Сортировка по популярности **/
-        const val POPULARITY = 2
+    /** Сортировка по популярности **/
+    POPULARITY(2),
 
-        /** Сортировка по размеру **/
-        const val SIZE = 3
+    /** Сортировка по размеру **/
+    SIZE(3),
 
-        /** Сортировка по дате создания **/
-        const val CREATED = 4
+    /** Сортировка по дате создания **/
+    CREATED(4),
 
-        /** Сортировка по дате изменения **/
-        const val MODIFIED = 5
+    /** Сортировка по дате изменения **/
+    MODIFIED(5),
 
-        /** Сортировка по суммарной цене **/
-        const val PRICE = 6
+    /** Сортировка по суммарной цене **/
+    PRICE(6),
 
-        /** Сортировка по категории **/
-        const val CATEGORY = 7
-    }
+    /** Сортировка по категории **/
+    CATEGORY(7);
 }

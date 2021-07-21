@@ -1,4 +1,4 @@
-package app.simple.buyer.fragments
+package app.simple.buyer.fragments.mainmenu
 
 import android.os.Bundle
 import android.view.Menu
@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentMainMenuBinding
+import app.simple.buyer.fragments.ViewHolderSample
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.toParcelable
@@ -45,7 +46,7 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
         binding.menuToolbar.setOnClickListener(navigateEditLists)
         binding.menuToolbar.setOnMenuItemClickListener(this)
 
-        val adapterMenu = MultiCellTypeAdapter(mActivity, this::showError)
+        val adapterMenu = MultiCellTypeAdapter(this::showError)
         layoutManager = LinearLayoutManager(mActivity)
         binding.menuRecycler.layoutManager = layoutManager
         binding.menuRecycler.adapter = adapterMenu
@@ -73,9 +74,8 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.darkTheme ->{
-                Prefs(mActivity).darkTheme = !Prefs(mActivity).darkTheme
-                mActivity.recreate()
+            R.id.darkTheme -> {
+                model.toggleDarkTheme()
             }
         }
         return true

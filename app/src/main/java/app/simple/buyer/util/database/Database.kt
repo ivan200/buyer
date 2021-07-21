@@ -54,8 +54,6 @@ object Database {
     }
 
     fun initItems(context: Context, realm: Realm){
-        val realm = Realm.getDefaultInstance()
-
         val items = arrayListOf<BuyItem>()
         val inputStream = context.resources.openRawResource(R.raw.food)
         val inputReader = InputStreamReader(inputStream)

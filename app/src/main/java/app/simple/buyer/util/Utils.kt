@@ -2,8 +2,6 @@
 
 package app.simple.buyer.util
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -23,30 +21,21 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.text.format.DateUtils
 import android.util.DisplayMetrics
-import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ProgressBar
-import androidx.annotation.AnyRes
-import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat
-import androidx.core.view.ViewCompat.setBackground
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import app.simple.buyer.BuildConfig
 import app.simple.buyer.R
-import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -61,7 +50,7 @@ object Utils {
 
     fun hideKeyboard(activity: Activity) {
         val focusedView = activity.currentFocus
-        if (focusedView != null && hasNoHardwareKeyboard(focusedView)) {
+        if (focusedView != null) {
             val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(focusedView.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
         }
@@ -70,29 +59,27 @@ object Utils {
     fun hideKeyboard2(activity: Activity, editText: EditText) {
         editText.clearFocus()
         val focusedView = activity.currentFocus
-        if (focusedView != null && hasNoHardwareKeyboard(focusedView)) {
+        if (focusedView != null) {
             val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(focusedView.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
         }
     }
 
     fun hideKeyboardFrom(view: View) {
-        if (hasNoHardwareKeyboard(view)) {
-            val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
-        }
+        val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
     }
 
     fun showKeyboard(activity: Activity, editText: EditText) {
         val focusedView = activity.currentFocus
-        if (focusedView != null && hasNoHardwareKeyboard(focusedView)) {
+        if (focusedView != null) {
             val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.showSoftInput(editText, InputMethodManager.RESULT_UNCHANGED_SHOWN)
         }
     }
 
     fun showKeyBoard2(editText: View?) {
-        if (editText != null && editText.requestFocus() && hasNoHardwareKeyboard(editText)) {
+        if (editText != null && editText.requestFocus()) {
             val inputMethodManager = editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
         }
@@ -114,17 +101,21 @@ object Utils {
         val offset = 25f
 
         val matrix = floatArrayOf(
-                rx * x, gy * x, bz * x, 0f, r - offset,
-                rx * y, gy * y, bz * y, 0f, g - offset,
-                rx * z, gy * z, bz * z, 0f, b - offset,
-                0f, 0f, 0f, 1f, 0f)
+            rx * x, gy * x, bz * x, 0f, r - offset,
+            rx * y, gy * y, bz * y, 0f, g - offset,
+            rx * z, gy * z, bz * z, 0f, b - offset,
+            0f, 0f, 0f, 1f, 0f
+        )
 
         val mFilter = ColorMatrixColorFilter(matrix)
         drawable.colorFilter = mFilter
     }
 
     //Перекрашивание цвета прогрессбара на api<21
-    fun tintIndeterminateProgress(progress: ProgressBar, @ColorInt color: Int = ContextCompat.getColor(progress.context, R.color.colorPrimary)) {
+    fun tintIndeterminateProgress(
+        progress: ProgressBar,
+        @ColorInt color: Int = ContextCompat.getColor(progress.context, R.color.colorPrimary)
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             progress.indeterminateTintList = ColorStateList.valueOf(color)
         } else {
@@ -143,7 +134,10 @@ object Utils {
         }
     }
 
-    fun tintHorizontalProgress(progress: ProgressBar, @ColorInt color: Int = ContextCompat.getColor(progress.context, R.color.colorPrimary)) {
+    fun tintHorizontalProgress(
+        progress: ProgressBar,
+        @ColorInt color: Int = ContextCompat.getColor(progress.context, R.color.colorPrimary)
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             progress.progressTintList = ColorStateList.valueOf(color)
         } else {
@@ -310,7 +304,9 @@ object Utils {
         var appName = packageName
         val packageManager = context.packageManager
         try {
-            appName = packageManager.getApplicationLabel(packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString()
+            appName = packageManager.getApplicationLabel(
+                packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+            ).toString()
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
@@ -359,7 +355,7 @@ object Utils {
     //Проверка на возможность использования отпечатка пальца на устройстве
     @SuppressLint("MissingPermission")
     fun isFingerprintAvailable(context: Context): Boolean {
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val fingerprintManager = FingerprintManagerCompat.from(context)
             fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()
         } else false
@@ -398,11 +394,11 @@ object Utils {
     }
 
     fun transparentSystemBars(
-            window: Window,
-            transparentStatus: Boolean = true,
-            transparentNavigation: Boolean = true,
-            statusLightTheme: Boolean = false,
-            navigationLightTheme: Boolean = false
+        window: Window,
+        transparentStatus: Boolean = true,
+        transparentNavigation: Boolean = true,
+        statusLightTheme: Boolean = false,
+        navigationLightTheme: Boolean = false
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return
@@ -466,7 +462,7 @@ object Utils {
             setWindowFlag(window, WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS, true)
         }
 
-        if(color == Color.TRANSPARENT){
+        if (color == Color.TRANSPARENT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, drawSystemBar)
                 if (!drawSystemBar) {
@@ -492,10 +488,10 @@ object Utils {
     }
 
     fun themeNavBar(
-            window: Window,
-            @ColorInt color: Int,
-            navigationLightTheme: Boolean = false,
-            drawSystemBar: Boolean = false
+        window: Window,
+        @ColorInt color: Int,
+        navigationLightTheme: Boolean = false,
+        drawSystemBar: Boolean = false
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return
@@ -504,7 +500,7 @@ object Utils {
             setWindowFlag(window, WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS, true)
         }
 
-        if(color == Color.TRANSPARENT) {
+        if (color == Color.TRANSPARENT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, drawSystemBar)
                 if (!drawSystemBar) {
@@ -518,7 +514,7 @@ object Utils {
             if (!drawSystemBar && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 setDecorFlag(window, View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR, navigationLightTheme)
             }
-        } else{
+        } else {
             setWindowFlag(window, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.navigationBarColor = color

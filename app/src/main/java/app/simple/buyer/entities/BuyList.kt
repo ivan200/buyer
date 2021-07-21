@@ -45,7 +45,7 @@ open class BuyList() : RealmObject() {
     var isHidden: Boolean = false
 
     /** тип персональной сортировки данного списка (обычно сортировка внутри списка распространяется на все списки) */
-    var personalOrderType: Int = OrderType.CREATED
+    var personalOrderType: Int = OrderType.CREATED.value
 
     /** элементы списка покупок */
     var items: RealmList<BuyListItem> = RealmList()
@@ -76,22 +76,16 @@ open class BuyList() : RealmObject() {
             }
         }
 
-        fun orderBy(realm: Realm, context: Context, orderType: Int, sortOrder: Sort) {
-            Prefs(context).listsSortAscending = if(sortOrder == Sort.ASCENDING) Sort.ASCENDING.value else Sort.DESCENDING.value
-            Prefs(context).listsOrderType = orderType
+        fun orderBy(realm: Realm, orderType: OrderType, sortAscending: Boolean) {
+//            Prefs(context).listsSortAscending = if(sortOrder == Sort.ASCENDING) Sort.ASCENDING.value else Sort.DESCENDING.value
+//            Prefs(context).listsOrderType = orderType
+            val sortOrder = if(sortAscending) Sort.ASCENDING else Sort.DESCENDING
+
             when (orderType) {
-                OrderType.ALPHABET -> {
-                    orderByField(realm, BuyList::name.name, sortOrder)
-                }
-                OrderType.POPULARITY -> {
-                    orderByField(realm, BuyList::populatity.name, sortOrder)
-                }
-                OrderType.CREATED -> {
-                    orderByField(realm,  BuyList::created.name, sortOrder)
-                }
-                OrderType.MODIFIED -> {
-                    orderByField(realm, BuyList::modified.name, sortOrder)
-                }
+                OrderType.ALPHABET -> orderByField(realm, BuyList::name.name, sortOrder)
+                OrderType.POPULARITY -> orderByField(realm, BuyList::populatity.name, sortOrder)
+                OrderType.CREATED -> orderByField(realm,  BuyList::created.name, sortOrder)
+                OrderType.MODIFIED -> orderByField(realm, BuyList::modified.name, sortOrder)
                 OrderType.SIZE -> {
                     realm.executeTransactionAsync {
                         val sort = getAllOrdered(realm).sortedBy { l -> BuyListItem.countInList(it, l.id) }

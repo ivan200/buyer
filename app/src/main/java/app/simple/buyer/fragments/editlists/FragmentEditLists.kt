@@ -1,10 +1,11 @@
-package app.simple.buyer.fragments
+package app.simple.buyer.fragments.editlists
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
@@ -15,9 +16,9 @@ import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentEditListsBinding
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.OrderType
+import app.simple.buyer.fragments.ViewHolderSample
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.database.Prefs
-import app.simple.buyer.util.toByteArray
 import app.simple.buyer.util.toParcelable
 import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
@@ -32,6 +33,8 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
         get() = R.string.app_name
 
     private val shadowView get() = requireView().findViewById<View>(R.id.shadow_view)
+    private val navbarBg get() = requireView().findViewById<LinearLayout>(R.id.nav_bar_layout_bg)
+
     private val binding by viewBinding(FragmentEditListsBinding::bind)
     private var shadowToggler: ShadowRecyclerSwitcher? = null
 
@@ -45,7 +48,7 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
             setDisplayHomeAsUpEnabled(true)
         }
 
-        val adapter = MultiCellTypeAdapter(mActivity, this::showError)
+        val adapter = MultiCellTypeAdapter(this::showError)
         layoutManager = LinearLayoutManager(mActivity)
         binding.rvEditLists.layoutManager = layoutManager
         binding.rvEditLists.adapter = adapter
@@ -62,7 +65,7 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
-        setRecyclerPaddings(binding.rvEditLists, appBarLayout, binding.listsFab, insets)
+        setRecyclerPaddings(binding.rvEditLists, appBarLayout, binding.listsFab, insets, navBarBg = navbarBg)
         return super.onApplyWindowInsets(v, insets)
     }
 
@@ -87,40 +90,40 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-        val sortType = if(Prefs(requireContext()).listsSortAscending)  Sort.ASCENDING else Sort.DESCENDING
+        val sortType = true// if(Prefs(requireContext()).listsSortAscending)  Sort.ASCENDING else Sort.DESCENDING
 
         when (item.itemId) {
             R.id.item_sort_type -> {
-                val invertSort = if(sortType == Sort.ASCENDING)  Sort.DESCENDING else Sort.ASCENDING
-                BuyList.orderBy(realm, requireContext(), Prefs(requireContext()).listsOrderType, invertSort)
-                if (invertSort == Sort.ASCENDING) {
-                    item.setIcon(R.drawable.ic_sort_ascending)
-                } else {
-                    item.setIcon(R.drawable.ic_sort_descending)
-                }
+//                val invertSort = if(sortType == Sort.ASCENDING)  Sort.DESCENDING else Sort.ASCENDING
+//                BuyList.orderBy(realm, Prefs(requireContext()).listsOrderType, invertSort)
+//                if (invertSort == Sort.ASCENDING) {
+//                    item.setIcon(R.drawable.ic_sort_ascending)
+//                } else {
+//                    item.setIcon(R.drawable.ic_sort_descending)
+//                }
             }
             R.id.item_order_alphabet -> {
-                BuyList.orderBy(realm, requireContext(), OrderType.ALPHABET, sortType)
+                model.onOrderSelected(OrderType.ALPHABET)
                 checkItem(item, toolbar.menu)
             }
             R.id.item_order_popularity -> {
-                BuyList.orderBy(realm, requireContext(), OrderType.POPULARITY, sortType)
+                model.onOrderSelected(OrderType.POPULARITY)
                 checkItem(item, toolbar.menu)
             }
             R.id.item_order_size -> {
-                BuyList.orderBy(realm, requireContext(), OrderType.SIZE, sortType)
+                model.onOrderSelected(OrderType.SIZE)
                 checkItem(item, toolbar.menu)
             }
             R.id.item_order_create -> {
-                BuyList.orderBy(realm, requireContext(), OrderType.CREATED, sortType)
+                model.onOrderSelected(OrderType.CREATED)
                 checkItem(item, toolbar.menu)
             }
             R.id.item_order_modify -> {
-                BuyList.orderBy(realm, requireContext(), OrderType.MODIFIED, sortType)
+                model.onOrderSelected(OrderType.MODIFIED)
                 checkItem(item, toolbar.menu)
             }
             R.id.item_order_price -> {
-                BuyList.orderBy(realm, requireContext(), OrderType.PRICE, sortType)
+                model.onOrderSelected(OrderType.PRICE)
                 checkItem(item, toolbar.menu)
             }
             R.id.item_order_hand -> {

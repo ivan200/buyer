@@ -16,10 +16,11 @@ import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.fragments.FragmentMain.DrawerState.*
+import app.simple.buyer.fragments.additem.FragmentAddItem
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.TAG
 import app.simple.buyer.util.Utils
-import app.simple.buyer.util.database.Prefs
+import app.simple.buyer.util.log
 import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -104,7 +105,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
         setDrawerEdge(mDrawer, true)
         setDrawerEdge(mDrawer, false)
 
-        adapter = MultiCellTypeAdapter(mActivity, this::showError)
+        adapter = MultiCellTypeAdapter(this::showError)
         recyclerView.layoutManager = LinearLayoutManager(mActivity)
         recyclerView.adapter = adapter
         adapter!!.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
@@ -118,9 +119,26 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
     }
 
     fun getDrawerPos(newState: Int, drawerOpen: Boolean): DrawerState {
-        return if (newState == DrawerLayout.STATE_IDLE) {
-            if (drawerOpen) FINISH_OPENING else FINISH_CLOSING
-        } else if (drawerOpen) START_CLOSING else START_OPENING
+        val nState = when(newState){
+            DrawerLayout.STATE_IDLE -> "STATE_IDLE"
+            DrawerLayout.STATE_DRAGGING -> "STATE_DRAGGING"
+            DrawerLayout.STATE_SETTLING -> "STATE_SETTLING"
+            else -> "fdsfdsf"
+        }
+        val isOpen = if(drawerOpen) "OPEN" else "CLOSED"
+
+        log("$isOpen $nState")
+
+        return when {
+            !drawerOpen && newState == DrawerLayout.STATE_SETTLING -> START_OPENING
+            !drawerOpen && newState == DrawerLayout.STATE_IDLE -> FINISH_CLOSING
+            !drawerOpen && newState == DrawerLayout.STATE_DRAGGING -> START_OPENING
+
+            drawerOpen && newState == DrawerLayout.STATE_SETTLING -> START_CLOSING
+            drawerOpen && newState == DrawerLayout.STATE_IDLE -> FINISH_OPENING
+            drawerOpen && newState == DrawerLayout.STATE_DRAGGING -> START_CLOSING
+            else -> START_OPENING
+        }
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {

@@ -1,4 +1,4 @@
-package app.simple.buyer.fragments
+package app.simple.buyer.fragments.additem
 
 import android.view.LayoutInflater
 import android.view.View

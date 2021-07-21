@@ -50,3 +50,4 @@ app/release/
 /_windows/
 /codestyles/
 .idea/assetWizardSettings.xml
+/.idea/shelf/.xml

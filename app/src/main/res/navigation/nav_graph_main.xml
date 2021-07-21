@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentEditLists"
-        android:name="app.simple.buyer.fragments.FragmentEditLists"
+        android:name="app.simple.buyer.fragments.editlists.FragmentEditLists"
         android:label="FragmentEditLists"
         tools:layout="@layout/fragment_edit_lists"
         />

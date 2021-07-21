@@ -1,10 +1,10 @@
 package app.simple.buyer.interactor
 
+import app.simple.buyer.entities.OrderType
 import app.simple.buyer.entities.User
-import app.simple.buyer.util.logger
+import app.simple.buyer.util.log
 import app.simple.buyer.util.update
 import io.realm.Realm
-import java.util.logging.Level
 
 object UserInteractor {
 
@@ -20,16 +20,47 @@ object UserInteractor {
         return firstUser
     }
 
-    fun updateMainMenuState(realm: Realm, scrollState: ByteArray) {
-        realm.executeTransactionAsync {
-            val user = getUser(it)
-            user.apply {
-                if (!mainMenuState.contentEquals(scrollState)) {
-                    mainMenuState = scrollState
-                    update(it)
-                    logger.log(Level.INFO, scrollState.contentToString())
-                }
+    fun updateMainMenuState(realm: Realm, scrollState: ByteArray) = realm.executeTransactionAsync {
+        getUser(it).apply {
+            if (!mainMenuScrollState.contentEquals(scrollState)) {
+                mainMenuScrollState = scrollState
+                update(it)
+                log(scrollState.contentToString())
             }
         }
     }
+
+
+    fun updateOrderType(realm: Realm, orderType: OrderType) = realm.executeTransactionAsync {
+        getUser(it).apply {
+            if (listsOrderType != orderType.value) {
+                listsOrderType = orderType.value
+                update(it)
+                log("OrderType: ${orderType.name}")
+            }
+        }
+    }
+
+
+    fun updateSortAscending(realm: Realm, ascending: Boolean) = realm.executeTransactionAsync {
+        getUser(it).apply {
+            if (listsSortAscending != ascending) {
+                listsSortAscending = ascending
+                update(it)
+                log("SortAscending: $ascending")
+            }
+        }
+    }
+
+
+    fun updateDarkTheme(realm: Realm, dark: Boolean) = realm.executeTransactionAsync {
+        getUser(it).apply {
+            if (darkTheme != dark) {
+                darkTheme = dark
+                update(it)
+                log("DarkTheme: $dark")
+            }
+        }
+    }
+
 }

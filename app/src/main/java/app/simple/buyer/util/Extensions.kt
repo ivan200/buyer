@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import io.realm.*
 import java.util.*
+import java.util.logging.Level
 import java.util.logging.Logger
 import kotlin.collections.HashMap
 
@@ -33,7 +34,7 @@ import kotlin.collections.HashMap
 //
 inline val <T : Any> T.TAG: String get() = this::class.java.simpleName
 inline val <T : Any> T.logger: Logger get() = Logger.getLogger(this.TAG)
-
+inline fun <T : Any> T.log(value: Any) = logger.log(Level.INFO, value.toString())
 
 //
 //Collections

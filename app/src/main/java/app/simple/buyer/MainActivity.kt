@@ -1,21 +1,37 @@
 package app.simple.buyer
 
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import app.simple.buyer.util.database.Database
+import app.simple.buyer.util.Utils
 
 
-class MainActivity : BaseActivity(R.layout.activity_main) {
+class MainActivity : AppCompatActivity() {
+
+    private val model: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val th = if (model.isDarkThemeOn) R.style.AppThemeDark_Translucent else R.style.AppThemeLight_Translucent
+        setTheme(th)
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        try {
-            Database.firstInit(this, realm)
-        } catch (e: Throwable) {
-            showError(e)
+        model.checkFirstInit()
+        model.darkThemeChanged.observe(this) {
+            recreate()
         }
+    }
+
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        Utils.themeStatusBar(window, Color.TRANSPARENT, !model.isDarkThemeOn, false)
+        Utils.themeNavBar(window, Color.TRANSPARENT, !model.isDarkThemeOn, false)
+        return super.onCreateView(name, context, attrs)
     }
 
     override fun onBackPressed() {
@@ -25,3 +41,4 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 }
+

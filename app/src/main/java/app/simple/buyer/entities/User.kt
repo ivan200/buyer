@@ -1,6 +1,5 @@
 package app.simple.buyer.entities
 
-import app.simple.buyer.util.awaitFirst
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmQuery
@@ -25,7 +24,7 @@ open class User : RealmObject() {
     var currentListId: Long = 0L
 
     /** Сортировка списков в левой панели */
-    var listsOrderType: Int = OrderType.CREATED
+    var listsOrderType: Int = OrderType.CREATED.value
 
     /** Сортировка списков в левой панели по возрастанию/убыванию */
     var listsSortAscending: Boolean = true
@@ -34,7 +33,7 @@ open class User : RealmObject() {
     var darkTheme: Boolean = true
 
     /** Текущее состояние левой панели для восстановления скролла */
-    var mainMenuState: ByteArray = ByteArray(0)
+    var mainMenuScrollState: ByteArray = ByteArray(0)
 
     companion object {
         private fun getQuery(realm: Realm): RealmQuery<User> {
@@ -44,19 +43,6 @@ open class User : RealmObject() {
         fun get(realm: Realm): User? {
             return getQuery(realm).findFirst()
         }
-
-        suspend fun getAwait(realm: Realm): User? {
-            return getQuery(realm).awaitFirst()
-        }
-
-//        fun get(realm: Realm): User {
-//            val user = getQuery(realm).findFirst()
-//            if(user == null){
-//                val firstUser = User()
-//                realm.insert(firstUser)
-//            }
-//            return getQuery(realm).findFirst()!!
-//        }
     }
 }
 

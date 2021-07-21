@@ -1,4 +1,4 @@
-package app.simple.buyer.fragments
+package app.simple.buyer.fragments.additem
 
 import android.os.Bundle
 import android.view.KeyEvent
@@ -6,11 +6,14 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentAddItemBinding
 import app.simple.buyer.entities.BuyItem
+import app.simple.buyer.fragments.FragmentMain
+import app.simple.buyer.fragments.editlists.EditListsViewModel
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.Utils
 import app.simple.buyer.util.logger
@@ -27,12 +30,14 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
 
     private val binding by viewBinding(FragmentAddItemBinding::bind)
 
+    private val model: AddItemViewModel by viewModels()
+
     private lateinit var adapter: FoodAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = FoodAdapter(BuyItem.getListAsync(realm, ""), this::onItemAdded)
+        adapter = FoodAdapter(model.getItems(), this::onItemAdded)
         binding.apply {
             recyclerList.setHasFixedSize(true)
             recyclerList.itemAnimator = null
@@ -66,22 +71,20 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
             blockItemUpdateOnce = false
             return
         }
-        if((binding.recyclerList.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() > 0){
+        if(binding.recyclerList.canScrollVertically(-1)){
             binding.recyclerList.scrollToPosition(0)
         }
-        adapter.updateDataNoClear(BuyItem.getListAsync(realm, text.trim()))
+        adapter.updateDataNoClear(model.getItems(text))
     }
 
     fun rightDrawerPositionChanged(pos: FragmentMain.DrawerState){
-        logger.log(Level.INFO, pos.name)
-
         when(pos){
             FragmentMain.DrawerState.START_OPENING -> Utils.showKeyBoard2(binding.editText)
             FragmentMain.DrawerState.FINISH_OPENING -> Utils.showKeyBoard2(binding.editText)
-            FragmentMain.DrawerState.START_CLOSING -> Utils.hideKeyboard(mActivity)
+            FragmentMain.DrawerState.START_CLOSING -> Utils.hideKeyboardFrom(requireView())
             FragmentMain.DrawerState.FINISH_CLOSING -> {
                 binding.editText.text?.clear()
-                Utils.hideKeyboard(mActivity)
+                Utils.hideKeyboardFrom(requireView())
             }
         }
     }

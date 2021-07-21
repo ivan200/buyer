@@ -29,8 +29,7 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
     open val title = R.string.app_name
     open val titleString: String? = null
 
-    val mActivity get() = activity as BaseActivity
-    val realm get() = mActivity.realm
+    val mActivity get() = activity as MainActivity
 
     override val emptyData: EmptyData? = null
 
@@ -106,7 +105,11 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
     }
 
     fun showError(throwable: Throwable) {
-        mActivity.showError(throwable)
+
+//        mActivity.showError(throwable)
+
+
+
     }
 
 
