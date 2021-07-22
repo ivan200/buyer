@@ -11,14 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentAddItemBinding
-import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.fragments.FragmentMain
-import app.simple.buyer.fragments.editlists.EditListsViewModel
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.Utils
-import app.simple.buyer.util.logger
 import app.simple.buyer.util.views.viewBinding
-import java.util.logging.Level
 
 
 class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {

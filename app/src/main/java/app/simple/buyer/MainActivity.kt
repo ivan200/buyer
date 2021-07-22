@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     private val model: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val th = if (model.isDarkThemeOn) R.style.AppThemeDark_Translucent else R.style.AppThemeLight_Translucent
+        val th = if (model.isDarkThemeOn) R.style.AppThemeDark else R.style.AppThemeLight
         setTheme(th)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

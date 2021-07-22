@@ -70,6 +70,10 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
 
         setHasOptionsMenu(true)
         toolbar?.setOnMenuItemClickListener(this)
+
+        binding.listsFab.setOnClickListener { view ->
+            AddListDialogFragment().show(childFragmentManager, AddListDialogFragment.TAG)
+        }
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
@@ -84,14 +88,14 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
             menu.setGroupVisible(R.id.group_normal_mode, true)
             menu.setGroupVisible(R.id.group_reorder_mode, false)
         }
-        model.orderTypeChanged.observe(viewLifecycleOwner){ orderType: OrderType ->
+        model.orderTypeChanged.observe(viewLifecycleOwner) { orderType: OrderType ->
             val orderItem = orderMapping.firstOrNull { it.first == orderType }
             if (orderItem != null) {
                 checkItem(menu.findItem(orderItem.second), toolbar.menu)
             }
         }
-        model.sortTypeChanged.observe(viewLifecycleOwner){
-            val icon = when(it!!){
+        model.sortTypeChanged.observe(viewLifecycleOwner) {
+            val icon = when (it!!) {
                 SortType.ASCENDING -> R.drawable.ic_sort_ascending
                 SortType.DESCENDING -> R.drawable.ic_sort_descending
             }

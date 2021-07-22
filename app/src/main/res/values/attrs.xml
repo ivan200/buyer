@@ -11,13 +11,13 @@
         <attr name="colorSectionHeader" format="color"/>
         <attr name="bgSelectable" format="reference"/>
         <attr name="icAdd" format="reference"/>
-
         <attr name="colorText" format="color"/>
         <attr name="colorTextDisabled" format="color"/>
         <attr name="colorTextSecondary" format="color"/>
         <attr name="colorTextSecondaryDisabled" format="color"/>
         <attr name="colorTextHint" format="color"/>
         <attr name="colorDivider" format="color"/>
+        <attr name="colorNavbar" format="color"/>
 
     </declare-styleable>
 </resources>
