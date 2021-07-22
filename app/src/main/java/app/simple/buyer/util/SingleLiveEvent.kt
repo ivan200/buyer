@@ -15,11 +15,11 @@ class SingleLiveEvent<T> : MutableLiveData<T> {
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         // Observe the internal MutableLiveData
-        super.observe(owner, Observer { t ->
+        super.observe(owner) { t ->
             if (handled.compareAndSet(false, true)) {
                 observer.onChanged(t)
             }
-        })
+        }
     }
 
     override fun setValue(t: T?) {

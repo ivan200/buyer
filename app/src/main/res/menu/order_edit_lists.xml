@@ -11,6 +11,18 @@
 
             <menu>
                 <item
+                    android:icon="@drawable/ic_order_create"
+                    android:id="@+id/item_order_create"
+                    android:title="@string/order_create"
+                    app:showAsAction="never"
+                    />
+                <item
+                    android:icon="@drawable/ic_order_modify"
+                    android:id="@+id/item_order_modify"
+                    android:title="@string/order_modify"
+                    app:showAsAction="never"
+                    />
+                <item
                     android:icon="@drawable/ic_order_alphabet"
                     android:id="@+id/item_order_alphabet"
                     android:title="@string/order_alphabet"
@@ -40,18 +52,6 @@
                     <!--android:title="@string/order_category"-->
                     <!--app:showAsAction="never"-->
                     <!--/>-->
-                <item
-                    android:icon="@drawable/ic_order_create"
-                    android:id="@+id/item_order_create"
-                    android:title="@string/order_create"
-                    app:showAsAction="never"
-                    />
-                <item
-                    android:icon="@drawable/ic_order_modify"
-                    android:id="@+id/item_order_modify"
-                    android:title="@string/order_modify"
-                    app:showAsAction="never"
-                    />
                 <item
                     android:icon="@drawable/ic_order_hand"
                     android:id="@+id/item_order_hand"

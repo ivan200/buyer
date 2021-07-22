@@ -1,6 +1,7 @@
 package app.simple.buyer.interactor
 
 import app.simple.buyer.entities.OrderType
+import app.simple.buyer.entities.SortType
 import app.simple.buyer.entities.User
 import app.simple.buyer.util.log
 import app.simple.buyer.util.update
@@ -42,12 +43,12 @@ object UserInteractor {
     }
 
 
-    fun updateSortAscending(realm: Realm, ascending: Boolean) = realm.executeTransactionAsync {
+    fun updateSortAscending(realm: Realm, sortType: SortType) = realm.executeTransactionAsync {
         getUser(it).apply {
-            if (listsSortAscending != ascending) {
-                listsSortAscending = ascending
+            if (listsSortAscending != sortType.value) {
+                listsSortAscending = sortType.value
                 update(it)
-                log("SortAscending: $ascending")
+                log("SortAscending: $sortType")
             }
         }
     }

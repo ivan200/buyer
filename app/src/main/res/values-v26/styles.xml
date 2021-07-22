@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--На апи 26 стало возможным включать SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         потому для навигейшнбара мы выставляем бэкграунд какой и у обычных вью, чтоб он плавно переходил в боттомбар-->
 
     <style name="AppThemeLight.Base" parent="AppThemeLight">
         <item name="android:colorEdgeEffect">?attr/colorToolbar</item>
         <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
     </style>
 
 
@@ -20,6 +21,7 @@
     <style name="AppThemeDark.Base" parent="AppThemeDark">
         <item name="android:colorEdgeEffect">?attr/colorToolbar</item>
         <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
     </style>
 
     <style name="AppThemeDark.ColoredStatus" parent="AppThemeDark.Base">

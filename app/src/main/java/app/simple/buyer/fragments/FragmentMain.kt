@@ -118,27 +118,14 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
 //        { pos -> Prefs(mActivity).mainScrollPosition = pos }
     }
 
-    fun getDrawerPos(newState: Int, drawerOpen: Boolean): DrawerState {
-        val nState = when(newState){
-            DrawerLayout.STATE_IDLE -> "STATE_IDLE"
-            DrawerLayout.STATE_DRAGGING -> "STATE_DRAGGING"
-            DrawerLayout.STATE_SETTLING -> "STATE_SETTLING"
-            else -> "fdsfdsf"
-        }
-        val isOpen = if(drawerOpen) "OPEN" else "CLOSED"
-
-        log("$isOpen $nState")
-
-        return when {
-            !drawerOpen && newState == DrawerLayout.STATE_SETTLING -> START_OPENING
-            !drawerOpen && newState == DrawerLayout.STATE_IDLE -> FINISH_CLOSING
-            !drawerOpen && newState == DrawerLayout.STATE_DRAGGING -> START_OPENING
-
-            drawerOpen && newState == DrawerLayout.STATE_SETTLING -> START_CLOSING
-            drawerOpen && newState == DrawerLayout.STATE_IDLE -> FINISH_OPENING
-            drawerOpen && newState == DrawerLayout.STATE_DRAGGING -> START_CLOSING
-            else -> START_OPENING
-        }
+    fun getDrawerPos(newState: Int, drawerOpen: Boolean): DrawerState = when {
+        !drawerOpen && newState == DrawerLayout.STATE_SETTLING -> START_OPENING
+        !drawerOpen && newState == DrawerLayout.STATE_DRAGGING -> START_OPENING
+        !drawerOpen && newState == DrawerLayout.STATE_IDLE -> FINISH_CLOSING
+        drawerOpen && newState == DrawerLayout.STATE_SETTLING -> START_CLOSING
+        drawerOpen && newState == DrawerLayout.STATE_DRAGGING -> START_CLOSING
+        drawerOpen && newState == DrawerLayout.STATE_IDLE -> FINISH_OPENING
+        else -> START_OPENING
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {

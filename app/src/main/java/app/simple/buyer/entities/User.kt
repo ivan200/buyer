@@ -27,7 +27,7 @@ open class User : RealmObject() {
     var listsOrderType: Int = OrderType.CREATED.value
 
     /** Сортировка списков в левой панели по возрастанию/убыванию */
-    var listsSortAscending: Boolean = true
+    var listsSortAscending: Boolean = SortType.ASCENDING.value
 
     /** Тёмная тема */
     var darkTheme: Boolean = true

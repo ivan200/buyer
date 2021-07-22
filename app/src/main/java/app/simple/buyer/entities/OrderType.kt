@@ -1,33 +1,40 @@
 package app.simple.buyer.entities
 
 /**
- * Created by Zakharovi on 31.01.2018.
+ * Тип сортировки
+ *
+ * @author ivan200
+ * @since 31.01.2018
  */
 enum class OrderType(val value: Int) {
-    /** Ручная сортировка **/
-    NOT_SET(-1),
-
-    /** Ручная сортировка **/
-    HAND(0),
-
-    /** Сортировка по алфавиту **/
-    ALPHABET(1),
-
-    /** Сортировка по популярности **/
-    POPULARITY(2),
-
-    /** Сортировка по размеру **/
-    SIZE(3),
-
     /** Сортировка по дате создания **/
-    CREATED(4),
+    CREATED(0),
 
     /** Сортировка по дате изменения **/
-    MODIFIED(5),
+    MODIFIED(1),
+
+    /** Сортировка по алфавиту **/
+    ALPHABET(2),
+
+    /** Сортировка по популярности **/
+    POPULARITY(3),
+
+    /** Сортировка по размеру **/
+    SIZE(4),
 
     /** Сортировка по суммарной цене **/
-    PRICE(6),
+    PRICE(5),
 
-    /** Сортировка по категории **/
-    CATEGORY(7);
+    /** Ручная сортировка **/
+    HAND(6);
+
+//    /** Сортировка по категории **/
+//    CATEGORY(7);
+
+    companion object {
+        fun getByValue(value: Int): OrderType {
+            return values().first { it.value == value }
+        }
+    }
 }
+

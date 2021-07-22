@@ -1,7 +1,5 @@
 package app.simple.buyer.entities
 
-import android.content.Context
-import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.database.PrimaryKeyFactory
 import app.simple.buyer.util.update
 import io.realm.*
