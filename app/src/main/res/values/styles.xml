@@ -9,6 +9,8 @@
         <item name="windowActionBar">       false</item>
         <item name="windowNoTitle">         true</item>
         <item name="actionMenuTextColor">   ?attr/colorToolbarText</item>
+        <item name="android:itemBackground">@color/colorBackgroundLightMenu</item>
+
         <item name="android:windowTranslucentStatus"        tools:targetApi="kitkat">true</item>
         <item name="android:windowTranslucentNavigation"    tools:targetApi="kitkat">true</item>
         <item name="android:colorEdgeEffect"                tools:targetApi="lollipop">?attr/colorToolbar</item>
@@ -18,7 +20,7 @@
         <item name="colorToolbar">              @color/colorBackgroundLightTransparent</item>
         <item name="colorToolbarText">          @color/colorTextBlack</item>
         <item name="colorToolbarIcon">          @color/colorTextBlackSecondary</item>
-        <item name="colorMenuIcon">            @color/colorTextBlackSecondary</item>
+        <item name="colorMenuIcon">             @color/colorTextBlackSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
         <item name="bgSelectable">              @drawable/layer_list</item>
         <item name="icAdd">                     @drawable/ic_add_black</item>
@@ -41,14 +43,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorBackground">@color/colorBackgroundLight</item>
-    </style>
-
-    <style name="AppThemeLight.ColoredStatus" parent="AppThemeDark">
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">?android:colorBackground</item>
-        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">false</item>
-        <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">false</item>
+        <item name="android:colorBackground">@color/colorBackgroundLightMenu</item>
     </style>
 
     <style name="AppThemeDark.Base" parent="Theme.AppCompat">
@@ -60,6 +55,7 @@
         <item name="windowActionBar">       false</item>
         <item name="windowNoTitle">         true</item>
         <item name="actionMenuTextColor">   ?attr/colorToolbarText</item>
+        <item name="android:itemBackground">@color/colorBackgroundDarkMenu</item>
 
         <item name="android:windowTranslucentStatus"        tools:targetApi="kitkat">true</item>
         <item name="android:windowTranslucentNavigation"    tools:targetApi="kitkat">true</item>
@@ -70,7 +66,7 @@
         <item name="colorToolbar">              @color/colorBackgroundDarkTransparent</item>
         <item name="colorToolbarText">          @color/colorTextWhite</item>
         <item name="colorToolbarIcon">          @color/colorTextWhiteSecondary</item>
-        <item name="colorMenuIcon">            @color/colorTextWhiteSecondary</item>
+        <item name="colorMenuIcon">             @color/colorTextWhiteSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
         <item name="bgSelectable">              @drawable/layer_list_light</item>
         <item name="icAdd">                     @drawable/ic_add_white</item>z
@@ -88,20 +84,11 @@
 
     <style name="AppThemeDark" parent="AppThemeDark.Base"/>
 
-
-    <style name="AppThemeDark.ColoredStatus" parent="AppThemeDark">
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">?android:colorBackground</item>
-        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">false</item>
-        <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">false</item>
-    </style>
-
-
     <style name="AppThemeDark.Dialog" parent="Theme.AppCompat.Dialog.Alert" >
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorBackground">@color/colorBackgroundDark</item>
+        <item name="android:colorBackground">@color/colorBackgroundDarkMenu</item>
     </style>
 
 </resources>

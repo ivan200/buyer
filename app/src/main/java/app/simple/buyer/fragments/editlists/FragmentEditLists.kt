@@ -20,12 +20,13 @@ import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.toParcelable
 import app.simple.buyer.util.views.viewBinding
 
+
 class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.OnMenuItemClickListener {
 
     private val model: EditListsViewModel by viewModels()
 
     override val title: Int
-        get() = R.string.app_name
+        get() = R.string.lists_edit_title
 
     private val shadowView get() = requireView().findViewById<View>(R.id.shadow_view)
     private val navbarBg get() = requireView().findViewById<LinearLayout>(R.id.nav_bar_layout_bg)
@@ -34,9 +35,10 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
     private var shadowToggler: ShadowRecyclerSwitcher? = null
 
     private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var adapter: EditListsAdapter
 
     private val orderMapping = listOf(
-        Pair(OrderType.HAND, R.id.item_order_hand),
+//        Pair(OrderType.HAND, R.id.item_order_hand),
         Pair(OrderType.ALPHABET, R.id.item_order_alphabet),
         Pair(OrderType.POPULARITY, R.id.item_order_popularity),
         Pair(OrderType.SIZE, R.id.item_order_size),
@@ -53,21 +55,22 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
             setDisplayHomeAsUpEnabled(true)
         }
 
-        val adapter = EditListsAdapter(model.getItems())
+        adapter = EditListsAdapter(model.getItems())
+        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
         layoutManager = LinearLayoutManager(mActivity)
         binding.rvEditLists.layoutManager = layoutManager
         binding.rvEditLists.adapter = adapter
-        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
+        binding.rvEditLists.itemAnimator?.moveDuration = 0
+        binding.rvEditLists.itemAnimator?.changeDuration = 0
 
         val menuState = model.mainMenuState.toParcelable(LinearLayoutManager.SavedState.CREATOR)
         layoutManager.onRestoreInstanceState(menuState)
-
         shadowToggler = ShadowRecyclerSwitcher(binding.rvEditLists, shadowView, model::saveMainMenuState)
 
         setHasOptionsMenu(true)
         toolbar?.setOnMenuItemClickListener(this)
 
-        binding.listsFab.setOnClickListener { view ->
+        binding.listsFab.setOnClickListener {
             AddListDialogFragment().show(childFragmentManager, AddListDialogFragment.TAG)
         }
     }
@@ -99,7 +102,7 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
         }
     }
 
-    fun checkItem(item: MenuItem, menu: Menu) {
+    private fun checkItem(item: MenuItem, menu: Menu) {
         for (i in 0 until menu.size()) {
             val menuItem = menu.getItem(i)!!
             menuItem.isCheckable = (menuItem.itemId == item.itemId)

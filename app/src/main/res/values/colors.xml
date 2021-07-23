@@ -38,11 +38,15 @@
     <color name="ColorBackgroundGrey100">#fff5f5f5</color>
     <color name="ColorBackgroundGrey50">#fffafafa</color>
     <color name="colorBackground">#fafafa</color>
+
+<!-- app colors-->
     <color name="colorBackgroundDark">#FF202125</color>
     <color name="colorBackgroundDarkTransparent">#f2202125</color>
+    <color name="colorBackgroundDarkMenu">#FF2e3035</color>
 
     <color name="colorBackgroundLight">#ffe1e3ea</color>
     <color name="colorBackgroundLightTransparent">#f2e1e3ea</color>
+    <color name="colorBackgroundLightMenu">#FFeef0f8</color>
 
     <color name="colorCheckboxGreen">#4caf50</color>
     <color name="colorCheckboxRed">#D50000</color>

@@ -14,12 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentMainMenuBinding
-import app.simple.buyer.fragments.ViewHolderSample
 import app.simple.buyer.util.ShadowRecyclerSwitcher
-import app.simple.buyer.util.database.Prefs
 import app.simple.buyer.util.toParcelable
-import app.simple.buyer.util.views.MultiCellObject
-import app.simple.buyer.util.views.MultiCellTypeAdapter
 import app.simple.buyer.util.views.viewBinding
 
 
@@ -46,18 +42,20 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
         binding.menuToolbar.setOnClickListener(navigateEditLists)
         binding.menuToolbar.setOnMenuItemClickListener(this)
 
-        val adapterMenu = MultiCellTypeAdapter(this::showError)
+        val adapterMenu = MainMenuAdapter(model.getItems(), model::onMenuItemSelected)
+        adapterMenu.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
+        binding.menuRecycler.adapter = adapterMenu
+
         layoutManager = LinearLayoutManager(mActivity)
         binding.menuRecycler.layoutManager = layoutManager
-        binding.menuRecycler.adapter = adapterMenu
-        adapterMenu.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
-
-        adapterMenu.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
-
         val menuState = model.getMainMenuState().toParcelable(LinearLayoutManager.SavedState.CREATOR)
         layoutManager.onRestoreInstanceState(menuState)
 
         menuShadowToggler = ShadowRecyclerSwitcher(binding.menuRecycler, binding.menuShadowView, model::saveMainMenuState)
+
+        model.currentListId.observe(viewLifecycleOwner){
+            adapterMenu.selectList(it)
+        }
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
