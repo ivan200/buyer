@@ -16,11 +16,8 @@ import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentEditListsBinding
 import app.simple.buyer.entities.OrderType
 import app.simple.buyer.entities.SortType
-import app.simple.buyer.fragments.ViewHolderSample
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.toParcelable
-import app.simple.buyer.util.views.MultiCellObject
-import app.simple.buyer.util.views.MultiCellTypeAdapter
 import app.simple.buyer.util.views.viewBinding
 
 class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.OnMenuItemClickListener {
@@ -56,12 +53,11 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
             setDisplayHomeAsUpEnabled(true)
         }
 
-        val adapter = MultiCellTypeAdapter(this::showError)
+        val adapter = EditListsAdapter(model.getItems())
         layoutManager = LinearLayoutManager(mActivity)
         binding.rvEditLists.layoutManager = layoutManager
         binding.rvEditLists.adapter = adapter
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
-        adapter.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
 
         val menuState = model.mainMenuState.toParcelable(LinearLayoutManager.SavedState.CREATOR)
         layoutManager.onRestoreInstanceState(menuState)

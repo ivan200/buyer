@@ -18,7 +18,7 @@
         <item name="colorToolbar">              @color/colorBackgroundLightTransparent</item>
         <item name="colorToolbarText">          @color/colorTextBlack</item>
         <item name="colorToolbarIcon">          @color/colorTextBlackSecondary</item>
-        <item name="colorOrderIcon">            @color/colorTextBlackSecondary</item>
+        <item name="colorMenuIcon">            @color/colorTextBlackSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
         <item name="bgSelectable">              @drawable/layer_list</item>
         <item name="icAdd">                     @drawable/ic_add_black</item>
@@ -70,7 +70,7 @@
         <item name="colorToolbar">              @color/colorBackgroundDarkTransparent</item>
         <item name="colorToolbarText">          @color/colorTextWhite</item>
         <item name="colorToolbarIcon">          @color/colorTextWhiteSecondary</item>
-        <item name="colorOrderIcon">            @color/colorTextWhiteSecondary</item>
+        <item name="colorMenuIcon">            @color/colorTextWhiteSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
         <item name="bgSelectable">              @drawable/layer_list_light</item>
         <item name="icAdd">                     @drawable/ic_add_white</item>z

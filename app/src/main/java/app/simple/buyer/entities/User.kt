@@ -16,11 +16,11 @@ open class User : RealmObject() {
 //        this.listId = buyList.id
 //    }
 
-    /** Уникальный id */
+    /** Уникальный Id юзера. Так как он пока один, то всегда 0 */
     @PrimaryKey
     var id: Long = 0
 
-    /** Id юзера. Так как он пока один, то всегда 0 */
+    /** Текущий выбранный список */
     var currentListId: Long = 0L
 
     /** Сортировка списков в левой панели */

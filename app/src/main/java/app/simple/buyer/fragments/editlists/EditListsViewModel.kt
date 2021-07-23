@@ -4,11 +4,14 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import app.simple.buyer.BaseViewModel
+import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.OrderType
 import app.simple.buyer.entities.SortType
 import app.simple.buyer.entities.User
+import app.simple.buyer.interactor.ListsInteractor
 import app.simple.buyer.interactor.UserInteractor
 import app.simple.buyer.util.SingleLiveEvent
+import io.realm.OrderedRealmCollection
 import io.realm.RealmObjectChangeListener
 
 class EditListsViewModel(application: Application) : BaseViewModel(application) {
@@ -20,11 +23,15 @@ class EditListsViewModel(application: Application) : BaseViewModel(application) 
     init {
         user.addChangeListener(RealmObjectChangeListener<User> { changedUser, changeSet ->
             if (changeSet?.isFieldChanged(User::listsOrderType.name) == true) {
+                val sort = SortType.getByValue(changedUser.listsSortAscending)
                 val order = OrderType.getByValue(changedUser.listsOrderType)
+                ListsInteractor.reorderBy(realm, order, sort)
                 _orderTypeChanged.postValue(order)
             }
             if (changeSet?.isFieldChanged(User::listsSortAscending.name) == true) {
                 val sort = SortType.getByValue(changedUser.listsSortAscending)
+                val order = OrderType.getByValue(changedUser.listsOrderType)
+                ListsInteractor.reorderBy(realm, order, sort)
                 _sortTypeChanged.postValue(sort)
             }
         })
@@ -47,12 +54,9 @@ class EditListsViewModel(application: Application) : BaseViewModel(application) 
 
     val mainMenuState: ByteArray get() = user.mainMenuScrollState
 
-    val listsOrderType: OrderType get() = OrderType.getByValue(user.listsOrderType)
-
-    val listsSortAscending: Boolean get() = user.listsSortAscending
-
     fun updateOrderType(order: OrderType) {
         UserInteractor.updateOrderType(realm, order)
+
 //        BuyList.orderBy(realm, requireContext(), OrderType.ALPHABET, sortType)
     }
 
@@ -61,4 +65,8 @@ class EditListsViewModel(application: Application) : BaseViewModel(application) 
         UserInteractor.updateSortAscending(realm, newSort)
     }
 
+
+    fun getItems(): OrderedRealmCollection<BuyList> {
+        return BuyList.getAllOrdered(realm)
+    }
 }

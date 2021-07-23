@@ -21,6 +21,7 @@
     <string name="dialog_add_list_error">Данный список уже существует</string>
 
     <string name="button_add">Добавить</string>
+    <string name="button_cancel">Отмена</string>
 
     <string name="menu_sort">Сортировка</string>
 
@@ -39,5 +40,6 @@
     <string name="empty_data">Нет данных</string>
     <string name="empty_getting_data">Нечего отображать</string>
 
+    <string name="default_first_list_name">Продукты</string>
 
 </resources>

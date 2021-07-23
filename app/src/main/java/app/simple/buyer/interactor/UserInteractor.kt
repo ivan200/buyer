@@ -3,7 +3,6 @@ package app.simple.buyer.interactor
 import app.simple.buyer.entities.OrderType
 import app.simple.buyer.entities.SortType
 import app.simple.buyer.entities.User
-import app.simple.buyer.util.log
 import app.simple.buyer.util.update
 import io.realm.Realm
 
@@ -21,23 +20,29 @@ object UserInteractor {
         return firstUser
     }
 
+    fun selectList(realm: Realm, listId: Long) = realm.executeTransactionAsync {
+        getUser(it).apply {
+            if (currentListId != listId) {
+                currentListId = listId
+                update(it)
+            }
+        }
+    }
+
     fun updateMainMenuState(realm: Realm, scrollState: ByteArray) = realm.executeTransactionAsync {
         getUser(it).apply {
             if (!mainMenuScrollState.contentEquals(scrollState)) {
                 mainMenuScrollState = scrollState
                 update(it)
-                log(scrollState.contentToString())
             }
         }
     }
-
 
     fun updateOrderType(realm: Realm, orderType: OrderType) = realm.executeTransactionAsync {
         getUser(it).apply {
             if (listsOrderType != orderType.value) {
                 listsOrderType = orderType.value
                 update(it)
-                log("OrderType: ${orderType.name}")
             }
         }
     }
@@ -48,7 +53,6 @@ object UserInteractor {
             if (listsSortAscending != sortType.value) {
                 listsSortAscending = sortType.value
                 update(it)
-                log("SortAscending: $sortType")
             }
         }
     }
@@ -59,7 +63,6 @@ object UserInteractor {
             if (darkTheme != dark) {
                 darkTheme = dark
                 update(it)
-                log("DarkTheme: $dark")
             }
         }
     }

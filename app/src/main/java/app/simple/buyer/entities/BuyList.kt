@@ -1,7 +1,6 @@
 package app.simple.buyer.entities
 
 import app.simple.buyer.util.database.PrimaryKeyFactory
-import app.simple.buyer.util.update
 import io.realm.*
 import io.realm.annotations.PrimaryKey
 import java.util.*
@@ -74,48 +73,11 @@ open class BuyList() : RealmObject() {
             }
         }
 
-        fun orderBy(realm: Realm, orderType: OrderType, sortAscending: Boolean) {
-//            Prefs(context).listsSortAscending = if(sortOrder == Sort.ASCENDING) Sort.ASCENDING.value else Sort.DESCENDING.value
-//            Prefs(context).listsOrderType = orderType
-            val sortOrder = if(sortAscending) Sort.ASCENDING else Sort.DESCENDING
-
-            when (orderType) {
-                OrderType.ALPHABET -> orderByField(realm, BuyList::name.name, sortOrder)
-                OrderType.POPULARITY -> orderByField(realm, BuyList::populatity.name, sortOrder)
-                OrderType.CREATED -> orderByField(realm,  BuyList::created.name, sortOrder)
-                OrderType.MODIFIED -> orderByField(realm, BuyList::modified.name, sortOrder)
-                OrderType.SIZE -> {
-                    realm.executeTransactionAsync {
-                        val sort = getAllOrdered(realm).sortedBy { l -> BuyListItem.countInList(it, l.id) }
-                        val indices = if (sortOrder == Sort.ASCENDING) sort.indices else sort.indices.reversed()
-                        for ((k, i) in indices.withIndex()) {
-                            sort[i]?.sortPosition = k.toLong()
-                        }
-                    }
-                }
-            }
-        }
-
-        //Сортировка по одному из полей
-        private fun orderByField(realm: Realm, fieldName: String, sortOrder: Sort) {
-            realm.executeTransactionAsync {
-                val sort = getAllOrdered(realm).sort(fieldName, sortOrder)
-                for (i in sort.indices) {
-                    sort[i]?.sortPosition = i.toLong()
-                }
-            }
-        }
 
         fun getByName(realm: Realm, name: String) : BuyList? {
-            return getQuery(realm).equalTo( BuyList::name.name, name).findFirst()
+            return getQuery(realm).equalTo(BuyList::name.name, name).findFirst()
         }
 
-        fun addAsync(realm: Realm, name: String) {
-            val newList = BuyList(name)
-            realm.executeTransactionAsync {
-                newList.update(it)
-            }
-        }
     }
 }
 

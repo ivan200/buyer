@@ -6,14 +6,11 @@ import io.realm.*
 /**
  * The RealmBaseRecyclerAdapter class is an abstract utility class for binding RecyclerView UI elements to Realm data.
  *
- *
  * This adapter will automatically handle any updates to its data and call `notifyDataSetChanged()`,
  * `notifyItemInserted()`, `notifyItemRemoved()` or `notifyItemRangeChanged()` as appropriate.
  *
- *
  * The RealmAdapter will stop receiving updates if the Realm instance providing the [OrderedRealmCollection] is
  * closed.
- *
  *
  * If the adapter contains Realm model classes with a primary key that is either an `int` or a `long`, call
  * `setHasStableIds(true)` in the constructor and override [getItemId] as described by the Javadoc in that method.
