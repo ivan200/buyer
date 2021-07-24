@@ -17,6 +17,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <include
+        android:id="@+id/view_toolbar"
         layout="@layout/view_toolbar"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

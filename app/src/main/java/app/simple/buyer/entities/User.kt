@@ -9,12 +9,6 @@ import io.realm.annotations.PrimaryKey
  * User
  */
 open class User : RealmObject() {
-//    constructor(buyItem: BuyItem, buyList: BuyList) : this() {
-//        this.id = PrimaryKeyFactory.nextKey<BuyListItem>()
-//        this.buyItem = buyItem
-//        this.buyList = buyList
-//        this.listId = buyList.id
-//    }
 
     /** Уникальный Id юзера. Так как он пока один, то всегда 0 */
     @PrimaryKey
@@ -34,6 +28,10 @@ open class User : RealmObject() {
 
     /** Текущее состояние левой панели для восстановления скролла */
     var mainMenuScrollState: ByteArray = ByteArray(0)
+
+
+    val order get() = OrderType.getByValue(listsOrderType)
+    val sort get() = SortType.getByValue(listsSortAscending)
 
     companion object {
         private fun getQuery(realm: Realm): RealmQuery<User> {

@@ -29,8 +29,14 @@ open class BuyList() : RealmObject() {
     /** Дата модификации списка */
     var modified: Date = Date()
 
-    /** Позиция при нестандартной сортировке */
-    var sortPosition: Long = 0
+    /** элементы списка покупок */
+    var items: RealmList<BuyListItem> = RealmList()
+
+    /** Количеество элементов, для сортировки */
+    var itemsCount: Long = 0
+
+    /** Суммарная стоимость элементов, для сортировки */
+    var itemsSumPrice: Long = 0
 
     /** Позиция при ручной сортировке */
     var handSortPosition: Long = 0
@@ -44,9 +50,6 @@ open class BuyList() : RealmObject() {
     /** тип персональной сортировки данного списка (обычно сортировка внутри списка распространяется на все списки) */
     var personalOrderType: Int = OrderType.CREATED.value
 
-    /** элементы списка покупок */
-    var items: RealmList<BuyListItem> = RealmList()
-
     /** Текущее состояние скролла каждого из списков */
     var scrollState: ByteArray = ByteArray(0)
 
@@ -55,22 +58,27 @@ open class BuyList() : RealmObject() {
             return realm.where(BuyList::class.java)
         }
 
-        fun getAll(realm: Realm) : RealmResults<BuyList> {
-            return getQuery(realm).findAll()
-        }
-
-        fun getAllOrdered(realm: Realm): OrderedRealmCollection<BuyList> {
-            return getQuery(realm).findAll().sort(BuyList::sortPosition.name)
-        }
-
-        fun getAllOrderedByHand(realm: Realm): OrderedRealmCollection<BuyList> {
-            return getQuery(realm).findAll().sort(BuyList::handSortPosition.name)
+        fun getAllOrdered(realm: Realm, orderType: OrderType, sortType: SortType): OrderedRealmCollection<BuyList> {
+            val sortOrder = when (sortType) {
+                SortType.ASCENDING -> Sort.ASCENDING
+                SortType.DESCENDING -> Sort.DESCENDING
+            }
+            val fieldName = when (orderType) {
+                OrderType.ALPHABET -> BuyList::name.name
+                OrderType.POPULARITY -> BuyList::populatity.name
+                OrderType.CREATED -> BuyList::created.name
+                OrderType.MODIFIED -> BuyList::modified.name
+                OrderType.PRICE -> BuyList::itemsSumPrice.name
+                OrderType.HAND -> BuyList::handSortPosition.name
+                OrderType.SIZE -> BuyList::itemsCount.name
+            }
+            return getQuery(realm).findAll().sort(fieldName, sortOrder)
         }
 
         fun clearHandOrder(realm: Realm) {
-            realm.executeTransactionAsync {
-                getAllOrdered(realm).forEach { buyList -> buyList.handSortPosition = buyList.sortPosition }
-            }
+//            realm.executeTransactionAsync {
+//                getAllOrdered(realm).forEach { buyList -> buyList.handSortPosition = buyList.sortPosition }
+//            }
         }
 
         fun getByName(realm: Realm, name: String) : BuyList? {

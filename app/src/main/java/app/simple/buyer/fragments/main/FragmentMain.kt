@@ -2,7 +2,6 @@ package app.simple.buyer.fragments.main
 
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
@@ -10,16 +9,16 @@ import androidx.customview.widget.ViewDragHelper
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
+import app.simple.buyer.databinding.FragmentMainBinding
 import app.simple.buyer.fragments.ViewHolderSample
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
 import app.simple.buyer.fragments.main.DrawerState.*
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import app.simple.buyer.util.views.viewBinding
 
 
 class FragmentMain : BaseFragment(R.layout.fragment_main) {
@@ -27,14 +26,9 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
         get() = R.string.app_name
 
     private val model: MainViewModel by viewModels()
+    private val binding by viewBinding(FragmentMainBinding::bind)
 
-    private val mDrawer get() = requireView().findViewById<DrawerLayout>(R.id.drawer_layout)
-
-    private val recyclerView get() = requireView().findViewById<RecyclerView>(R.id.main_recycler)
-    private val navbarBg get() = requireView().findViewById<LinearLayout>(R.id.nav_bar_layout_bg)
-    private val shadow get() = requireView().findViewById<View>(R.id.shadow_view)
     private var mainShadowToggler: ShadowRecyclerSwitcher? = null
-    private val fab get() = requireView().findViewById<FloatingActionButton>(R.id.fab)
 
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
 
@@ -50,7 +44,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
 
         mDrawerToggle = object : ActionBarDrawerToggle(
             mActivity,
-            mDrawer,
+            binding.drawer,
             toolbar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
@@ -61,11 +55,11 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
                 super.onDrawerStateChanged(newState)
 
                 if (newState == rDrawerState) return
-                val state = getDrawerState(mDrawer, false)
+                val state = getDrawerState(binding.drawer, false)
                 if (state == rDrawerState) return
                 rDrawerState = state
 
-                val drawerOpen = mDrawer.isDrawerOpen(GravityCompat.END)
+                val drawerOpen = binding.drawer.isDrawerOpen(GravityCompat.END)
                 val pos = DrawerState.getDrawerPos(rDrawerState, drawerOpen)
                 this@FragmentMain
                     .childFragmentManager
@@ -78,42 +72,54 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
             override fun onDrawerOpened(drawerView: View) {
                 val isSecondaryOpened = drawerView.id == R.id.nav_view_right
                 val lockGravity = if (isSecondaryOpened) GravityCompat.START else GravityCompat.END
-                mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, lockGravity)
+                binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, lockGravity)
                 super.onDrawerOpened(drawerView)
             }
 
             override fun onDrawerClosed(drawerView: View) {
                 val isSecondaryClosed = drawerView.id == R.id.nav_view_right
                 val lockGravity = if (isSecondaryClosed) GravityCompat.START else GravityCompat.END
-                mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, lockGravity)
+                binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, lockGravity)
                 super.onDrawerClosed(drawerView)
             }
 
         }
 
-        mDrawer.addDrawerListener(mDrawerToggle)
+        binding.drawer.addDrawerListener(mDrawerToggle)
 
         mDrawerToggle.syncState()
 
-        fab.setOnClickListener { v ->
-            mDrawer.openDrawer(GravityCompat.END)
+        binding.contentMain.fab.setOnClickListener { v ->
+            binding.drawer.openDrawer(GravityCompat.END)
         }
 
         adapter = MultiCellTypeAdapter(this::showError)
-        recyclerView.layoutManager = LinearLayoutManager(mActivity)
-        recyclerView.adapter = adapter
+        binding.contentMain.mainRecycler.let {
+            it.layoutManager = LinearLayoutManager(mActivity)
+            it.adapter = adapter
+        }
         adapter!!.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
 
         mainShadowToggler = ShadowRecyclerSwitcher(
-            recyclerView,
-            shadow,
+            binding.contentMain.mainRecycler,
+            binding.contentMain.viewToolbar.shadowView
 //            Prefs(mActivity).mainScrollPosition
         )
 //        { pos -> Prefs(mActivity).mainScrollPosition = pos }
+
+        //TODO Доприкрутить менюшки
+        //TODO Добавить экспорт списка
     }
 
+
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
-        setRecyclerPaddings(recyclerView, appBarLayout, fab, insets, navBarBg = navbarBg)
+        setRecyclerPaddings(
+            binding.contentMain.mainRecycler,
+            appBarLayout,
+            binding.contentMain.fab,
+            insets,
+            navBarBg = binding.navbar.navBarLayoutBg
+        )
         childFragmentManager.fragments.forEach {
             (it as? BaseFragment)?.onApplyWindowInsets(v, insets)
         }

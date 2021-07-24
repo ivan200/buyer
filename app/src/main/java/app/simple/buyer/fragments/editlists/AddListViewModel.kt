@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import app.simple.buyer.BaseViewModel
 import app.simple.buyer.entities.BuyList
-import app.simple.buyer.entities.OrderType
-import app.simple.buyer.entities.SortType
 import app.simple.buyer.interactor.ListsInteractor
 import app.simple.buyer.interactor.UserInteractor
 
@@ -48,11 +46,6 @@ class AddListViewModel(application: Application) : BaseViewModel(application) {
     fun onAddNewList(){
         if(currentNewListName.isNotEmpty()) {
             ListsInteractor.createList(realm, currentNewListName)
-            ListsInteractor.reorderBy(
-                realm,
-                OrderType.getByValue(user.listsOrderType),
-                SortType.getByValue(user.listsSortAscending)
-            )
             currentNewListName = ""
         }
     }

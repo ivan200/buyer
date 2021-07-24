@@ -37,7 +37,7 @@ open class BuyItem() : RealmObject() {
     var parentItem: BuyItem? = null
 
     /** Цена, запоминается */
-    var price: String = ""
+    var price: Long = 0L
 
     /** Название без заглавных и букв ё */
     var searchName: String = ""
@@ -60,6 +60,7 @@ open class BuyItem() : RealmObject() {
 
         //сглаживание имени (заменяем буквы ё и уменьшаем регистр для поиска)
         fun smoothName(name: String): String {
+            //TODO Прикрутить поддержку английского и возможно других языков.
             return name.replace('ё', 'е')
                 .replace('Ё', 'Е')
                 .lowercase(Locale("ru", "RU"))

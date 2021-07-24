@@ -2,11 +2,11 @@ package app.simple.buyer.fragments.main
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import app.simple.buyer.BaseViewModel
 import app.simple.buyer.entities.User
+import app.simple.buyer.interactor.ListsInteractor
 import app.simple.buyer.interactor.UserInteractor
-import app.simple.buyer.util.SingleLiveEvent
-import app.simple.buyer.util.database.Database
 import io.realm.RealmObjectChangeListener
 
 class MainViewModel(application: Application) : BaseViewModel(application) {
@@ -15,18 +15,25 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     init {
         user.addChangeListener(RealmObjectChangeListener<User> { changedUser, changeSet ->
             if (changeSet?.isFieldChanged(User::currentListId.name) == true) {
-                _currentListChanged.postValue(changedUser.currentListId)
+                _currentListId.postValue(changedUser.currentListId)
             }
         })
     }
 
-    val isDarkThemeOn get() = user.darkTheme
+    private val _currentListId = MutableLiveData(user.currentListId)
+    val currentListId: LiveData<Long> get() = _currentListId
 
-    private val _currentListChanged = SingleLiveEvent<Long>()
-    val currentListChanged: LiveData<Long> get() = _currentListChanged
-
-
-    fun checkFirstInit(){
-        Database.firstInit(context, realm)
+    fun saveScrollState(scrollState: ByteArray) {
+        ListsInteractor.updateListScrollState(realm, user.currentListId, scrollState)
     }
+
+    fun getScrollState(): ByteArray {
+        return user.mainMenuScrollState
+    }
+
+//    fun getItems(): OrderedRealmCollection<BuyListItem> {
+//        return realm.getById<BuyList>()?.items
+//    }
+//
+
 }

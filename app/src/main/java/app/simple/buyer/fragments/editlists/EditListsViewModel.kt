@@ -23,24 +23,18 @@ class EditListsViewModel(application: Application) : BaseViewModel(application) 
     init {
         user.addChangeListener(RealmObjectChangeListener<User> { changedUser, changeSet ->
             if (changeSet?.isFieldChanged(User::listsOrderType.name) == true) {
-                val sort = SortType.getByValue(changedUser.listsSortAscending)
-                val order = OrderType.getByValue(changedUser.listsOrderType)
-                ListsInteractor.reorderBy(realm, order, sort)
-                _orderTypeChanged.postValue(order)
+                _orderTypeChanged.postValue(changedUser.order)
             }
             if (changeSet?.isFieldChanged(User::listsSortAscending.name) == true) {
-                val sort = SortType.getByValue(changedUser.listsSortAscending)
-                val order = OrderType.getByValue(changedUser.listsOrderType)
-                ListsInteractor.reorderBy(realm, order, sort)
-                _sortTypeChanged.postValue(sort)
+                _sortTypeChanged.postValue(changedUser.sort)
             }
         })
     }
 
-    private val _orderTypeChanged = MutableLiveData(OrderType.getByValue(user.listsOrderType))
+    private val _orderTypeChanged = MutableLiveData(user.order)
     val orderTypeChanged: LiveData<OrderType> get() = _orderTypeChanged
 
-    private val _sortTypeChanged = MutableLiveData(SortType.getByValue(user.listsSortAscending))
+    private val _sortTypeChanged = MutableLiveData(user.sort)
     val sortTypeChanged: LiveData<SortType> get() = _sortTypeChanged
 
     fun saveMainMenuState(scrollState: ByteArray) {
@@ -56,8 +50,6 @@ class EditListsViewModel(application: Application) : BaseViewModel(application) 
 
     fun updateOrderType(order: OrderType) {
         UserInteractor.updateOrderType(realm, order)
-
-//        BuyList.orderBy(realm, requireContext(), OrderType.ALPHABET, sortType)
     }
 
     fun toggleSortAscending() {
@@ -67,7 +59,7 @@ class EditListsViewModel(application: Application) : BaseViewModel(application) 
 
 
     fun getItems(): OrderedRealmCollection<BuyList> {
-        return BuyList.getAllOrdered(realm)
+        return BuyList.getAllOrdered(realm, user.order, user.sort)
     }
 
     fun onItemClicked(itemId: Long){

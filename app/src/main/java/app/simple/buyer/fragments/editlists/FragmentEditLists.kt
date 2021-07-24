@@ -92,6 +92,7 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
             if (orderItem != null) {
                 checkItem(menu.findItem(orderItem.second), toolbar.menu)
             }
+            adapter.updateData(model.getItems())
         }
         model.sortTypeChanged.observe(viewLifecycleOwner) {
             val icon = when (it!!) {
@@ -99,6 +100,7 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
                 SortType.DESCENDING -> R.drawable.ic_sort_descending
             }
             menu.findItem(R.id.item_sort_type)?.setIcon(icon)
+            adapter.updateData(model.getItems())
         }
     }
 
@@ -125,6 +127,9 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
                 R.id.item_order_hand -> {
                     toolbar.menu.setGroupVisible(R.id.group_normal_mode, false)
                     toolbar.menu.setGroupVisible(R.id.group_reorder_mode, true)
+
+                    //TODO Доприкрутить сортировку руками
+
 //                adapter?.enableReorderMode(true)
                     item.isChecked = true
                 }

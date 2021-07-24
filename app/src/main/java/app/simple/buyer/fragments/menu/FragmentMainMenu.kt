@@ -42,6 +42,7 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
         binding.menuToolbar.setOnClickListener(navigateEditLists)
         binding.menuToolbar.setOnMenuItemClickListener(this)
 
+        //TODO Добавить отображение emptyView если удалены все списки
         val adapterMenu = MainMenuAdapter(model.getItems(), model::onMenuItemSelected)
         adapterMenu.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
         binding.menuRecycler.adapter = adapterMenu
@@ -55,6 +56,9 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
 
         model.currentListId.observe(viewLifecycleOwner){
             adapterMenu.selectList(it)
+        }
+        model.listsOrderChanged.observe(viewLifecycleOwner){
+            adapterMenu.updateData(model.getItems())
         }
     }
 
