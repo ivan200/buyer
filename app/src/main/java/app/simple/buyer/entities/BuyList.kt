@@ -73,7 +73,6 @@ open class BuyList() : RealmObject() {
             }
         }
 
-
         fun getByName(realm: Realm, name: String) : BuyList? {
             return getQuery(realm).equalTo(BuyList::name.name, name).findFirst()
         }

@@ -1,4 +1,4 @@
-package app.simple.buyer.fragments.mainmenu
+package app.simple.buyer.fragments.menu
 
 import android.app.Application
 import androidx.lifecycle.LiveData

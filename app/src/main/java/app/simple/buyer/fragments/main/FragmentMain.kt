@@ -1,42 +1,32 @@
-package app.simple.buyer.fragments
+package app.simple.buyer.fragments.main
 
-import android.content.Context
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.View
-import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.customview.widget.ViewDragHelper
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
-import app.simple.buyer.fragments.FragmentMain.DrawerState.*
-import app.simple.buyer.fragments.additem.FragmentAddItem
+import app.simple.buyer.fragments.ViewHolderSample
+import app.simple.buyer.fragments.additem.DrawerStateConsumer
+import app.simple.buyer.fragments.main.DrawerState.*
 import app.simple.buyer.util.ShadowRecyclerSwitcher
-import app.simple.buyer.util.TAG
-import app.simple.buyer.util.Utils
-import app.simple.buyer.util.log
 import app.simple.buyer.util.views.MultiCellObject
 import app.simple.buyer.util.views.MultiCellTypeAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class FragmentMain : BaseFragment(R.layout.fragment_main) {
-
-    enum class DrawerState {
-        START_OPENING,
-        FINISH_OPENING,
-        START_CLOSING,
-        FINISH_CLOSING
-    }
-
     override val title: Int
         get() = R.string.app_name
+
+    private val model: MainViewModel by viewModels()
 
     private val mDrawer get() = requireView().findViewById<DrawerLayout>(R.id.drawer_layout)
 
@@ -58,25 +48,31 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
             setDisplayHomeAsUpEnabled(false)
         }
 
-        mDrawerToggle = object : ActionBarDrawerToggle(mActivity, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+        mDrawerToggle = object : ActionBarDrawerToggle(
+            mActivity,
+            mDrawer,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        ) {
             var rDrawerState: Int = ViewDragHelper.STATE_IDLE
 
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)
-                if (newState == rDrawerState) return
 
+                if (newState == rDrawerState) return
                 val state = getDrawerState(mDrawer, false)
                 if (state == rDrawerState) return
-
                 rDrawerState = state
 
                 val drawerOpen = mDrawer.isDrawerOpen(GravityCompat.END)
-                val pos = getDrawerPos(rDrawerState, drawerOpen)
-
-//                logger.log(Level.INFO, "RightDrawerState: ${pos.name}")
-                val fragmentAddItem = (this@FragmentMain).childFragmentManager.fragments
-                        .find { it.TAG == FragmentAddItem::class.java.simpleName } as? FragmentAddItem
-                fragmentAddItem?.rightDrawerPositionChanged(pos)
+                val pos = DrawerState.getDrawerPos(rDrawerState, drawerOpen)
+                this@FragmentMain
+                    .childFragmentManager
+                    .fragments
+                    .firstOrNull { it is DrawerStateConsumer }
+                    ?.let { it as? DrawerStateConsumer }
+                    ?.onDrawerPositionChanged(pos)
             }
 
             override fun onDrawerOpened(drawerView: View) {
@@ -96,14 +92,12 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
         }
 
         mDrawer.addDrawerListener(mDrawerToggle)
+
         mDrawerToggle.syncState()
 
         fab.setOnClickListener { v ->
             mDrawer.openDrawer(GravityCompat.END)
         }
-
-        setDrawerEdge(mDrawer, true)
-        setDrawerEdge(mDrawer, false)
 
         adapter = MultiCellTypeAdapter(this::showError)
         recyclerView.layoutManager = LinearLayoutManager(mActivity)
@@ -118,16 +112,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
 //        { pos -> Prefs(mActivity).mainScrollPosition = pos }
     }
 
-    fun getDrawerPos(newState: Int, drawerOpen: Boolean): DrawerState = when {
-        !drawerOpen && newState == DrawerLayout.STATE_SETTLING -> START_OPENING
-        !drawerOpen && newState == DrawerLayout.STATE_DRAGGING -> START_OPENING
-        !drawerOpen && newState == DrawerLayout.STATE_IDLE -> FINISH_CLOSING
-        drawerOpen && newState == DrawerLayout.STATE_SETTLING -> START_CLOSING
-        drawerOpen && newState == DrawerLayout.STATE_DRAGGING -> START_CLOSING
-        drawerOpen && newState == DrawerLayout.STATE_IDLE -> FINISH_OPENING
-        else -> START_OPENING
-    }
-
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
         setRecyclerPaddings(recyclerView, appBarLayout, fab, insets, navBarBg = navbarBg)
         childFragmentManager.fragments.forEach {
@@ -136,38 +120,12 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
         return super.onApplyWindowInsets(v, insets)
     }
 
-    private fun setDrawerEdge(mDrawerLayout: DrawerLayout, isLeftDrawer: Boolean = true) {
-        try {
-            val manager = mActivity.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            val width = DisplayMetrics().also { manager.defaultDisplay.getMetrics(it) }.widthPixels
-
-            val viewDragHelper = mDrawerLayout.javaClass
-                    .getDeclaredField(if (isLeftDrawer) "mLeftDragger" else "mRightDragger")
-                    .apply { isAccessible = true }
-                    .run { get(mDrawerLayout) as ViewDragHelper }
-
-            viewDragHelper.let { it::class.java.getDeclaredField("mEdgeSize") }
-                    .apply {
-                        isAccessible = true
-                        setInt(viewDragHelper, width/2)
-                    }
-
-            viewDragHelper.let { it::class.java.getDeclaredField("mTouchSlop") }
-                    .apply {
-                        isAccessible = true
-                        setInt(viewDragHelper, Utils.convertDpToPixel(16).toInt())
-                    }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     private fun getDrawerState(mDrawerLayout: DrawerLayout, isLeftDrawer: Boolean = true): Int {
         try {
             val viewDragHelper = mDrawerLayout.javaClass
-                    .getDeclaredField(if (isLeftDrawer) "mLeftDragger" else "mRightDragger")
-                    .apply { isAccessible = true }
-                    .run { get(mDrawerLayout) as ViewDragHelper }
+                .getDeclaredField(if (isLeftDrawer) "mLeftDragger" else "mRightDragger")
+                .apply { isAccessible = true }
+                .run { get(mDrawerLayout) as ViewDragHelper }
 
             return viewDragHelper.viewDragState
         } catch (e: Exception) {

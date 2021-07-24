@@ -55,7 +55,7 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
             setDisplayHomeAsUpEnabled(true)
         }
 
-        adapter = EditListsAdapter(model.getItems())
+        adapter = EditListsAdapter(model.getItems(), model::onItemClicked, model::onItemDeleted)
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
         layoutManager = LinearLayoutManager(mActivity)
         binding.rvEditLists.layoutManager = layoutManager

@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentAddItemBinding
-import app.simple.buyer.fragments.FragmentMain
+import app.simple.buyer.fragments.main.DrawerState
+import app.simple.buyer.fragments.main.DrawerState.*
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.Utils
 import app.simple.buyer.util.views.viewBinding
 
-
-class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
+class FragmentAddItem : BaseFragment(R.layout.fragment_add_item), DrawerStateConsumer {
 
     override val title: Int
         get() = R.string.app_name
@@ -73,12 +73,12 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item) {
         adapter.updateDataNoClear(model.getItems(text))
     }
 
-    fun rightDrawerPositionChanged(pos: FragmentMain.DrawerState){
+    override fun onDrawerPositionChanged(pos: DrawerState){
         when(pos){
-            FragmentMain.DrawerState.START_OPENING -> Utils.showKeyBoard2(binding.editText)
-            FragmentMain.DrawerState.FINISH_OPENING -> Utils.showKeyBoard2(binding.editText)
-            FragmentMain.DrawerState.START_CLOSING -> Utils.hideKeyboardFrom(requireView())
-            FragmentMain.DrawerState.FINISH_CLOSING -> {
+            START_OPENING -> Utils.showKeyBoard2(binding.editText)
+            FINISH_OPENING -> Utils.showKeyBoard2(binding.editText)
+            START_CLOSING -> Utils.hideKeyboardFrom(requireView())
+            FINISH_CLOSING -> {
                 binding.editText.text?.clear()
                 Utils.hideKeyboardFrom(requireView())
             }

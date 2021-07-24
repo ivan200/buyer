@@ -1,4 +1,4 @@
-package app.simple.buyer.fragments.mainmenu
+package app.simple.buyer.fragments.menu
 
 import android.view.LayoutInflater
 import android.view.View
@@ -18,10 +18,10 @@ class MainMenuAdapter(
         setHasStableIds(true)
     }
 
-    var selectListId: Long = 0
+    private var selectedListId: Long = 0
 
     fun selectList(listId: Long){
-        this.selectListId = listId
+        this.selectedListId = listId
         notifyDataSetChanged()
     }
 
@@ -47,9 +47,9 @@ class MainMenuAdapter(
         }
 
         fun bind(data: BuyList) {
-            view.isSelected = data.id == selectListId
-            tvTitle.text = data.name
             itemListId = data.id
+            tvTitle.text = data.name
+            view.isSelected = data.id == selectedListId
         }
 
         override fun onClick(v: View?) {

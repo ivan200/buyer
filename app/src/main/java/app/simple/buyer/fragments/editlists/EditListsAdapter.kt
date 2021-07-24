@@ -3,6 +3,7 @@ package app.simple.buyer.fragments.editlists
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.R
@@ -11,7 +12,9 @@ import app.simple.buyer.util.views.RealmRecyclerViewAdapter2
 import io.realm.OrderedRealmCollection
 
 class EditListsAdapter(
-    data: OrderedRealmCollection<BuyList>
+    data: OrderedRealmCollection<BuyList>,
+    val onItemClicked: Function1<Long, Unit>,
+    val onDelClicked: Function1<Long, Unit>
 ) : RealmRecyclerViewAdapter2<BuyList, EditListsAdapter.EditListsHolder>(data, true) {
     init {
         setHasStableIds(true)
@@ -30,19 +33,23 @@ class EditListsAdapter(
         holder.bind(getItem(position)!!)
     }
 
-    inner class EditListsHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class EditListsHolder(val view: View) : RecyclerView.ViewHolder(view) {
         private val tvTitle: TextView = view.findViewById(R.id.tv_title)
+        private val ibDelete: ImageButton = view.findViewById(R.id.ib_delete)
+        private var itemListId: Long = 0
 
         init {
-            view.setOnClickListener(this)
+            view.setOnClickListener {
+                onItemClicked.invoke(itemListId)
+            }
+            ibDelete.setOnClickListener {
+                onDelClicked.invoke(itemListId)
+            }
         }
 
         fun bind(data: BuyList) {
+            itemListId = data.id
             tvTitle.text = data.name
-        }
-
-        override fun onClick(v: View?) {
-//            updateView()
         }
     }
 }

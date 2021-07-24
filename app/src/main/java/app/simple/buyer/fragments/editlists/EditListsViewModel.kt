@@ -69,4 +69,11 @@ class EditListsViewModel(application: Application) : BaseViewModel(application) 
     fun getItems(): OrderedRealmCollection<BuyList> {
         return BuyList.getAllOrdered(realm)
     }
+
+    fun onItemClicked(itemId: Long){
+    }
+
+    fun onItemDeleted(itemId: Long){
+        ListsInteractor.deleteList(realm, itemId)
+    }
 }

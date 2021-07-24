@@ -14,7 +14,7 @@ import app.simple.buyer.util.Utils
 
 class MainActivity : AppCompatActivity() {
 
-    private val model: MainViewModel by viewModels()
+    private val model: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val th = if (model.isDarkThemeOn) R.style.AppThemeDark else R.style.AppThemeLight

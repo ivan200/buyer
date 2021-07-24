@@ -22,7 +22,6 @@ import androidx.collection.LongSparseArray
 import androidx.collection.SparseArrayCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
-import io.realm.*
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -219,15 +218,6 @@ fun Parcelable?.toByteArray(): ByteArray? {
     parcel.recycle() // not sure if needed or a good idea
     return bytes
 }
-
-fun <T : Parcelable?> ByteArray?.toParcelable1(creator: Creator<T>): T? {
-    if(this == null) return null
-    val parcel = Parcel.obtain()
-    parcel.unmarshall(this, 0, this.size)
-    parcel.setDataPosition(0) // this is extremely important!
-    return creator.createFromParcel(parcel)
-}
-
 
 fun <T : Parcelable> ByteArray.toParcelable(creator: Creator<T>): T {
     val parcel = Parcel.obtain()

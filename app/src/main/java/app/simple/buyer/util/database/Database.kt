@@ -7,7 +7,6 @@ import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.interactor.ListsInteractor
-import app.simple.buyer.interactor.UserInteractor
 import app.simple.buyer.util.contains
 import app.simple.buyer.util.count
 import app.simple.buyer.util.update
@@ -117,8 +116,7 @@ object Database {
 
     fun initLists(context: Context, realm: Realm){
         val firstListTitle = context.getString(R.string.default_first_list_name)
-        val newList = ListsInteractor.createList(realm, firstListTitle)
-        UserInteractor.selectList(realm, newList.id)
+        ListsInteractor.createList(realm, firstListTitle)
     }
 
 

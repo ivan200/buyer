@@ -1,4 +1,4 @@
-package app.simple.buyer.fragments.mainmenu
+package app.simple.buyer.fragments.menu
 
 import android.os.Bundle
 import android.view.Menu

@@ -23,7 +23,7 @@
 
             <fragment
                 android:id="@+id/fragment_main_menu"
-                class="app.simple.buyer.fragments.mainmenu.FragmentMainMenu"
+                class="app.simple.buyer.fragments.menu.FragmentMainMenu"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout="@layout/fragment_main_menu" />
