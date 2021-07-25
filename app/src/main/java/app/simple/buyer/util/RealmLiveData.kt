@@ -41,14 +41,62 @@ class RealmObjectLiveData<T : RealmObject>(val realmObject: T) : LiveData<T?>(),
     }
 }
 
+
+class RealmResultsLiveData<M : RealmModel>(
+    var realmResults: OrderedRealmCollection<M>?
+) : LiveData<OrderedRealmCollection<M>>(), OrderedRealmCollectionChangeListener<OrderedRealmCollection<M>> {
+    var active = false
+
+    fun update(newResults: OrderedRealmCollection<M>?) {
+        if (active) {
+            realmResults?.removeListener(this)
+            realmResults = newResults
+            realmResults?.addListener(this)
+        } else {
+            realmResults = newResults
+        }
+    }
+
+    override fun onActive() {
+        active = true
+        realmResults?.addListener(this)
+    }
+
+    override fun onInactive() {
+        realmResults?.removeListener(this)
+        active = false
+    }
+
+    override fun onChange(realmResults: OrderedRealmCollection<M>, changeSet: OrderedCollectionChangeSet) {
+        value = realmResults
+    }
+}
+
 class RealmObjectFieldLiveData<T : RealmObject>(
-    val realmObject: T,
+    var realmObject: T?,
     private vararg val fieldName: String
 ) : LiveData<T?>(), RealmObjectChangeListener<T> {
+    var active = false
 
-    override fun onActive() = realmObject.addChangeListener(this)
+    fun update(newRealmObject: T) {
+        if (active) {
+            realmObject?.removeChangeListener(this)
+            realmObject = newRealmObject
+            realmObject?.addChangeListener(this)
+        } else {
+            realmObject = newRealmObject
+        }
+    }
 
-    override fun onInactive() = realmObject.removeChangeListener(this)
+    override fun onActive() {
+        active = true
+        realmObject?.addChangeListener(this)
+    }
+
+    override fun onInactive() {
+        realmObject?.removeChangeListener(this)
+        active = false
+    }
 
     override fun onChange(result: T, changeSet: ObjectChangeSet?) {
         if (fieldName.any { changeSet?.isFieldChanged(it) == true }) { postValue(result) }
@@ -213,3 +261,21 @@ inline fun <reified T : RealmModel> Realm.getAllAsync(): RealmResults<T> {
     return this.where(T::class.java).findAllAsync()
 }
 
+
+@Suppress("UNCHECKED_CAST")
+fun <T : RealmModel> OrderedRealmCollection<T>.addListener(
+    listener: OrderedRealmCollectionChangeListener<OrderedRealmCollection<T>>
+) = when (this) {
+    is RealmResults<T> -> this.addChangeListener(listener as OrderedRealmCollectionChangeListener<RealmResults<T>>)
+    is RealmList<T> -> this.addChangeListener(listener as OrderedRealmCollectionChangeListener<RealmList<T>>)
+    else -> throw IllegalArgumentException("RealmCollection not supported: " + this.javaClass)
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <T : RealmModel> OrderedRealmCollection<T>.removeListener(
+    listener: OrderedRealmCollectionChangeListener<OrderedRealmCollection<T>>
+) = when (this) {
+    is RealmResults<T> -> this.removeChangeListener(listener as OrderedRealmCollectionChangeListener<RealmResults<T>>)
+    is RealmList<T> -> this.removeChangeListener(listener as OrderedRealmCollectionChangeListener<RealmList<T>>)
+    else -> throw IllegalArgumentException("RealmCollection not supported: " + this.javaClass)
+}

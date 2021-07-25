@@ -53,10 +53,10 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
             shadowToggler = ShadowRecyclerSwitcher(recyclerList, shadowView)
         }
 
-        model.buyListItems.observe(viewLifecycleOwner){
+        model.ltemsLiveData.observe(viewLifecycleOwner){
             adapter.itemsUpdated(it)
         }
-        adapter.itemsUpdated(model.listItems)
+//        adapter.itemsUpdated(model.listItems)
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {

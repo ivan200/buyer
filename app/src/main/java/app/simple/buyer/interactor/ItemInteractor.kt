@@ -17,8 +17,7 @@ object ItemInteractor {
         val trimmedName = buyItemName.trim()
         var buyItem = BuyItem.getByName(realm, trimmedName)
         if (buyItem == null) {
-            buyItem = BuyItem(trimmedName)
-            buyItem.update(realm)
+            buyItem = BuyItem.new(realm, trimmedName)
         }
         return buyItem
     }
@@ -27,10 +26,10 @@ object ItemInteractor {
         val user = UserInteractor.getUserSync(realm)
         var list = realm.getById<BuyList>(user.currentListId)
         if (list == null) {
-            list = BuyList(defaultListTitle)
-            list.update(realm)
+            list = BuyList.new(realm, defaultListTitle)
 
             user.currentListId = list.id
+            user.currentList = list
             user.update(realm)
         }
         return list
@@ -39,7 +38,8 @@ object ItemInteractor {
     private fun createOrIncrease(realm: Realm, list: BuyList, buyItem: BuyItem) {
         var item = BuyListItem.getByListAndItem(realm, list.id, buyItem.id)
         if (item == null) {
-            item = BuyListItem(buyItem, list)
+            item = BuyListItem.new(realm, buyItem, list)
+//            list.items.add(item)
         } else {
             if (item.isBuyed) {
                 item.isBuyed = false

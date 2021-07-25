@@ -14,7 +14,6 @@ import app.simple.buyer.util.hide
 import app.simple.buyer.util.show
 import app.simple.buyer.util.views.RealmRecyclerViewAdapter2
 import io.realm.OrderedRealmCollection
-import io.realm.RealmResults
 
 class AddItemAdapter(
     data: OrderedRealmCollection<BuyItem>,
@@ -25,8 +24,8 @@ class AddItemAdapter(
         setHasStableIds(true)
     }
 
-    var itemsData: RealmResults<BuyListItem>? = null
-    fun itemsUpdated(itemsData: RealmResults<BuyListItem>) {
+    var itemsData: OrderedRealmCollection<BuyListItem>? = null
+    fun itemsUpdated(itemsData: OrderedRealmCollection<BuyListItem>) {
         this.itemsData = itemsData
         notifyDataSetChanged()
     }

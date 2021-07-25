@@ -20,15 +20,15 @@ class EditListsViewModel(application: Application) : BaseViewModel(application) 
 
     var mainMenuState: ByteArray
         get() = user.mainMenuScrollState
-        set(value) = UserInteractor.updateMainMenuState(realm, value)
+        set(value) = UserInteractor.updateMainMenuStateAsync(realm, value)
 
     fun updateOrderType(order: OrderType) {
-        UserInteractor.updateOrderType(realm, order)
+        UserInteractor.updateOrderTypeAsync(realm, order)
     }
 
     fun toggleSortAscending() {
         val newSort = SortType.getByValue(!user.listsSortAscending)
-        UserInteractor.updateSortAscending(realm, newSort)
+        UserInteractor.updateSortAscendingAsync(realm, newSort)
     }
 
     fun getItems(): OrderedRealmCollection<BuyList> {

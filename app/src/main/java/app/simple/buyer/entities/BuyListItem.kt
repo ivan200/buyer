@@ -1,6 +1,7 @@
 package app.simple.buyer.entities
 
 import app.simple.buyer.util.database.PrimaryKeyFactory
+import app.simple.buyer.util.update
 import io.realm.*
 import io.realm.annotations.PrimaryKey
 import java.util.*
@@ -11,15 +12,7 @@ import java.util.*
  */
 
 //Элемент списка покупок, которые мы составляем
-open class BuyListItem() : RealmObject() {
-    constructor(buyItem: BuyItem, buyList: BuyList) : this() {
-        this.id = PrimaryKeyFactory.nextKey<BuyListItem>()
-        this.buyItem = buyItem
-        this.buyItemId = buyItem.id
-        this.buyList = buyList
-        this.listId = buyList.id
-    }
-
+open class BuyListItem : RealmObject() {
     /** Уникальный id */
     @PrimaryKey
     var id: Long = 0
@@ -32,9 +25,6 @@ open class BuyListItem() : RealmObject() {
 
     /** id списка, в котором этот элемент */
     var listId: Long = 0
-
-    /** Сам список, в котором этот элемент */
-    var buyList: BuyList? = null
 
     /** Дата создания элемента */
     var created: Date = Date()
@@ -59,6 +49,15 @@ open class BuyListItem() : RealmObject() {
 
 
     companion object {
+        fun new(realm: Realm, buyItem: BuyItem, buyList: BuyList): BuyListItem = realm.createObject(
+            BuyListItem::class.java, PrimaryKeyFactory.nextKey<BuyListItem>()
+        ).also {
+            it.buyItem = buyItem
+            it.buyItemId = buyItem.id
+            it.listId = buyList.id
+            it.update(realm)
+        }
+
         private fun getQuery(realm: Realm): RealmQuery<BuyListItem> {
             return realm.where(BuyListItem::class.java)
         }

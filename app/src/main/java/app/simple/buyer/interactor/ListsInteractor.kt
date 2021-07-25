@@ -19,11 +19,11 @@ object ListsInteractor {
     fun createList(realm: Realm, title: String) {
         realm.executeTransactionAsync {
             val isEmpty = it.count<BuyList>() == 0L
-            val newBuyList = BuyList(title)
-            newBuyList.update(it)
+            val newBuyList = BuyList.new(it, title)
             if(isEmpty) {
                 val user = UserInteractor.getUser(it)
                 user.currentListId = newBuyList.id
+                user.currentList = newBuyList
                 user.update(it)
             }
         }
@@ -49,26 +49,30 @@ object ListsInteractor {
                 }
                 if (menuList.count() <= 1) {
                     user.currentListId = 0
+                    user.currentList = null
                 } else {
                     user.currentListId = menuList[indexAfterDelete].id
+                    user.currentList = menuList[indexAfterDelete]
                 }
                 user.update(it)
             }
 
             val list = it.getById<BuyList>(listId)
             list?.apply {
-                items.deleteAllFromRealm()
+//                items.deleteAllFromRealm()
                 deleteFromRealm()
             }
         }
     }
 
-    fun updateListScrollStateAsync(realm: Realm, listId: Long, scrollState: ByteArray) {
+    fun updateListScrollStateAsync(realm: Realm, listId: Long, newScrollState: ByteArray) {
         realm.executeTransactionAsync {
-            val list = it.getById<BuyList>(listId)
-            list?.scrollState = scrollState
-            list?.update(it)
+            it.getById<BuyList>(listId)?.apply {
+                if (!scrollState.contentEquals(newScrollState)) {
+                    scrollState = newScrollState
+                    update(it)
+                }
+            }
         }
     }
-
 }

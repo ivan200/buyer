@@ -3,6 +3,7 @@ package app.simple.buyer.interactor
 import app.simple.buyer.entities.OrderType
 import app.simple.buyer.entities.SortType
 import app.simple.buyer.entities.User
+import app.simple.buyer.util.getById
 import app.simple.buyer.util.update
 import io.realm.Realm
 
@@ -14,25 +15,26 @@ object UserInteractor {
 
     fun createUser(realm: Realm): User {
         realm.executeTransactionAsync {
-            User().update(it)
+            User.new(it)
         }
         return User.getAsync(realm)
     }
 
     fun getUserSync(realm: Realm): User {
-        return User.get(realm) ?: User().apply { update(realm) }
+        return User.get(realm) ?: User.new(realm)
     }
 
-    fun selectList(realm: Realm, listId: Long) = realm.executeTransactionAsync {
+    fun selectListAsync(realm: Realm, listId: Long) = realm.executeTransactionAsync {
         getUser(it).apply {
             if (currentListId != listId) {
                 currentListId = listId
+                currentList = it.getById(listId)
                 update(it)
             }
         }
     }
 
-    fun updateMainMenuState(realm: Realm, scrollState: ByteArray){
+    fun updateMainMenuStateAsync(realm: Realm, scrollState: ByteArray){
         realm.executeTransactionAsync {
             getUser(it).apply {
                 if (!mainMenuScrollState.contentEquals(scrollState)) {
@@ -43,7 +45,7 @@ object UserInteractor {
         }
     }
 
-    fun updateOrderType(realm: Realm, orderType: OrderType) = realm.executeTransactionAsync {
+    fun updateOrderTypeAsync(realm: Realm, orderType: OrderType) = realm.executeTransactionAsync {
         getUser(it).apply {
             if (listsOrderType != orderType.value) {
                 listsOrderType = orderType.value
@@ -53,7 +55,7 @@ object UserInteractor {
     }
 
 
-    fun updateSortAscending(realm: Realm, sortType: SortType) = realm.executeTransactionAsync {
+    fun updateSortAscendingAsync(realm: Realm, sortType: SortType) = realm.executeTransactionAsync {
         getUser(it).apply {
             if (listsSortAscending != sortType.value) {
                 listsSortAscending = sortType.value
@@ -63,7 +65,7 @@ object UserInteractor {
     }
 
 
-    fun updateDarkTheme(realm: Realm, dark: Boolean) = realm.executeTransactionAsync {
+    fun updateDarkThemeAsync(realm: Realm, dark: Boolean) = realm.executeTransactionAsync {
         getUser(it).apply {
             if (darkTheme != dark) {
                 darkTheme = dark

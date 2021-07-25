@@ -2,6 +2,7 @@ package app.simple.buyer.entities
 
 import app.simple.buyer.util.database.PrimaryKeyFactory
 import app.simple.buyer.util.getById
+import app.simple.buyer.util.update
 import io.realm.*
 import io.realm.annotations.PrimaryKey
 import java.util.*
@@ -11,12 +12,7 @@ import java.util.*
  */
 
 //Список покупок, который мы составляем
-open class BuyList() : RealmObject() {
-    constructor(name: String) : this() {
-        this.id = PrimaryKeyFactory.nextKey<BuyList>()
-        this.name = name
-    }
-
+open class BuyList : RealmObject() {
     /** Уникальный id */
     @PrimaryKey
     var id: Long = 0
@@ -30,8 +26,8 @@ open class BuyList() : RealmObject() {
     /** Дата модификации списка */
     var modified: Date = Date()
 
-    /** элементы списка покупок */
-    var items: RealmList<BuyListItem> = RealmList()
+//    /** элементы списка покупок */
+//    var items: RealmList<BuyListItem> = RealmList()
 
     /** Количеество элементов, для сортировки */
     var itemsCount: Long = 0
@@ -60,7 +56,14 @@ open class BuyList() : RealmObject() {
 //    var personalSortType: Boolean = SortType.ASCENDING.value
 
     companion object {
-        private fun getQuery(realm: Realm) : RealmQuery<BuyList> {
+        fun new(realm: Realm, name: String): BuyList = realm.createObject(
+            BuyList::class.java, PrimaryKeyFactory.nextKey<BuyList>()
+        ).also {
+            it.name = name
+            it.update(realm)
+        }
+
+        private fun getQuery(realm: Realm): RealmQuery<BuyList> {
             return realm.where(BuyList::class.java)
         }
 
@@ -103,7 +106,6 @@ open class BuyList() : RealmObject() {
         fun getScrollState(realm: Realm, currentListId: Long): ByteArray {
             return realm.getById<BuyList>(currentListId)?.scrollState ?: ByteArray(0)
         }
-
     }
 }
 

@@ -1,6 +1,7 @@
 package app.simple.buyer.entities
 
 import app.simple.buyer.util.database.PrimaryKeyFactory
+import app.simple.buyer.util.update
 import io.realm.*
 import io.realm.annotations.PrimaryKey
 import java.util.*
@@ -57,6 +58,16 @@ open class BuyItem() : RealmObject() {
     var subItems: RealmList<BuyItem> = RealmList()
 
     companion object {
+        fun new(realm: Realm, name: String, parentItem: BuyItem? = null): BuyItem = realm.createObject(
+            BuyItem::class.java, PrimaryKeyFactory.nextKey<BuyItem>()
+        ).also {
+            it.name = name
+            it.parentItem = parentItem
+            it.searchName = smoothName(name)
+            it.wordCount = name.count { c -> c.isWhitespace() } + 1
+            it.orderCombineString = it.getOrderString()
+            it.update(realm)
+        }
 
         //сглаживание имени (заменяем буквы ё и уменьшаем регистр для поиска)
         fun smoothName(name: String): String {

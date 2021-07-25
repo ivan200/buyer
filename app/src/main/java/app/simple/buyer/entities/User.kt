@@ -1,5 +1,7 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.util.database.PrimaryKeyFactory
+import app.simple.buyer.util.update
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmQuery
@@ -9,13 +11,15 @@ import io.realm.annotations.PrimaryKey
  * User
  */
 open class User : RealmObject() {
-
     /** Уникальный Id юзера. Так как он пока один, то всегда 0 */
     @PrimaryKey
     var id: Long = 0
 
     /** Текущий выбранный список */
     var currentListId: Long = 0L
+
+    /** Текущий выбранный список */
+    var currentList: BuyList? = null
 
     /** Сортировка списков в левой панели */
     var listsOrderType: Int = OrderType.CREATED.value
@@ -46,6 +50,12 @@ open class User : RealmObject() {
     val itemsCheck get() = CheckedPosition.getByValue(listItemsCheckedPosition)
 
     companion object {
+        fun new(realm: Realm): User = realm.createObject(
+            User::class.java, PrimaryKeyFactory.nextKey<User>()
+        ).also {
+            it.update(realm)
+        }
+
         private fun getQuery(realm: Realm): RealmQuery<User> {
             return realm.where(User::class.java)
         }

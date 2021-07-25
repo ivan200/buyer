@@ -16,10 +16,10 @@ class MainMenuViewModel(application: Application) : BaseViewModel(application) {
 
     var mainMenuState: ByteArray
         get() = user.mainMenuScrollState
-        set(value) = UserInteractor.updateMainMenuState(realm, value)
+        set(value) = UserInteractor.updateMainMenuStateAsync(realm, value)
 
     fun toggleDarkTheme() {
-        UserInteractor.updateDarkTheme(realm, !user.darkTheme)
+        UserInteractor.updateDarkThemeAsync(realm, !user.darkTheme)
     }
 
     fun getItems(): OrderedRealmCollection<BuyList> {
@@ -27,6 +27,6 @@ class MainMenuViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onMenuItemSelected(itemId: Long) {
-        UserInteractor.selectList(realm, itemId)
+        UserInteractor.selectListAsync(realm, itemId)
     }
 }

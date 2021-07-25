@@ -4,10 +4,7 @@ import android.content.Context
 import android.os.AsyncTask
 import app.simple.buyer.R
 import app.simple.buyer.entities.BuyItem
-import app.simple.buyer.entities.BuyList
-import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.interactor.ListsInteractor
-import app.simple.buyer.util.contains
 import app.simple.buyer.util.count
 import app.simple.buyer.util.update
 import io.realm.Realm
@@ -54,7 +51,7 @@ object Database {
         }
     }
 
-    fun initItems(context: Context, realm: Realm){
+    fun initItems(context: Context, realm: Realm) {
         val items = arrayListOf<BuyItem>()
         val inputStream = context.resources.openRawResource(R.raw.food)
         val inputReader = InputStreamReader(inputStream)
@@ -84,35 +81,35 @@ object Database {
         }
     }
 
-
-    //Добавление элемента покупок по имени в определённый список
-    fun checkAddItem(realm: Realm, currentList: BuyList, itemName: String, context: Context){
-        //Проверяем, есть ли такой элемент в словаре
-        var item = BuyItem.getByName(realm, itemName)
-        if(item == null){
-            //Ищем категорию других товаров, если нет то создаём
-            val other = context.getString(R.string.cat_other)
-            val otherCat = BuyItem.getByName(realm, other) ?: BuyItem(other)
-
-            item = BuyItem(itemName, otherCat)
-            otherCat.subItems.add(item)
-
-            realm.executeTransaction {
-                otherCat.update(it)
-                item.update(it)
-            }
-        }
-        //Если в списке в текущем списке нет элемента с таким же названием, добавляем
-        if(!currentList.items.contains {it.buyItem?.id == item.id}){
-            val buyListItem = BuyListItem(item, currentList)
-            currentList.items.add(buyListItem)
-
-            realm.executeTransaction {
-                buyListItem.update(it)
-                currentList.update(it)
-            }
-        }
-    }
+//
+//    //Добавление элемента покупок по имени в определённый список
+//    fun checkAddItem(realm: Realm, currentList: BuyList, itemName: String, context: Context){
+//        //Проверяем, есть ли такой элемент в словаре
+//        var item = BuyItem.getByName(realm, itemName)
+//        if(item == null){
+//            //Ищем категорию других товаров, если нет то создаём
+//            val other = context.getString(R.string.cat_other)
+//            val otherCat = BuyItem.getByName(realm, other) ?: BuyItem.new(realm, other)
+//
+//            item = BuyItem(itemName, otherCat)
+//            otherCat.subItems.add(item)
+//
+//            realm.executeTransaction {
+//                otherCat.update(it)
+//                item.update(it)
+//            }
+//        }
+//        //Если в списке в текущем списке нет элемента с таким же названием, добавляем
+//        if(!currentList.items.contains {it.buyItem?.id == item.id}){
+//            val buyListItem = BuyListItem(item, currentList)
+//            currentList.items.add(buyListItem)
+//
+//            realm.executeTransaction {
+//                buyListItem.update(it)
+//                currentList.update(it)
+//            }
+//        }
+//    }
 
     fun initLists(context: Context, realm: Realm){
         val firstListTitle = context.getString(R.string.default_first_list_name)
