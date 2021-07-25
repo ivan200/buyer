@@ -36,7 +36,7 @@ object ListsInteractor {
      * - если список, который под удаление сейчас выбран, то перевыбираем следующий за ним
      * - удаляем все элементы списка и сам список
      */
-    fun deleteList(realm: Realm, listId: Long) {
+    fun deleteListAsync(realm: Realm, listId: Long) {
         realm.executeTransactionAsync {
             val user = UserInteractor.getUser(it)
             val selectedListId = user.currentListId
@@ -63,7 +63,7 @@ object ListsInteractor {
         }
     }
 
-    fun updateListScrollState(realm: Realm, listId: Long, scrollState: ByteArray) {
+    fun updateListScrollStateAsync(realm: Realm, listId: Long, scrollState: ByteArray) {
         realm.executeTransactionAsync {
             val list = it.getById<BuyList>(listId)
             list?.scrollState = scrollState

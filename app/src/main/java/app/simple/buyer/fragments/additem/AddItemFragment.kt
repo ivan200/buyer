@@ -17,7 +17,7 @@ import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.Utils
 import app.simple.buyer.util.views.viewBinding
 
-class FragmentAddItem : BaseFragment(R.layout.fragment_add_item), DrawerStateConsumer {
+class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateConsumer {
 
     override val title: Int
         get() = R.string.app_name
@@ -28,18 +28,18 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
 
     private val model: AddItemViewModel by viewModels()
 
-    private lateinit var adapter: FoodAdapter
+    private lateinit var adapter: AddItemAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = FoodAdapter(model.getItems(), this::onItemAdded)
+        adapter = AddItemAdapter(model.getItems(), this::onItemClicked, model::onItemDeleted)
         binding.apply {
             recyclerList.setHasFixedSize(true)
             recyclerList.itemAnimator = null
             recyclerList.layoutManager = LinearLayoutManager(mActivity)
             recyclerList.adapter = adapter
-            editText.addTextChangedListener(Utils.simpleTextWatcher (this@FragmentAddItem::onTextChanged))
+            editText.addTextChangedListener(Utils.simpleTextWatcher (this@AddItemFragment::onTextChanged))
             editText.setOnEditorActionListener { v, actionId, event ->
                 if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_NEXT) {
                     (v as EditText).text.clear()
@@ -47,6 +47,10 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
                 false
             }
             shadowToggler = ShadowRecyclerSwitcher(recyclerList, shadowView)
+        }
+
+        model.buyListItems.observe(viewLifecycleOwner){
+            adapter.itemsUpdated(it)
         }
     }
 
@@ -57,9 +61,10 @@ class FragmentAddItem : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
 
     var blockItemUpdateOnce = false
 
-    fun onItemAdded(){
+    fun onItemClicked(itemId: Long){
         blockItemUpdateOnce = true
         binding.editText.text?.clear()
+        model.onItemClicked(itemId)
     }
 
     fun onTextChanged(text: String){

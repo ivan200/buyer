@@ -45,7 +45,9 @@
             android:gravity="center_vertical"
             android:text="Текст"
             android:textColor="?attr/colorTextSecondary"
-            android:textSize="@dimen/text_list_item_secondary"/>
+            android:textSize="@dimen/text_list_item_secondary"
+            android:visibility="gone"
+            />
     </LinearLayout>
 
     <TextView

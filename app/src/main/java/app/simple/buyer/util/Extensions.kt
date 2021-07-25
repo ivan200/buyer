@@ -22,6 +22,8 @@ import androidx.collection.LongSparseArray
 import androidx.collection.SparseArrayCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -225,3 +227,9 @@ fun <T : Parcelable> ByteArray.toParcelable(creator: Creator<T>): T {
     parcel.setDataPosition(0) // this is extremely important!
     return creator.createFromParcel(parcel)
 }
+
+val RecyclerView.savedState: ByteArray
+    get() = (layoutManager as LinearLayoutManager).onSaveInstanceState().toByteArray() ?: ByteArray(0)
+
+val ByteArray.asScrollState: LinearLayoutManager.SavedState
+    get() = this.toParcelable(LinearLayoutManager.SavedState.CREATOR)

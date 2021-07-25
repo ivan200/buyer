@@ -18,13 +18,9 @@ class RealmLiveData<T : RealmModel>(val realmResults: RealmResults<T>) : LiveDat
         value = results
     }
 
-    override fun onActive() {
-        realmResults.addChangeListener(this)
-    }
+    override fun onActive() = realmResults.addChangeListener(this)
 
-    override fun onInactive() {
-        realmResults.removeChangeListener(this)
-    }
+    override fun onInactive() = realmResults.removeChangeListener(this)
 }
 
 class RealmObjectLiveData<T : RealmObject>(val realmObject: T) : LiveData<T?>(), RealmChangeListener<T> {
@@ -44,6 +40,39 @@ class RealmObjectLiveData<T : RealmObject>(val realmObject: T) : LiveData<T?>(),
         value = if (result.isLoaded && result.isValid) result else null
     }
 }
+
+class RealmObjectFieldLiveData<T : RealmObject>(
+    val realmObject: T,
+    private vararg val fieldName: String
+) : LiveData<T?>(), RealmObjectChangeListener<T> {
+
+    override fun onActive() = realmObject.addChangeListener(this)
+
+    override fun onInactive() = realmObject.removeChangeListener(this)
+
+    override fun onChange(result: T, changeSet: ObjectChangeSet?) {
+        if (fieldName.any { changeSet?.isFieldChanged(it) == true }) { postValue(result) }
+    }
+}
+
+
+class RealmObjectFieldSingleLiveEvent<T : RealmObject>(
+    val realmObject: T,
+    private vararg val fieldName: String
+) : SingleLiveEvent<T?>(), RealmObjectChangeListener<T> {
+
+    override fun onActive() = realmObject.addChangeListener(this)
+
+    override fun onInactive() = realmObject.removeChangeListener(this)
+
+    override fun onChange(result: T, changeSet: ObjectChangeSet?) {
+        if (fieldName.any { changeSet?.isFieldChanged(it) == true }) { postValue(result) }
+    }
+}
+
+
+
+
 
 
 class LiveRealmObject<T : RealmModel?> @MainThread constructor(obj: T?) : MutableLiveData<T>() {

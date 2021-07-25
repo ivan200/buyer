@@ -15,11 +15,12 @@ import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentMainMenuBinding
 import app.simple.buyer.util.ShadowRecyclerSwitcher
-import app.simple.buyer.util.toParcelable
+import app.simple.buyer.util.asScrollState
+import app.simple.buyer.util.savedState
 import app.simple.buyer.util.views.viewBinding
 
 
-class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMenuItemClickListener {
+class MainMenuFragment : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMenuItemClickListener {
 
     private val model: MainMenuViewModel by viewModels()
 
@@ -33,6 +34,7 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
     private val navigateEditLists = Navigation.createNavigateOnClickListener(R.id.action_fragmentMain_to_fragmentEditLists, Bundle())
 
     private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var adapterMenu: MainMenuAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,19 +45,24 @@ class FragmentMainMenu : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
         binding.menuToolbar.setOnMenuItemClickListener(this)
 
         //TODO Добавить отображение emptyView если удалены все списки
-        val adapterMenu = MainMenuAdapter(model.getItems(), model::onMenuItemSelected)
-        adapterMenu.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
-        binding.menuRecycler.adapter = adapterMenu
 
         layoutManager = LinearLayoutManager(mActivity)
-        binding.menuRecycler.layoutManager = layoutManager
-        val menuState = model.getMainMenuState().toParcelable(LinearLayoutManager.SavedState.CREATOR)
-        layoutManager.onRestoreInstanceState(menuState)
+        layoutManager.onRestoreInstanceState(model.mainMenuState.asScrollState)
 
-        menuShadowToggler = ShadowRecyclerSwitcher(binding.menuRecycler, binding.menuShadowView, model::saveMainMenuState)
+        adapterMenu = MainMenuAdapter(model.getItems(), model::onMenuItemSelected)
+        adapterMenu.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
+
+        binding.menuRecycler.let {
+            it.layoutManager = layoutManager
+            it.adapter = adapterMenu
+        }
+
+        menuShadowToggler = ShadowRecyclerSwitcher(binding.menuRecycler, binding.menuShadowView){
+            model.mainMenuState = binding.menuRecycler.savedState
+        }
 
         model.currentListId.observe(viewLifecycleOwner){
-            adapterMenu.selectList(it)
+            adapterMenu.selectList(it?.currentListId)
         }
         model.listsOrderChanged.observe(viewLifecycleOwner){
             adapterMenu.updateData(model.getItems())

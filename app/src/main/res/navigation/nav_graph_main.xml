@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragmentMain"
-        android:name="app.simple.buyer.fragments.main.FragmentMain"
+        android:name="app.simple.buyer.fragments.main.MainFragment"
         android:label="FragmentMain"
         tools:layout="@layout/fragment_main"
         >
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentEditLists"
-        android:name="app.simple.buyer.fragments.editlists.FragmentEditLists"
+        android:name="app.simple.buyer.fragments.editlists.EditListsFragment"
         android:label="FragmentEditLists"
         tools:layout="@layout/fragment_edit_lists"
         />

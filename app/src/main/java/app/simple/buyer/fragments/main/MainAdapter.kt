@@ -1,28 +1,21 @@
-package app.simple.buyer.fragments.menu
+package app.simple.buyer.fragments.main
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.R
-import app.simple.buyer.entities.BuyList
+import app.simple.buyer.databinding.CellMainBinding
+import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.util.views.RealmRecyclerViewAdapter2
 import io.realm.OrderedRealmCollection
 
-class MainMenuAdapter(
-    data: OrderedRealmCollection<BuyList>,
-    val onMenuItemSelected: Function1<Long, Unit>
-) : RealmRecyclerViewAdapter2<BuyList, MainMenuAdapter.MainMenuHolder>(data, true) {
+class MainAdapter(
+    data: OrderedRealmCollection<BuyListItem>,
+    val onItemSelected: Function1<Long, Unit>
+) : RealmRecyclerViewAdapter2<BuyListItem, MainAdapter.MainMenuHolder>(data, true) {
     init {
         setHasStableIds(true)
-    }
-
-    private var selectedListId: Long = 0L
-
-    fun selectList(listId: Long?) {
-        this.selectedListId = listId ?: 0L
-        notifyDataSetChanged()
     }
 
     override fun getItemId(index: Int): Long {
@@ -30,7 +23,7 @@ class MainMenuAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainMenuHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.cell_main_menu, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.cell_main, parent, false)
         return MainMenuHolder(itemView)
     }
 
@@ -39,21 +32,22 @@ class MainMenuAdapter(
     }
 
     inner class MainMenuHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        private val tvTitle: TextView = view.findViewById(R.id.tv_title)
+        val binding = CellMainBinding.bind(view)
         private var itemListId: Long = 0
 
         init {
             view.setOnClickListener(this)
         }
 
-        fun bind(data: BuyList) {
+        fun bind(data: BuyListItem) {
             itemListId = data.id
-            tvTitle.text = data.name
-            view.isSelected = data.id == selectedListId
+
+            binding.tvTitle.text = data.buyItem?.name
+            view.isSelected = data.id == itemListId
         }
 
         override fun onClick(v: View?) {
-            onMenuItemSelected.invoke(itemListId)
+            onItemSelected.invoke(itemListId)
         }
     }
 }

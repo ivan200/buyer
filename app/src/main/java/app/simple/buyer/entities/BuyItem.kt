@@ -36,8 +36,8 @@ open class BuyItem() : RealmObject() {
     /** Ссылка на верхнюю категорию (если есть) */
     var parentItem: BuyItem? = null
 
-    /** Цена, запоминается */
-    var price: Long = 0L
+    /** Цена, запоминается (к сожалению храним во флоте)*/
+    var price: Float = 0f
 
     /** Название без заглавных и букв ё */
     var searchName: String = ""

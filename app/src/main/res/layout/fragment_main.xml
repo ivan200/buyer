@@ -25,7 +25,7 @@
 
             <fragment
                 android:id="@+id/fragment_main_menu"
-                class="app.simple.buyer.fragments.menu.FragmentMainMenu"
+                class="app.simple.buyer.fragments.menu.MainMenuFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout="@layout/fragment_main_menu" />
@@ -41,7 +41,7 @@
 
             <fragment
                 android:id="@+id/fragment_right_panel"
-                class="app.simple.buyer.fragments.additem.FragmentAddItem"
+                class="app.simple.buyer.fragments.additem.AddItemFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout="@layout/fragment_add_item" />

@@ -3,13 +3,12 @@ package app.simple.buyer.util
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class ShadowRecyclerSwitcher(
         recyclerView: RecyclerView,
         val shadowView: View,
-        val onScrollChanged: Function1<ByteArray, Unit>? = null) {
+        val onScrollStateChanged: Function0<Unit>? = null) {
     private var canScrollUp = false
     private var shadowVisible = false
 
@@ -19,9 +18,7 @@ class ShadowRecyclerSwitcher(
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                onScrollChanged?.invoke(
-                    (recyclerView.layoutManager as LinearLayoutManager).onSaveInstanceState().toByteArray() ?: ByteArray(0)
-                )
+                onScrollStateChanged?.invoke()
             }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

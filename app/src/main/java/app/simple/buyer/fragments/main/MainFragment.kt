@@ -9,30 +9,29 @@ import androidx.customview.widget.ViewDragHelper
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentMainBinding
-import app.simple.buyer.fragments.ViewHolderSample
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
 import app.simple.buyer.fragments.main.DrawerState.*
 import app.simple.buyer.util.ShadowRecyclerSwitcher
-import app.simple.buyer.util.views.MultiCellObject
-import app.simple.buyer.util.views.MultiCellTypeAdapter
+import app.simple.buyer.util.asScrollState
+import app.simple.buyer.util.savedState
 import app.simple.buyer.util.views.viewBinding
 
 
-class FragmentMain : BaseFragment(R.layout.fragment_main) {
+class MainFragment : BaseFragment(R.layout.fragment_main) {
     override val title: Int
         get() = R.string.app_name
 
     private val model: MainViewModel by viewModels()
     private val binding by viewBinding(FragmentMainBinding::bind)
 
-    private var mainShadowToggler: ShadowRecyclerSwitcher? = null
-
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
-
-    var adapter: MultiCellTypeAdapter? = null
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var adapter: MainAdapter
+    private lateinit var mainShadowToggler: ShadowRecyclerSwitcher
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +60,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
 
                 val drawerOpen = binding.drawer.isDrawerOpen(GravityCompat.END)
                 val pos = DrawerState.getDrawerPos(rDrawerState, drawerOpen)
-                this@FragmentMain
+                this@MainFragment
                     .childFragmentManager
                     .fragments
                     .firstOrNull { it is DrawerStateConsumer }
@@ -82,7 +81,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
                 binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, lockGravity)
                 super.onDrawerClosed(drawerView)
             }
-
         }
 
         binding.drawer.addDrawerListener(mDrawerToggle)
@@ -93,19 +91,20 @@ class FragmentMain : BaseFragment(R.layout.fragment_main) {
             binding.drawer.openDrawer(GravityCompat.END)
         }
 
-        adapter = MultiCellTypeAdapter(this::showError)
+        layoutManager = LinearLayoutManager(mActivity)
+        layoutManager.onRestoreInstanceState(model.scrollState.asScrollState)
+
+        adapter = MainAdapter(model.getItems(), model::onItemSelected)
+        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
+
         binding.contentMain.mainRecycler.let {
-            it.layoutManager = LinearLayoutManager(mActivity)
+            it.layoutManager = layoutManager
             it.adapter = adapter
         }
-        adapter!!.update((1..50).map { x -> MultiCellObject(ViewHolderSample.holderData, "Example string $x") })
 
-        mainShadowToggler = ShadowRecyclerSwitcher(
-            binding.contentMain.mainRecycler,
-            binding.contentMain.viewToolbar.shadowView
-//            Prefs(mActivity).mainScrollPosition
-        )
-//        { pos -> Prefs(mActivity).mainScrollPosition = pos }
+        mainShadowToggler = ShadowRecyclerSwitcher(binding.contentMain.mainRecycler, binding.contentMain.viewToolbar.shadowView) {
+            model.scrollState = binding.contentMain.mainRecycler.savedState
+        }
 
         //TODO Доприкрутить менюшки
         //TODO Добавить экспорт списка

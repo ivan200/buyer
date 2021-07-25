@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:minHeight="@dimen/height_subheader"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:baselineAligned="false"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="@dimen/size_icon_clickable_area"
+            android:layout_height="@dimen/size_icon_clickable_area"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_icon_bounding"
+            android:layout_marginEnd="@dimen/margin_icon_bounding"
+            android:gravity="center">
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_default"
+            android:paddingTop="@dimen/margin_half"
+            android:paddingRight="@dimen/margin_default"
+            android:paddingBottom="@dimen/margin_half">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textColor="?attr/colorText"
+                android:textSize="@dimen/text_list_item_default"
+                tools:text="Текст" />
+
+            <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="@dimen/text_list_item_secondary"
+                android:visibility="gone"
+                tools:text="Текст" />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

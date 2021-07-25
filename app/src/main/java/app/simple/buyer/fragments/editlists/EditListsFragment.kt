@@ -16,12 +16,14 @@ import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentEditListsBinding
 import app.simple.buyer.entities.OrderType
 import app.simple.buyer.entities.SortType
+import app.simple.buyer.entities.User
 import app.simple.buyer.util.ShadowRecyclerSwitcher
-import app.simple.buyer.util.toParcelable
+import app.simple.buyer.util.asScrollState
+import app.simple.buyer.util.savedState
 import app.simple.buyer.util.views.viewBinding
 
 
-class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.OnMenuItemClickListener {
+class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.OnMenuItemClickListener {
 
     private val model: EditListsViewModel by viewModels()
 
@@ -63,9 +65,10 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
         binding.rvEditLists.itemAnimator?.moveDuration = 0
         binding.rvEditLists.itemAnimator?.changeDuration = 0
 
-        val menuState = model.mainMenuState.toParcelable(LinearLayoutManager.SavedState.CREATOR)
-        layoutManager.onRestoreInstanceState(menuState)
-        shadowToggler = ShadowRecyclerSwitcher(binding.rvEditLists, shadowView, model::saveMainMenuState)
+        layoutManager.onRestoreInstanceState(model.mainMenuState.asScrollState)
+        shadowToggler = ShadowRecyclerSwitcher(binding.rvEditLists, shadowView) {
+            model.mainMenuState = binding.rvEditLists.savedState
+        }
 
         setHasOptionsMenu(true)
         toolbar?.setOnMenuItemClickListener(this)
@@ -87,15 +90,16 @@ class FragmentEditLists : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
             menu.setGroupVisible(R.id.group_normal_mode, true)
             menu.setGroupVisible(R.id.group_reorder_mode, false)
         }
-        model.orderTypeChanged.observe(viewLifecycleOwner) { orderType: OrderType ->
-            val orderItem = orderMapping.firstOrNull { it.first == orderType }
+        model.orderTypeChanged.observe(viewLifecycleOwner) { user: User? ->
+            val orderItem = orderMapping.firstOrNull { it.first == user!!.order }
             if (orderItem != null) {
                 checkItem(menu.findItem(orderItem.second), toolbar.menu)
             }
             adapter.updateData(model.getItems())
         }
+
         model.sortTypeChanged.observe(viewLifecycleOwner) {
-            val icon = when (it!!) {
+            val icon = when (it!!.sort) {
                 SortType.ASCENDING -> R.drawable.ic_sort_ascending
                 SortType.DESCENDING -> R.drawable.ic_sort_descending
             }

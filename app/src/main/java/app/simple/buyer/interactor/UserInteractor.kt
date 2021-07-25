@@ -20,6 +20,10 @@ object UserInteractor {
         return firstUser
     }
 
+    fun getUserSync(realm: Realm): User {
+        return User.get(realm) ?: User().apply { update(realm) }
+    }
+
     fun selectList(realm: Realm, listId: Long) = realm.executeTransactionAsync {
         getUser(it).apply {
             if (currentListId != listId) {
@@ -29,11 +33,13 @@ object UserInteractor {
         }
     }
 
-    fun updateMainMenuState(realm: Realm, scrollState: ByteArray) = realm.executeTransactionAsync {
-        getUser(it).apply {
-            if (!mainMenuScrollState.contentEquals(scrollState)) {
-                mainMenuScrollState = scrollState
-                update(it)
+    fun updateMainMenuState(realm: Realm, scrollState: ByteArray){
+        realm.executeTransactionAsync {
+            getUser(it).apply {
+                if (!mainMenuScrollState.contentEquals(scrollState)) {
+                    mainMenuScrollState = scrollState
+                    update(it)
+                }
             }
         }
     }

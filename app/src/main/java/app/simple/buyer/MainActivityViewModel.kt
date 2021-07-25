@@ -1,31 +1,18 @@
 package app.simple.buyer
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import app.simple.buyer.entities.User
 import app.simple.buyer.interactor.UserInteractor
-import app.simple.buyer.util.SingleLiveEvent
+import app.simple.buyer.util.RealmObjectFieldSingleLiveEvent
 import app.simple.buyer.util.database.Database
-import io.realm.RealmObjectChangeListener
 
 class MainActivityViewModel(application: Application) : BaseViewModel(application) {
-    private val user = UserInteractor.getUser(realm)
-
-    init {
-        user.addChangeListener(RealmObjectChangeListener<User> { t, changeSet ->
-            if (changeSet?.isFieldChanged(User::darkTheme.name) == true) {
-                _darkThemeChanged.call()
-            }
-        })
-    }
+    private val user: User = UserInteractor.getUser(realm)
+    val darkThemeChanged = RealmObjectFieldSingleLiveEvent(user, User::darkTheme.name)
 
     val isDarkThemeOn get() = user.darkTheme
 
-    private val _darkThemeChanged = SingleLiveEvent<Unit?>()
-    val darkThemeChanged: LiveData<Unit?> get() = _darkThemeChanged
-
-
-    fun checkFirstInit(){
+    fun checkFirstInit() {
         Database.firstInit(context, realm)
     }
 }

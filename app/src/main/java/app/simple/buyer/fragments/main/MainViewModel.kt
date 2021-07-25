@@ -1,39 +1,30 @@
 package app.simple.buyer.fragments.main
 
 import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import app.simple.buyer.BaseViewModel
+import app.simple.buyer.entities.BuyList
+import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.entities.User
 import app.simple.buyer.interactor.ListsInteractor
 import app.simple.buyer.interactor.UserInteractor
-import io.realm.RealmObjectChangeListener
+import app.simple.buyer.util.RealmObjectFieldLiveData
+import io.realm.OrderedRealmCollection
 
 class MainViewModel(application: Application) : BaseViewModel(application) {
-    private val user = UserInteractor.getUser(realm)
+    private val user: User = UserInteractor.getUser(realm)
+    val currentListId = RealmObjectFieldLiveData(user, User::currentListId.name)
 
-    init {
-        user.addChangeListener(RealmObjectChangeListener<User> { changedUser, changeSet ->
-            if (changeSet?.isFieldChanged(User::currentListId.name) == true) {
-                _currentListId.postValue(changedUser.currentListId)
-            }
-        })
+    var scrollState: ByteArray
+        get() = BuyList.getScrollState(realm, user.currentListId)
+        set(value) = ListsInteractor.updateListScrollStateAsync(realm, user.currentListId, value)
+
+    fun getItems(): OrderedRealmCollection<BuyListItem> {
+        return BuyListItem.getAllOrdered(realm, user.currentListId, user.itemsOrder, user.itemsSort, user.itemsCheck)
     }
 
-    private val _currentListId = MutableLiveData(user.currentListId)
-    val currentListId: LiveData<Long> get() = _currentListId
+    fun onItemSelected(itemId: Long){
 
-    fun saveScrollState(scrollState: ByteArray) {
-        ListsInteractor.updateListScrollState(realm, user.currentListId, scrollState)
+
+
     }
-
-    fun getScrollState(): ByteArray {
-        return user.mainMenuScrollState
-    }
-
-//    fun getItems(): OrderedRealmCollection<BuyListItem> {
-//        return realm.getById<BuyList>()?.items
-//    }
-//
-
 }
