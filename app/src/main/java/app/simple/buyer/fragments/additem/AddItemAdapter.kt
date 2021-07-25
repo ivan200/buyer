@@ -66,21 +66,34 @@ class AddItemAdapter(
                 val count = listItem?.count ?: 0
                 tvTitle.text = data.name
 
-                when (count) {
-                    0L -> {
-                        tvTitle.setTextColor(view.context.getColorResCompat(R.attr.colorText))
-                        btnDetete.hide()
+                if (listItem?.isBuyed == true) {
+                    tvTitle.setTextColor(view.context.getColorResCompat(R.attr.colorTextDisabled))
+                    btnDetete.show().setImageResource(R.drawable.ic_clear)
+                    if (count > 1) {
+                        tvCount.show().setTextColor(view.context.getColorResCompat(R.attr.colorTextDisabled))
+                        tvCount.text = count.toString()
+                    } else {
                         tvCount.hide()
                     }
-                    1L -> {
-                        tvTitle.setTextColor(view.context.getColorCompat(R.color.colorCheckboxGreen))
-                        btnDetete.show().setImageResource(R.drawable.ic_clear)
-                        tvCount.hide()
-                    }
-                    else -> {
-                        tvTitle.setTextColor(view.context.getColorCompat(R.color.colorCheckboxGreen))
-                        btnDetete.show().setImageResource(R.drawable.ic_remove)
-                        tvCount.show().text = count.toString()
+                    btnDetete.hide()
+                } else {
+                    when (count) {
+                        0L -> {
+                            tvTitle.setTextColor(view.context.getColorResCompat(R.attr.colorText))
+                            btnDetete.hide()
+                            tvCount.hide()
+                        }
+                        1L -> {
+                            tvTitle.setTextColor(view.context.getColorCompat(R.color.colorCheckboxGreen))
+                            btnDetete.show().setImageResource(R.drawable.ic_clear)
+                            tvCount.hide()
+                        }
+                        else -> {
+                            tvTitle.setTextColor(view.context.getColorCompat(R.color.colorCheckboxGreen))
+                            btnDetete.show().setImageResource(R.drawable.ic_remove)
+                            tvCount.show().setTextColor(view.context.getColorResCompat(R.attr.colorText))
+                            tvCount.show().text = count.toString()
+                        }
                     }
                 }
             }

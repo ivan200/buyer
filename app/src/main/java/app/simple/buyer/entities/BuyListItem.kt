@@ -76,6 +76,11 @@ open class BuyListItem() : RealmObject() {
                 .equalTo(BuyListItem::listId.name, listId)
                 .findAll()
         }
+        fun getAllByListAsync(realm: Realm, listId: Long): RealmResults<BuyListItem> {
+            return getQuery(realm)
+                .equalTo(BuyListItem::listId.name, listId)
+                .findAll()
+        }
 
         fun getAllOrdered(
             realm: Realm,

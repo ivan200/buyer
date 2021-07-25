@@ -3,10 +3,9 @@ package app.simple.buyer.fragments.editlists
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.R
+import app.simple.buyer.databinding.CellEditListBinding
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.util.views.RealmRecyclerViewAdapter2
 import io.realm.OrderedRealmCollection
@@ -34,22 +33,21 @@ class EditListsAdapter(
     }
 
     inner class EditListsHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        private val tvTitle: TextView = view.findViewById(R.id.tv_title)
-        private val ibDelete: ImageButton = view.findViewById(R.id.ib_delete)
+        private val binding = CellEditListBinding.bind(view)
         private var itemListId: Long = 0
 
         init {
             view.setOnClickListener {
                 onItemClicked.invoke(itemListId)
             }
-            ibDelete.setOnClickListener {
+            binding.ibDelete.setOnClickListener {
                 onDelClicked.invoke(itemListId)
             }
         }
 
         fun bind(data: BuyList) {
             itemListId = data.id
-            tvTitle.text = data.name
+            binding.tvTitle.text = data.name
         }
     }
 }

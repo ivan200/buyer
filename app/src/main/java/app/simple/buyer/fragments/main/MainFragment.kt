@@ -106,10 +106,23 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
             model.scrollState = binding.contentMain.mainRecycler.savedState
         }
 
+        model.listChanged.observe(viewLifecycleOwner){
+            adapter.updateData(model.getItems())
+            updateTitle()
+            binding.drawer.closeDrawer(GravityCompat.START)
+        }
+        model.listOrderChanged.observe(viewLifecycleOwner){
+            adapter.updateData(model.getItems())
+        }
+        updateTitle()
+
         //TODO Доприкрутить менюшки
         //TODO Добавить экспорт списка
     }
 
+    private fun updateTitle(){
+        mActivity.title = model.getTitle() ?: getString(title)
+    }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
         setRecyclerPaddings(

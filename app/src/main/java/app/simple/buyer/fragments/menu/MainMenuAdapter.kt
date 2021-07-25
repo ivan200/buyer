@@ -3,9 +3,9 @@ package app.simple.buyer.fragments.menu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.R
+import app.simple.buyer.databinding.CellMainMenuBinding
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.util.views.RealmRecyclerViewAdapter2
 import io.realm.OrderedRealmCollection
@@ -39,7 +39,7 @@ class MainMenuAdapter(
     }
 
     inner class MainMenuHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        private val tvTitle: TextView = view.findViewById(R.id.tv_title)
+        private val binding = CellMainMenuBinding.bind(view)
         private var itemListId: Long = 0
 
         init {
@@ -48,7 +48,7 @@ class MainMenuAdapter(
 
         fun bind(data: BuyList) {
             itemListId = data.id
-            tvTitle.text = data.name
+            binding.tvTitle.text = data.name
             view.isSelected = data.id == selectedListId
         }
 

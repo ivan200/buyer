@@ -39,10 +39,14 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
             recyclerList.itemAnimator = null
             recyclerList.layoutManager = LinearLayoutManager(mActivity)
             recyclerList.adapter = adapter
+
             editText.addTextChangedListener(Utils.simpleTextWatcher (this@AddItemFragment::onTextChanged))
             editText.setOnEditorActionListener { v, actionId, event ->
                 if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_NEXT) {
-                    (v as EditText).text.clear()
+                    (v as EditText).text.let {
+                        model.onNewItem(it.toString())
+                        it.clear()
+                    }
                 }
                 false
             }
@@ -52,6 +56,7 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
         model.buyListItems.observe(viewLifecycleOwner){
             adapter.itemsUpdated(it)
         }
+        adapter.itemsUpdated(model.listItems)
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {

@@ -41,9 +41,25 @@ object ItemInteractor {
         if (item == null) {
             item = BuyListItem(buyItem, list)
         } else {
-            item.count = item.count + 1
+            if (item.isBuyed) {
+                item.isBuyed = false
+            } else {
+                item.count = item.count + 1
+            }
         }
         item.update(realm)
+    }
+
+    private fun deleteOrDecrease(realm: Realm, list: BuyList, buyItem: BuyItem) {
+        val item = BuyListItem.getByListAndItem(realm, list.id, buyItem.id)
+        if (item != null) {
+            if (item.count > 1) {
+                item.count = item.count - 1
+                item.update(realm)
+            } else {
+                item.deleteFromRealm()
+            }
+        }
     }
 
     /**
@@ -54,6 +70,28 @@ object ItemInteractor {
             val buyItem = it.getById<BuyItem>(buyItemId)!!
             val list = getCurrentList(it, defaultListTitle)
             createOrIncrease(it, list, buyItem)
+        }
+    }
+
+    /**
+     * Добавить элемент списка покупок, по имеющемуся предмету
+     */
+    fun deleteItemAsync(realm: Realm, buyItemId: Long, defaultListTitle: String) {
+        realm.executeTransactionAsync {
+            val buyItem = it.getById<BuyItem>(buyItemId)!!
+            val list = getCurrentList(it, defaultListTitle)
+            deleteOrDecrease(it, list, buyItem)
+        }
+    }
+
+    /**
+     * Добавить элемент списка покупок, по имеющемуся предмету
+     */
+    fun toggleItemAsync(realm: Realm, listItemId: Long) {
+        realm.executeTransactionAsync {
+            val buyItem = it.getById<BuyListItem>(listItemId)!!
+            buyItem.isBuyed = !buyItem.isBuyed
+            buyItem.update(it)
         }
     }
 

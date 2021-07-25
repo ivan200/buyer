@@ -13,11 +13,10 @@ object UserInteractor {
     }
 
     fun createUser(realm: Realm): User {
-        val firstUser = User()
         realm.executeTransactionAsync {
-            firstUser.update(it)
+            User().update(it)
         }
-        return firstUser
+        return User.getAsync(realm)
     }
 
     fun getUserSync(realm: Realm): User {

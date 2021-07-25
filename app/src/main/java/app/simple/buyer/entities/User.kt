@@ -53,6 +53,10 @@ open class User : RealmObject() {
         fun get(realm: Realm): User? {
             return getQuery(realm).findFirst()
         }
+
+        fun getAsync(realm: Realm): User {
+            return getQuery(realm).findFirstAsync()
+        }
     }
 }
 
