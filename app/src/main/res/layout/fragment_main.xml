@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.drawerlayout.widget.DrawerLayout
+    <app.simple.buyer.util.views.drawer.DrawerLayout
         android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -47,7 +47,7 @@
                 tools:layout="@layout/fragment_add_item" />
 
         </com.google.android.material.navigation.NavigationView>
-    </androidx.drawerlayout.widget.DrawerLayout>
+    </app.simple.buyer.util.views.drawer.DrawerLayout>
 
     <include
         android:id="@+id/navbar"
