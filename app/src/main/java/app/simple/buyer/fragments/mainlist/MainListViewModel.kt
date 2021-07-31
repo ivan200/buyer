@@ -1,4 +1,4 @@
-package app.simple.buyer.fragments.main
+package app.simple.buyer.fragments.mainlist
 
 import android.app.Application
 import app.simple.buyer.BaseViewModel
@@ -12,7 +12,7 @@ import app.simple.buyer.util.RealmObjectFieldLiveData
 import app.simple.buyer.util.getById
 import io.realm.OrderedRealmCollection
 
-class MainViewModel(application: Application) : BaseViewModel(application) {
+class MainListViewModel(application: Application) : BaseViewModel(application) {
     private val user: User = UserInteractor.getUser(realm)
     val listChanged = RealmObjectFieldLiveData(
         user,

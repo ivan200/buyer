@@ -40,9 +40,9 @@ class MainMenuFragment : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
         super.onViewCreated(view, savedInstanceState)
 
         setHasOptionsMenu(true)
-        binding.menuToolbar.title = getText(title)
-        binding.menuToolbar.setOnClickListener(navigateEditLists)
-        binding.menuToolbar.setOnMenuItemClickListener(this)
+        binding.viewToolbar.toolbar.title = getText(title)
+        binding.viewToolbar.toolbar.setOnClickListener(navigateEditLists)
+        binding.viewToolbar.toolbar.setOnMenuItemClickListener(this)
 
         //TODO Добавить отображение emptyView если удалены все списки
 
@@ -57,7 +57,7 @@ class MainMenuFragment : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
             it.adapter = adapterMenu
         }
 
-        menuShadowToggler = ShadowRecyclerSwitcher(binding.menuRecycler, binding.menuShadowView){
+        menuShadowToggler = ShadowRecyclerSwitcher(binding.menuRecycler, binding.viewToolbar.shadowView){
             model.mainMenuState = binding.menuRecycler.savedState
         }
 
@@ -70,14 +70,14 @@ class MainMenuFragment : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
-        setRecyclerPaddings(binding.menuRecycler, binding.menuToolbarSuper, null, insets, usePaddingLeft = true, usePaddingRight = false)
+        setRecyclerPaddings(binding.menuRecycler, binding.viewToolbar.appBarLayout, null, insets, usePaddingLeft = true, usePaddingRight = false)
         return super.onApplyWindowInsets(v, insets)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (binding.menuToolbar.menu?.size() == 0) {
-            binding.menuToolbar.inflateMenu(R.menu.main)
+        if (binding.viewToolbar.toolbar.menu?.size() == 0) {
+            binding.viewToolbar.toolbar.inflateMenu(R.menu.main_list)
         }
     }
 

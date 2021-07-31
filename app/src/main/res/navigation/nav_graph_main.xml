@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/fragmentMain"
-        android:name="app.simple.buyer.fragments.main.MainFragment"
+        android:name="app.simple.buyer.fragments.mainlist.MainListFragment"
         android:label="FragmentMain"
-        tools:layout="@layout/fragment_main"
+        tools:layout="@layout/fragment_main_list"
         >
         <action
             android:id="@+id/action_fragmentMain_to_fragmentEditLists"

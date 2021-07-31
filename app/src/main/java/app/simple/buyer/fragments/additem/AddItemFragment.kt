@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentAddItemBinding
-import app.simple.buyer.fragments.main.DrawerState
-import app.simple.buyer.fragments.main.DrawerState.*
+import app.simple.buyer.fragments.mainlist.DrawerState
+import app.simple.buyer.fragments.mainlist.DrawerState.*
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.Utils
 import app.simple.buyer.util.views.viewBinding
@@ -22,7 +22,7 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
     override val title: Int
         get() = R.string.app_name
 
-    private var shadowToggler: ShadowRecyclerSwitcher? = null
+    private var shadowSwitcher: ShadowRecyclerSwitcher? = null
 
     private val binding by viewBinding(FragmentAddItemBinding::bind)
 
@@ -50,13 +50,12 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
                 }
                 false
             }
-            shadowToggler = ShadowRecyclerSwitcher(recyclerList, shadowView)
+            shadowSwitcher = ShadowRecyclerSwitcher(recyclerList, shadowView)
         }
 
         model.ltemsLiveData.observe(viewLifecycleOwner){
             adapter.itemsUpdated(it)
         }
-//        adapter.itemsUpdated(model.listItems)
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {

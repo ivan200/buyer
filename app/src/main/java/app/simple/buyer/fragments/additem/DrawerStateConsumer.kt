@@ -1,6 +1,6 @@
 package app.simple.buyer.fragments.additem
 
-import app.simple.buyer.fragments.main.DrawerState
+import app.simple.buyer.fragments.mainlist.DrawerState
 
 /**
  * Интерфейс для обработки изменения позиции правого дравера

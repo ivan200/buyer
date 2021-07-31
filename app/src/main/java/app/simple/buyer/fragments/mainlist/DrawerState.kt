@@ -1,4 +1,4 @@
-package app.simple.buyer.fragments.main
+package app.simple.buyer.fragments.mainlist
 
 import androidx.annotation.IntDef
 import androidx.drawerlayout.widget.DrawerLayout

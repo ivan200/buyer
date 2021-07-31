@@ -22,29 +22,35 @@
             />
     </FrameLayout>
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/menu_toolbar_super"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorToolbar"
-        app:elevation="0dp"
-        >
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/menu_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            />
+    <include
+        android:id="@+id/view_toolbar"
+        layout="@layout/view_toolbar"/>
 
-    </com.google.android.material.appbar.AppBarLayout>
 
-    <View
-        android:id="@+id/menu_shadow_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/appbar_shadow_size"
-        android:layout_below="@id/menu_toolbar_super"
-        android:background="@drawable/dropshadow"
-        android:visibility="invisible"/>
+<!--    <com.google.android.material.appbar.AppBarLayout-->
+<!--        android:id="@+id/menu_toolbar_super"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="?attr/colorToolbar"-->
+<!--        app:elevation="0dp"-->
+<!--        >-->
+
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/menu_toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            />-->
+
+<!--    </com.google.android.material.appbar.AppBarLayout>-->
+
+<!--    <View-->
+<!--        android:id="@+id/menu_shadow_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/appbar_shadow_size"-->
+<!--        android:layout_below="@id/menu_toolbar_super"-->
+<!--        android:background="@drawable/dropshadow"-->
+<!--        android:visibility="invisible"/>-->
 
 
 </app.simple.buyer.util.views.WindowInsetsRelativeLayout>

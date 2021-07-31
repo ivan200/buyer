@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:id="@+id/group_normal_mode">
+        <item
+            android:id="@+id/action_order"
+            android:icon="@drawable/ic_sort"
+            android:title="@string/menu_sort"
+            app:showAsAction="ifRoom">
+
+            <menu>
+                <item
+                    android:icon="@drawable/ic_order_create"
+                    android:id="@+id/item_order_create"
+                    android:title="@string/order_create"
+                    app:showAsAction="never"
+                    />
+                <item
+                    android:icon="@drawable/ic_order_modify"
+                    android:id="@+id/item_order_modify"
+                    android:title="@string/order_modify"
+                    app:showAsAction="never"
+                    />
+                <item
+                    android:icon="@drawable/ic_order_alphabet"
+                    android:id="@+id/item_order_alphabet"
+                    android:title="@string/order_alphabet"
+                    app:showAsAction="never"
+                    />
+                <item
+                    android:icon="@drawable/ic_order_popularity"
+                    android:id="@+id/item_order_popularity"
+                    android:title="@string/order_popularity"
+                    app:showAsAction="never"
+                    />
+                <item
+                    android:icon="@drawable/ic_order_size"
+                    android:id="@+id/item_order_size"
+                    android:title="@string/order_size"
+                    app:showAsAction="never"
+                    />
+                <item
+                    android:icon="@drawable/ic_order_price"
+                    android:id="@+id/item_order_price"
+                    android:title="@string/order_price"
+                    app:showAsAction="never"
+                    />
+                <!--<item-->
+                    <!--android:icon="@drawable/ic_order_category"-->
+                    <!--android:id="@+id/item_order_category"-->
+                    <!--android:title="@string/order_category"-->
+                    <!--app:showAsAction="never"-->
+                    <!--/>-->
+                <item
+                    android:icon="@drawable/ic_order_hand"
+                    android:id="@+id/item_order_hand"
+                    android:title="@string/order_by_hand"
+                    app:showAsAction="never"
+                    />
+
+            </menu>
+
+        </item>
+        <item
+            android:id="@+id/item_sort_type"
+            android:icon="@drawable/ic_sort_ascending"
+            android:title="@string/order_ascending"
+            app:showAsAction="ifRoom"/>
+    </group>
+    <group android:id="@+id/group_reorder_mode">
+        <item
+            android:id="@+id/item_action_clear"
+            android:icon="@drawable/ic_clear"
+            android:title="@string/action_settings"
+            app:showAsAction="ifRoom"/>
+
+    </group>
+    <!--<item-->
+    <!--android:id="@+id/action_settings"-->
+    <!--android:title="@string/action_settings"-->
+    <!--app:showAsAction="never"/>-->
+
+</menu>

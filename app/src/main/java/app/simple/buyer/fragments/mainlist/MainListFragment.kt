@@ -1,7 +1,9 @@
-package app.simple.buyer.fragments.main
+package app.simple.buyer.fragments.mainlist
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.customview.widget.ViewDragHelper
@@ -10,25 +12,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
-import app.simple.buyer.databinding.FragmentMainBinding
+import app.simple.buyer.databinding.FragmentMainListBinding
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
-import app.simple.buyer.fragments.main.DrawerState.*
+import app.simple.buyer.fragments.mainlist.DrawerState.*
 import app.simple.buyer.util.*
 import app.simple.buyer.util.views.drawer.ActionBarDrawerToggle
 import app.simple.buyer.util.views.drawer.DrawerLayout
 import app.simple.buyer.util.views.viewBinding
 
 
-class MainFragment : BaseFragment(R.layout.fragment_main) {
+class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMenuItemClickListener {
     override val title: Int
         get() = R.string.app_name
 
-    private val model: MainViewModel by viewModels()
-    private val binding by viewBinding(FragmentMainBinding::bind)
+    private val model: MainListViewModel by viewModels()
+    private val binding by viewBinding(FragmentMainListBinding::bind)
 
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
     private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var adapter: MainAdapter
+    private lateinit var adapter: MainListAdapter
     private lateinit var mainShadowToggler: ShadowRecyclerSwitcher
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,7 +58,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
                     rDrawerState = newState
                     val drawerOpen = binding.drawer.isDrawerOpen(GravityCompat.END)
                     val pos = DrawerState.getDrawerPos(rDrawerState, drawerOpen)
-                    this@MainFragment
+                    this@MainListFragment
                         .childFragmentManager
                         .fragments
                         .firstOrNull { it is DrawerStateConsumer }
@@ -91,7 +93,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         layoutManager = LinearLayoutManager(mActivity)
         layoutManager.onRestoreInstanceState(model.scrollState.asScrollState)
 
-        adapter = MainAdapter(model.getItems(), model::onItemSelected)
+        adapter = MainListAdapter(model.getItems(), model::onItemSelected)
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
 
         binding.contentMain.mainRecycler.let {
@@ -113,6 +115,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         }
         updateTitle()
 
+        setHasOptionsMenu(true)
+        toolbar?.setOnMenuItemClickListener(this)
+
         //TODO Доприкрутить менюшки
         //TODO Добавить экспорт списка
     }
@@ -133,5 +138,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
             (it as? BaseFragment)?.onApplyWindowInsets(v, insets)
         }
         return super.onApplyWindowInsets(v, insets)
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        TODO("Not yet implemented")
     }
 }
