@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentEditListsBinding
-import app.simple.buyer.entities.OrderType
-import app.simple.buyer.entities.SortType
+import app.simple.buyer.entities.enums.OrderType
+import app.simple.buyer.entities.enums.SortType
 import app.simple.buyer.entities.User
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.asScrollState

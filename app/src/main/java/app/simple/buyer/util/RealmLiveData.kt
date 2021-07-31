@@ -55,6 +55,7 @@ class RealmResultsLiveData<M : RealmModel>(
         } else {
             realmResults = newResults
         }
+        value = realmResults
     }
 
     override fun onActive() {

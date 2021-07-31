@@ -1,6 +1,8 @@
 package app.simple.buyer.entities
 
-import app.simple.buyer.util.database.PrimaryKeyFactory
+import app.simple.buyer.entities.enums.CheckedPosition
+import app.simple.buyer.entities.enums.OrderType
+import app.simple.buyer.entities.enums.SortType
 import app.simple.buyer.util.update
 import io.realm.Realm
 import io.realm.RealmObject
@@ -51,7 +53,7 @@ open class User : RealmObject() {
 
     companion object {
         fun new(realm: Realm): User = realm.createObject(
-            User::class.java, PrimaryKeyFactory.nextKey<User>()
+            User::class.java, 0
         ).also {
             it.update(realm)
         }

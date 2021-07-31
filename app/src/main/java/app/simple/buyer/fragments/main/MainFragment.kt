@@ -104,7 +104,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         }
 
         model.listChanged.observe(viewLifecycleOwner){
-            adapter.updateData(model.getItems())
+            adapter.updateDataNoClear(model.getItems())
             updateTitle()
             binding.drawer.closeDrawer(GravityCompat.START)
         }

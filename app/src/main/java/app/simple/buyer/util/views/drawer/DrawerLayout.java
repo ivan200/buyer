@@ -76,7 +76,8 @@ import static androidx.core.view.accessibility.AccessibilityNodeInfoCompat.Acces
  * при двух имеющихся. Приходилось делать это через рефлексию что не очень хорошо.</p>
  * <p> - у оригинального дравера нельзя настроить (увеличить)
  * зоны тапа и выезда на которые он будет реагировать</p>
- * <p> то есть:</p>
+ * <p></p>
+ * <p> конкретные изменения:</p>
  * <p> - в метод onDrawerStateChanged добавлено вью у которой меняется стейт </p>
  * <p> - установлены зоны свайпа в половину экрана </p>
  *         <p>mLeftDragger.setEdgeSize(width / 2);</p>
@@ -84,8 +85,14 @@ import static androidx.core.view.accessibility.AccessibilityNodeInfoCompat.Acces
  * <p> - у ViewDragCallback выключен метод onEdgeTouched(int edgeFlags, int pointerId)</p>
  * <p> - TOUCH_SLOP_SENSITIVITY уменьшен до 0.3</p>
  * <p></p>
+ * <p>Что ещё хотелось бы улучшить:</p>
+ * <p>У DrawerListener не передаётся направление драга. то есть если правый дравер свайпнуть вправо,
+ * стейт у него поменяется точно также как и при свайпе влево</p>
+ * <p>Как следствие нельзя оба дравера повесить на всю ширину экрана,
+ * и пришлось ограничиться половиной</p>
  * <p></p>
- * DrawerLayout acts as a top-level container for window content that allows for
+ * <p></p>
+* DrawerLayout acts as a top-level container for window content that allows for
  * interactive "drawer" views to be pulled out from one or both vertical edges of the window.
  *
  * <p>Drawer positioning and layout is controlled using the <code>android:layout_gravity</code>

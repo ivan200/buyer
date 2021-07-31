@@ -1,5 +1,7 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.entities.enums.OrderType
+import app.simple.buyer.entities.enums.SortType
 import app.simple.buyer.util.database.PrimaryKeyFactory
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update

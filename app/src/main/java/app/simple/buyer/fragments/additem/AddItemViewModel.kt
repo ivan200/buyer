@@ -17,12 +17,13 @@ class AddItemViewModel(application: Application) : BaseViewModel(application) {
 
     val userLiveData = RealmObjectFieldLiveData(user, User::currentList.name)
 
-    val ltemsLiveData = RealmResultsLiveData(user.currentList?.let { BuyListItem.getAllByListAsync(realm, it.id) })
+    val ltemsLiveData: RealmResultsLiveData<BuyListItem> = RealmResultsLiveData(null)
 
     init {
         userLiveData.observeForever {
             ltemsLiveData.update(BuyListItem.getAllByListAsync(realm, user.currentList!!.id))
         }
+        ltemsLiveData.update(BuyListItem.getAllByListAsync(realm, user.currentList!!.id))
     }
 
     fun getItems(): RealmResults<BuyItem> {

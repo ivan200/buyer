@@ -1,5 +1,8 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.entities.enums.CheckedPosition
+import app.simple.buyer.entities.enums.OrderType
+import app.simple.buyer.entities.enums.SortType
 import app.simple.buyer.util.database.PrimaryKeyFactory
 import app.simple.buyer.util.update
 import io.realm.*
@@ -107,23 +110,23 @@ open class BuyListItem : RealmObject() {
             return when (checkedPosition) {
                 CheckedPosition.INVISIBLE -> query
                     .equalTo(BuyListItem::isBuyed.name, false)
-                    .findAll()
                     .sort(fieldName, sortOrder)
+                    .findAllAsync()
                 CheckedPosition.BOTTOM -> query
-                    .findAll()
                     .sort(
                         arrayOf(BuyListItem::isBuyed.name, fieldName),
                         arrayOf(Sort.ASCENDING, sortOrder)
                     )
+                    .findAllAsync()
                 CheckedPosition.TOP -> query
-                    .findAll()
                     .sort(
                         arrayOf(BuyListItem::isBuyed.name, fieldName),
                         arrayOf(Sort.DESCENDING, sortOrder)
                     )
+                    .findAllAsync()
                 CheckedPosition.BETWEEN -> query
-                    .findAll()
                     .sort(fieldName, sortOrder)
+                    .findAllAsync()
             }
         }
     }

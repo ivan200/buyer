@@ -13,25 +13,6 @@ import java.io.InputStreamReader
 
 
 object Database {
-//    fun addItem(itemName: String, realm: Realm){
-//        realm.executeTransactionAsync {
-//            val item = BuyItem.getByName(it, itemName)
-//            if (item != null) {
-//                item.apply {
-//                    populatity += 1
-//                    update(it)
-//                }
-//            } else {
-//                BuyItem().apply {
-//                    id = PrimaryKeyFactory.nextKey<BuyItem>()
-//                    name = itemName
-//                    wordCount = itemName.count { c -> c.isWhitespace() } + 1
-//                    update(it)
-//                }
-//            }
-//        }
-//    }
-
     fun firstInit(context: Context, realm: Realm){
         if(realm.count<BuyItem>() > 0){
             return

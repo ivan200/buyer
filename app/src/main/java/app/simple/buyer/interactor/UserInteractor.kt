@@ -1,7 +1,7 @@
 package app.simple.buyer.interactor
 
-import app.simple.buyer.entities.OrderType
-import app.simple.buyer.entities.SortType
+import app.simple.buyer.entities.enums.OrderType
+import app.simple.buyer.entities.enums.SortType
 import app.simple.buyer.entities.User
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update

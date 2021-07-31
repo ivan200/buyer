@@ -1,4 +1,4 @@
-package app.simple.buyer.entities
+package app.simple.buyer.entities.enums
 
 /**
  * Позиция прочеканых элементов относительно остальных

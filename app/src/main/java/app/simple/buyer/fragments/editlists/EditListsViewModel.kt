@@ -3,8 +3,8 @@ package app.simple.buyer.fragments.editlists
 import android.app.Application
 import app.simple.buyer.BaseViewModel
 import app.simple.buyer.entities.BuyList
-import app.simple.buyer.entities.OrderType
-import app.simple.buyer.entities.SortType
+import app.simple.buyer.entities.enums.OrderType
+import app.simple.buyer.entities.enums.SortType
 import app.simple.buyer.entities.User
 import app.simple.buyer.interactor.ListsInteractor
 import app.simple.buyer.interactor.UserInteractor
