@@ -1,8 +1,8 @@
 package app.simple.buyer
 
-import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.multidex.MultiDexApplication
 import app.simple.buyer.util.database.DBMigration
 import app.simple.buyer.util.database.PrimaryKeyFactory
 import io.realm.Realm
@@ -16,7 +16,7 @@ import org.acra.annotation.AcraCore
  */
 
 @AcraCore(buildConfigClass = BuildConfig::class)
-class BuyerApp : Application() {
+class BuyerApp : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()

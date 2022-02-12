@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="4dp"
+    android:viewportWidth="24"
+    android:viewportHeight="4">
+  <path
+      android:fillColor="?attr/colorMenuIcon"
+      android:pathData="M0,1h19v2h-19z"/>
+  <path
+      android:fillColor="?attr/colorMenuIcon"
+      android:pathData="M24,2.8l-1.8,-1.8l-1.7,1.8z"/>
+</vector>

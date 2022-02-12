@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/bgSelectable"
+    android:background="?attr/colorBackground"
     android:clickable="true"
     android:focusable="true"
     android:minHeight="@dimen/height_subheader"
@@ -22,20 +22,10 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/margin_icon_bounding"
             android:layout_marginEnd="@dimen/margin_icon_bounding"
-            android:layout_marginLeft="@dimen/margin_icon_bounding"
-            android:layout_marginRight="@dimen/margin_icon_bounding"
             android:gravity="center">
 
-            <CheckBox
-                android:id="@+id/checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:background="@color/colorTransparent"
-                android:clickable="false"
-                />
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -44,10 +34,8 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingLeft="@dimen/margin_default"
-            android:paddingStart="@dimen/margin_default"
             android:paddingTop="@dimen/margin_half"
             android:paddingRight="@dimen/margin_default"
-            android:paddingEnd="@dimen/margin_default"
             android:paddingBottom="@dimen/margin_half">
 
             <TextView

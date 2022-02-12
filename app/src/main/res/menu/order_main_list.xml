@@ -13,37 +13,37 @@
                 <item
                     android:icon="@drawable/ic_order_create"
                     android:id="@+id/item_order_create"
-                    android:title="@string/order_create"
+                    android:title="@string/order_item_create"
                     app:showAsAction="never"
                     />
                 <item
                     android:icon="@drawable/ic_order_modify"
                     android:id="@+id/item_order_modify"
-                    android:title="@string/order_modify"
+                    android:title="@string/order_item_modify"
                     app:showAsAction="never"
                     />
                 <item
                     android:icon="@drawable/ic_order_alphabet"
                     android:id="@+id/item_order_alphabet"
-                    android:title="@string/order_alphabet"
+                    android:title="@string/order_item_alphabet"
                     app:showAsAction="never"
                     />
                 <item
                     android:icon="@drawable/ic_order_popularity"
                     android:id="@+id/item_order_popularity"
-                    android:title="@string/order_popularity"
+                    android:title="@string/order_item_popularity"
                     app:showAsAction="never"
                     />
                 <item
                     android:icon="@drawable/ic_order_size"
                     android:id="@+id/item_order_size"
-                    android:title="@string/order_size"
+                    android:title="@string/order_item_size"
                     app:showAsAction="never"
                     />
                 <item
                     android:icon="@drawable/ic_order_price"
                     android:id="@+id/item_order_price"
-                    android:title="@string/order_price"
+                    android:title="@string/order_item_price"
                     app:showAsAction="never"
                     />
                 <!--<item-->
@@ -52,12 +52,6 @@
                     <!--android:title="@string/order_category"-->
                     <!--app:showAsAction="never"-->
                     <!--/>-->
-                <item
-                    android:icon="@drawable/ic_order_hand"
-                    android:id="@+id/item_order_hand"
-                    android:title="@string/order_by_hand"
-                    app:showAsAction="never"
-                    />
 
             </menu>
 

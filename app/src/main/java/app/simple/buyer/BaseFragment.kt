@@ -6,11 +6,8 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.OnApplyWindowInsetsListener
@@ -33,8 +30,8 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
 
     override val emptyData: EmptyData? = null
 
-    val toolbar get() = requireView().findViewById<Toolbar?>(R.id.toolbar)
-    val appBarLayout get() = requireView().findViewById<AppBarLayout?>(R.id.app_bar_layout)
+    val toolbar get() = view?.findViewById<Toolbar?>(R.id.toolbar)
+    val appBarLayout get() = view?.findViewById<AppBarLayout?>(R.id.app_bar_layout)
 
     override val emptyViewRoot: View? get() = view
 

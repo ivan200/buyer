@@ -11,8 +11,8 @@ import io.realm.OrderedRealmCollection
 class MainMenuViewModel(application: Application) : BaseViewModel(application) {
     private val user: User = UserInteractor.getUser(realm)
 
-    val currentListId = RealmObjectFieldLiveData(user, User::currentListId.name)
-    val listsOrderChanged = RealmObjectFieldLiveData(user, User::listsOrderType.name, User::listsSortAscending.name)
+    val currentListId = RealmObjectFieldLiveData(user, User.KEY_CURRENT_LIST_ID)
+    val listsOrderChanged = RealmObjectFieldLiveData(user, User.KEY_LISTS_ORDER_TYPE, User.KEY_LISTS_SORT_ASCENDING)
 
     var mainMenuState: ByteArray
         get() = user.mainMenuScrollState

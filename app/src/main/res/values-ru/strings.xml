@@ -38,6 +38,13 @@
     <string name="order_ascending">По возрастанию</string>
     <string name="order_descending">По убыванию</string>
 
+    <string name="order_item_alphabet">По алфавиту</string>
+    <string name="order_item_popularity">По популярности</string>
+    <string name="order_item_size">По количеству</string>
+    <!--    <string name="order_list_category">По категории</string>-->
+    <string name="order_item_create">По дате добавления</string>
+    <string name="order_item_modify">По дате изменения</string>
+    <string name="order_item_price">По цене</string>
     <string name="empty_data">Нет данных</string>
     <string name="empty_getting_data">Нечего отображать</string>
 

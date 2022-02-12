@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="@dimen/margin_half"
+    app:cardUseCompatPadding="true">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/margin_half">
+
+        <TableRow>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_create"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_create" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_modify"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_modify" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_alphabet"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_alphabet" />
+        </TableRow>
+
+        <TableRow>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_create_asc"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="4dp"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_arrow_order_asc" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_modify_asc"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="4dp"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_arrow_order_asc" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_alphabet_asc"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="4dp"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_arrow_order_asc" />
+        </TableRow>
+
+        <TableRow>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_popularity"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_popularity" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_size"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_size" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_price"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_price" />
+
+            <LinearLayout
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/margin_icon_bounding"
+                android:layout_marginEnd="@dimen/margin_icon_bounding"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    />
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_popularity_asc"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="4dp"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_arrow_order_asc" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_size_asc"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="4dp"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_arrow_order_asc" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_price_asc"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="4dp"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_arrow_order_asc" />
+        </TableRow>
+
+        <TableRow>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_01"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_01" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_02"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_02" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_03"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_03" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ib_order_04"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:background="?selectableItemBackground"
+                android:scaleType="center"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_order_04" />
+        </TableRow>
+    </TableLayout>
+
+</androidx.cardview.widget.CardView>

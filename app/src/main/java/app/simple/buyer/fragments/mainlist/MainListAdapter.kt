@@ -60,7 +60,6 @@ class MainListAdapter(
                 it.isChecked = data.isBuyed
                 it.setOnCheckedChangeListener(this)
             }
-
         }
 
         override fun onClick(v: View?) {

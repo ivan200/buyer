@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppThemeLight.Base" parent="Theme.AppCompat.Light">
+    <style name="AppThemeLight.Base" parent="Theme.Material3.Light">
         <item name="colorPrimary">          @color/colorPrimary</item>
         <item name="colorPrimaryDark">      @color/colorPrimaryDark</item>
         <item name="colorAccent">           @color/colorAccent</item>
@@ -39,14 +39,14 @@
     </style>
     <style name="AppThemeLight" parent="AppThemeLight.Base"/>
 
-    <style name="AppThemeLight.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert" >
+    <style name="AppThemeLight.Dialog" parent="Theme.Material3.Light.Dialog.Alert" >
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/colorBackgroundLightMenu</item>
     </style>
 
-    <style name="AppThemeDark.Base" parent="Theme.AppCompat">
+    <style name="AppThemeDark.Base" parent="Theme.Material3.Dark">
         <item name="colorPrimary">          @color/colorPrimary</item>
         <item name="colorPrimaryDark">      @color/colorPrimaryDark</item>
         <item name="colorAccent">           @color/colorAccent</item>
@@ -84,7 +84,7 @@
 
     <style name="AppThemeDark" parent="AppThemeDark.Base"/>
 
-    <style name="AppThemeDark.Dialog" parent="Theme.AppCompat.Dialog.Alert" >
+    <style name="AppThemeDark.Dialog" parent="Theme.Material3.Dark.Dialog.Alert" >
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

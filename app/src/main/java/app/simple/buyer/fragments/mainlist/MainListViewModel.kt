@@ -16,14 +16,14 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     private val user: User = UserInteractor.getUser(realm)
     val listChanged = RealmObjectFieldLiveData(
         user,
-        User::currentListId.name
+        User.KEY_CURRENT_LIST_ID
     )
 
     val listOrderChanged = RealmObjectFieldLiveData(
         user,
-        User::listItemsOrderType.name,
-        User::listItemsSortAscending.name,
-        User::listItemsCheckedPosition.name
+        User.KEY_LIST_ITEMS_ORDER_TYPE,
+        User.KEY_LIST_ITEMS_SORT_ASCENDING,
+        User.KEY_LIST_ITEMS_CHECKED_POSITION
     )
 
     var scrollState: ByteArray

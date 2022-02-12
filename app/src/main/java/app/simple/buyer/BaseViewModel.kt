@@ -1,9 +1,11 @@
 package app.simple.buyer
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import io.realm.Realm
 import kotlinx.coroutines.*
+
 
 abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var _realm: Realm

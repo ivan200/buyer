@@ -11,8 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import app.simple.buyer.R
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import app.simple.buyer.databinding.DialogAddListContentBinding
 
 
 /**
@@ -31,11 +30,11 @@ class AddListDialogFragment : DialogFragment() {
         val errorText = requireContext().getString(R.string.dialog_add_list_error)
 
         val styleId = if (model.isDarkThemeOn) R.style.AppThemeDark_Dialog else R.style.AppThemeLight_Dialog
-        val subView = layoutInflater.inflate(R.layout.dialog_add_list_content, null)
+        val binding = DialogAddListContentBinding.inflate(layoutInflater)
 
         val builder = AlertDialog.Builder(requireContext(), styleId)
         builder.setTitle(title)
-        builder.setView(subView)
+        builder.setView(binding.root)
         builder.setPositiveButton(positiveButton) { dialog, which ->
             model.onAddNewList()
             dismiss()
@@ -43,8 +42,8 @@ class AddListDialogFragment : DialogFragment() {
         builder.setNegativeButton(negativeButton, null)
         val dialog = builder.create()
 
-        val editText = subView.findViewById<TextInputEditText>(R.id.tiet_add_list)
-        val inputLayout = subView.findViewById<TextInputLayout>(R.id.til_add_list)
+        val editText = binding.tietAddList
+        val inputLayout = binding.tilAddList
         editText.hint = hint
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

@@ -15,7 +15,7 @@ import io.realm.RealmResults
 class AddItemViewModel(application: Application) : BaseViewModel(application) {
     private val user: User = UserInteractor.getUser(realm)
 
-    val userLiveData = RealmObjectFieldLiveData(user, User::currentList.name)
+    val userLiveData = RealmObjectFieldLiveData(user, User.KEY_CURRENT_LIST)
 
     val ltemsLiveData: RealmResultsLiveData<BuyListItem> = RealmResultsLiveData(null)
 

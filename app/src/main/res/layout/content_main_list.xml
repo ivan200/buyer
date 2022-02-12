@@ -31,6 +31,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:tint="@color/colorWhite"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_plus"/>
+        app:srcCompat="@drawable/ic_plus"
+        android:contentDescription="@string/button_add" />
 
 </RelativeLayout>

@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentEditListsBinding
+import app.simple.buyer.entities.User
 import app.simple.buyer.entities.enums.OrderType
 import app.simple.buyer.entities.enums.SortType
-import app.simple.buyer.entities.User
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.asScrollState
 import app.simple.buyer.util.savedState
@@ -86,14 +86,14 @@ class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         if (toolbar?.menu?.size() == 0) {
-            toolbar.inflateMenu(R.menu.order_edit_lists)
+            toolbar?.inflateMenu(R.menu.order_edit_lists)
             menu.setGroupVisible(R.id.group_normal_mode, true)
             menu.setGroupVisible(R.id.group_reorder_mode, false)
         }
         model.orderTypeChanged.observe(viewLifecycleOwner) { user: User? ->
             val orderItem = orderMapping.firstOrNull { it.first == user!!.order }
             if (orderItem != null) {
-                checkItem(menu.findItem(orderItem.second), toolbar.menu)
+                checkItem(menu.findItem(orderItem.second), toolbar?.menu)
             }
             adapter.updateData(model.getItems())
         }
@@ -108,7 +108,8 @@ class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
         }
     }
 
-    private fun checkItem(item: MenuItem, menu: Menu) {
+    private fun checkItem(item: MenuItem, menu: Menu?) {
+        if(menu == null) return
         for (i in 0 until menu.size()) {
             val menuItem = menu.getItem(i)!!
             menuItem.isCheckable = (menuItem.itemId == item.itemId)
@@ -129,8 +130,8 @@ class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
                     model.toggleSortAscending()
                 }
                 R.id.item_order_hand -> {
-                    toolbar.menu.setGroupVisible(R.id.group_normal_mode, false)
-                    toolbar.menu.setGroupVisible(R.id.group_reorder_mode, true)
+                    toolbar?.menu?.setGroupVisible(R.id.group_normal_mode, false)
+                    toolbar?.menu?.setGroupVisible(R.id.group_reorder_mode, true)
 
                     //TODO Доприкрутить сортировку руками
 
@@ -138,8 +139,8 @@ class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
                     item.isChecked = true
                 }
                 R.id.item_action_clear -> {
-                    toolbar.menu.setGroupVisible(R.id.group_reorder_mode, false)
-                    toolbar.menu.setGroupVisible(R.id.group_normal_mode, true)
+                    toolbar?.menu?.setGroupVisible(R.id.group_reorder_mode, false)
+                    toolbar?.menu?.setGroupVisible(R.id.group_normal_mode, true)
 //                adapter?.enableReorderMode(false)
                 }
             }

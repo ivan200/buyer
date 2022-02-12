@@ -2,9 +2,14 @@ package app.simple.buyer.entities
 
 import app.simple.buyer.util.database.PrimaryKeyFactory
 import app.simple.buyer.util.update
-import io.realm.*
+import io.realm.Realm
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.RealmQuery
+import io.realm.RealmResults
 import io.realm.annotations.PrimaryKey
-import java.util.*
+import io.realm.annotations.RealmField
+import java.util.Locale
 
 
 /**
@@ -12,6 +17,7 @@ import java.util.*
  */
 
 //Вещь, которую можно купить
+//@RealmClass(name = BuyItem.KEY_TABLE_NAME)
 open class BuyItem() : RealmObject() {
 
     constructor(name: String, parentItem: BuyItem? = null) : this() {
@@ -26,35 +32,44 @@ open class BuyItem() : RealmObject() {
 
     /** Уникальный id */
     @PrimaryKey
+    @RealmField(name=KEY_ID)
     var id: Long = 0
 
     /** Название */
+    @RealmField(name=KEY_NAME)
     var name: String = ""
 
     /** Сколько раз добавлялась, или популярность */
-    var populatity: Long = 0L
+    @RealmField(name=KEY_POPULARITY)
+    var popularity: Long = 0L
 
     /** Ссылка на верхнюю категорию (если есть) */
+    @RealmField(name=KEY_PARENT_ITEM)
     var parentItem: BuyItem? = null
 
     /** Цена, запоминается (к сожалению храним во флоте)*/
+    @RealmField(name=KEY_PRICE)
     var price: Float = 0f
 
     /** Название без заглавных и букв ё */
+    @RealmField(name=KEY_SEARCH_NAME)
     var searchName: String = ""
         private set
 
     /** Количество слов в названии (количество пробелов + 1) */
+    @RealmField(name=KEY_WORD_COUNT)
     var wordCount: Int = 0
         private set
 
     /** строка с данными для сортировки по ней (сортируется сначала по популярности, затем по количеству слов, затем по алфавиту */
+    @RealmField(name=KEY_ORDER_COMBINE_STRING)
     var orderCombineString: String? = null
         private set
 
-    fun getOrderString() = String.format("%05d", populatity) + wordCount.toString() + searchName
+    private fun getOrderString() = String.format("%05d", popularity) + wordCount.toString() + searchName
 
     /** все подкатегории */
+    @RealmField(name=KEY_SUB_ITEMS)
     var subItems: RealmList<BuyItem> = RealmList()
 
     companion object {
@@ -82,7 +97,7 @@ open class BuyItem() : RealmObject() {
         }
 
         fun getByName(realm: Realm, name: String): BuyItem? {
-            return getQuery(realm).equalTo(BuyItem::searchName.name, smoothName(name)).findFirst()
+            return getQuery(realm).equalTo(KEY_SEARCH_NAME, smoothName(name)).findFirst()
         }
 
         fun getListAsync(realm: Realm, name: String): RealmResults<BuyItem> {
@@ -90,12 +105,23 @@ open class BuyItem() : RealmObject() {
             var query = getQuery(realm)
 
             for (s in split) {
-                query = query.contains(BuyItem::searchName.name, smoothName(s))
+                query = query.contains(KEY_SEARCH_NAME, smoothName(s))
             }
 
             return query
-                .sort(BuyItem::orderCombineString.name)
+                .sort(KEY_ORDER_COMBINE_STRING)
                 .findAllAsync()
         }
+
+        const val KEY_TABLE_NAME = "BuyItem"
+        const val KEY_ID = "id"
+        const val KEY_NAME = "name"
+        const val KEY_POPULARITY = "popularity"
+        const val KEY_PARENT_ITEM = "parentItem"
+        const val KEY_PRICE = "price"
+        const val KEY_SEARCH_NAME = "searchName"
+        const val KEY_WORD_COUNT = "wordCount"
+        const val KEY_ORDER_COMBINE_STRING = "orderCombineString"
+        const val KEY_SUB_ITEMS = "subItems"
     }
 }

@@ -1,8 +1,15 @@
 package app.simple.buyer.fragments.mainlist
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
@@ -10,12 +17,14 @@ import androidx.customview.widget.ViewDragHelper
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentMainListBinding
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
-import app.simple.buyer.fragments.mainlist.DrawerState.*
-import app.simple.buyer.util.*
+import app.simple.buyer.util.ShadowRecyclerSwitcher
+import app.simple.buyer.util.asScrollState
+import app.simple.buyer.util.savedState
 import app.simple.buyer.util.views.drawer.ActionBarDrawerToggle
 import app.simple.buyer.util.views.drawer.DrawerLayout
 import app.simple.buyer.util.views.viewBinding
@@ -99,6 +108,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         binding.contentMain.mainRecycler.let {
             it.layoutManager = layoutManager
             it.adapter = adapter
+            (it.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         }
 
         mainShadowToggler = ShadowRecyclerSwitcher(binding.contentMain.mainRecycler, binding.contentMain.viewToolbar.shadowView) {
@@ -140,7 +150,29 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         return super.onApplyWindowInsets(v, insets)
     }
 
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-        TODO("Not yet implemented")
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_list_order -> {
+                val view = LayoutInflater.from(context).inflate(R.layout.view_main_sort, null)
+                val popup = PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                popup.isOutsideTouchable = true
+                popup.isFocusable = true
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                    popup.elevation = 10f
+//                };
+//                popup.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.colorBackground)))
+                popup.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                popup.showAsDropDown(requireView().findViewById(R.id.action_list_order))
+            }
+        }
+        return true
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if (binding.contentMain.viewToolbar.toolbar.menu?.size() == 0) {
+            binding.contentMain.viewToolbar.toolbar.inflateMenu(R.menu.main_list)
+        }
+    }
+
 }

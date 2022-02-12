@@ -77,7 +77,7 @@ class MainMenuFragment : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         if (binding.viewToolbar.toolbar.menu?.size() == 0) {
-            binding.viewToolbar.toolbar.inflateMenu(R.menu.main_list)
+            binding.viewToolbar.toolbar.inflateMenu(R.menu.main_menu_list)
         }
     }
 
