@@ -3,6 +3,7 @@ package app.simple.buyer
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
+import app.simple.buyer.util.ColorUtils
 import app.simple.buyer.util.database.DBMigration
 import app.simple.buyer.util.database.PrimaryKeyFactory
 import io.realm.Realm
@@ -24,6 +25,7 @@ class BuyerApp : MultiDexApplication() {
         initRealm(this)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
+        ColorUtils.changeOverScrollGlowColor(resources, R.color.ColorBackgroundGrey800)
 //        val consoleHandler = ConsoleHandler()
 //        consoleHandler.level = Level.FINEST
 //        Logger.getLogger("").apply {

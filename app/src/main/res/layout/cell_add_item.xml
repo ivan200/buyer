@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/bgSelectable"
+    android:background="?bgSelectable"
     android:gravity="center_vertical"
     android:minHeight="@dimen/height_subheader"
     android:orientation="horizontal">
@@ -69,7 +69,7 @@
         android:id="@+id/btn_detete"
         android:layout_width="@dimen/size_icon_clickable_area"
         android:layout_height="@dimen/size_icon_clickable_area"
-        android:background="?attr/bgSelectable"
+        android:background="?bgSelectable"
         android:scaleType="center"
         android:tint="@color/colorCheckboxRed"
         android:visibility="visible"

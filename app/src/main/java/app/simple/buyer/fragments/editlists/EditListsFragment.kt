@@ -17,8 +17,10 @@ import app.simple.buyer.databinding.FragmentEditListsBinding
 import app.simple.buyer.entities.User
 import app.simple.buyer.entities.enums.OrderType
 import app.simple.buyer.entities.enums.SortType
+import app.simple.buyer.util.ColorUtils
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.asScrollState
+import app.simple.buyer.util.getColorResCompat
 import app.simple.buyer.util.savedState
 import app.simple.buyer.util.views.viewBinding
 
@@ -76,6 +78,8 @@ class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
         binding.listsFab.setOnClickListener {
             AddListDialogFragment().show(childFragmentManager, AddListDialogFragment.TAG)
         }
+
+        ColorUtils.changeFabShadowColor(binding.listsFab, requireContext().getColorResCompat(R.attr.colorFabShadow))
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {

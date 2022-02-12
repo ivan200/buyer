@@ -8,6 +8,8 @@
         <attr name="colorStatusBar" format="color"/>
         <attr name="colorBackground" format="color"/>
         <attr name="colorFab" format="color"/>
+        <attr name="colorFabSelected" format="color"/>
+        <attr name="colorFabShadow" format="color"/>
         <attr name="colorSectionHeader" format="color"/>
         <attr name="bgSelectable" format="reference"/>
         <attr name="icAdd" format="reference"/>

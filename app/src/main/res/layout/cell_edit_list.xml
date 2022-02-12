@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:background="?attr/bgSelectable">
+        android:background="?bgSelectable">
 
         <TextView
             android:id="@+id/tv_title"
@@ -36,7 +36,7 @@
             android:id="@+id/ib_delete"
             android:layout_width="@dimen/size_icon_clickable_area"
             android:layout_height="@dimen/size_icon_clickable_area"
-            android:background="?selectableItemBackground"
+            android:background="?bgSelectable"
             android:scaleType="center"
             android:visibility="visible"
             app:srcCompat="@drawable/ic_delete"/>

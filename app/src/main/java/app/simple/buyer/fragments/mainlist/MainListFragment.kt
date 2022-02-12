@@ -22,8 +22,10 @@ import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentMainListBinding
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
+import app.simple.buyer.util.ColorUtils
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.asScrollState
+import app.simple.buyer.util.getColorResCompat
 import app.simple.buyer.util.savedState
 import app.simple.buyer.util.views.drawer.ActionBarDrawerToggle
 import app.simple.buyer.util.views.drawer.DrawerLayout
@@ -128,11 +130,13 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         setHasOptionsMenu(true)
         toolbar?.setOnMenuItemClickListener(this)
 
+        ColorUtils.changeFabShadowColor(binding.contentMain.fab, requireContext().getColorResCompat(R.attr.colorFabShadow))
+
         //TODO Доприкрутить менюшки
         //TODO Добавить экспорт списка
     }
 
-    private fun updateTitle(){
+    private fun updateTitle() {
         mActivity.title = model.getTitle() ?: getString(title)
     }
 

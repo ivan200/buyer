@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/bgSelectable"
+    android:background="?bgSelectable"
     android:clickable="true"
     android:focusable="true"
     android:minHeight="@dimen/height_subheader"
@@ -12,7 +12,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/selectableItemBackground"
         android:baselineAligned="false"
         android:gravity="center_vertical">
 

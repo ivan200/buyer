@@ -28,10 +28,17 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:tint="@color/colorWhite"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:contentDescription="@string/button_add"
+        app:backgroundTint="?colorFab"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_plus"
-        android:contentDescription="@string/button_add" />
+        app:borderWidth="0dp"
+        app:rippleColor="?colorFabSelected"
+        app:srcCompat="@drawable/ic_plus" />
 
 </RelativeLayout>

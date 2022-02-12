@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.VectorDrawable
 import android.os.Build
 import android.util.TypedValue
@@ -13,11 +14,17 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.*
+import androidx.annotation.AnyRes
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import app.simple.buyer.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.shape.MaterialShapeDrawable
 
 @AnyRes
 fun Context.getResCompat(@AttrRes id: Int) = ColorUtils.getAttrResCompat(this, id)
@@ -60,6 +67,7 @@ object ColorUtils {
     @SuppressLint("UseCompatLoadingForDrawables")
     fun changeOverScrollGlowColor(res: Resources, colorID: Int) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            @Suppress("DEPRECATION")
             fun changeResColor(res: Resources, resId: String, colorID: Int) {
                 try {
                     val drawableId = res.getIdentifier(resId, "drawable", "android")
@@ -69,7 +77,6 @@ object ColorUtils {
                     //ignore exception
                 }
             }
-
             changeResColor(res, "overscroll_glow", colorID)
             changeResColor(res, "overscroll_edge", colorID)
         }
@@ -82,6 +89,20 @@ object ColorUtils {
             .also { context.theme.resolveAttribute(id, it, true) }
             .let { if (it.resourceId != 0) it.resourceId else it.data }
     }
+
+    /**
+     * Перекрашивание цвета тени fab на api < 21
+     */
+    @SuppressLint("UseCompatLoadingForDrawables")
+    fun changeFabShadowColor(fab: FloatingActionButton, @ColorInt color: Int) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            fab.contentBackground
+                .let { it as? LayerDrawable }
+                ?.let { it.getDrawable(0) as? MaterialShapeDrawable }
+                ?.setShadowColor(color)
+        }
+    }
+
 
     /**
      * Получение ресурса цвета, привязаного к теме через аттрибуты, например `android.R.attr.textColorPrimary`

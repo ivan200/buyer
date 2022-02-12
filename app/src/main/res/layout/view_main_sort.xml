@@ -6,7 +6,9 @@
     android:orientation="vertical"
     app:cardCornerRadius="10dp"
     app:cardElevation="@dimen/margin_half"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    app:cardBackgroundColor="?colorFab"
+    >
 
     <TableLayout
         android:layout_width="match_parent"
@@ -20,7 +22,7 @@
                 android:id="@+id/ib_order_create"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_create" />
@@ -29,7 +31,7 @@
                 android:id="@+id/ib_order_modify"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_modify" />
@@ -38,7 +40,7 @@
                 android:id="@+id/ib_order_alphabet"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_alphabet" />
@@ -46,29 +48,26 @@
 
         <TableRow>
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_create_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="4dp"
-                android:background="?selectableItemBackground"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_modify_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="4dp"
-                android:background="?selectableItemBackground"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_alphabet_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="4dp"
-                android:background="?selectableItemBackground"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
@@ -80,7 +79,7 @@
                 android:id="@+id/ib_order_popularity"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_popularity" />
@@ -89,7 +88,7 @@
                 android:id="@+id/ib_order_size"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_size" />
@@ -98,7 +97,7 @@
                 android:id="@+id/ib_order_price"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_price" />
@@ -124,29 +123,26 @@
 
         <TableRow>
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_popularity_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="4dp"
-                android:background="?selectableItemBackground"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_size_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="4dp"
-                android:background="?selectableItemBackground"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_price_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="4dp"
-                android:background="?selectableItemBackground"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
@@ -158,7 +154,7 @@
                 android:id="@+id/ib_order_01"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_01" />
@@ -167,7 +163,7 @@
                 android:id="@+id/ib_order_02"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_02" />
@@ -176,7 +172,7 @@
                 android:id="@+id/ib_order_03"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_03" />
@@ -185,7 +181,7 @@
                 android:id="@+id/ib_order_04"
                 android:layout_width="@dimen/size_icon_clickable_area"
                 android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?selectableItemBackground"
+                android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_04" />
