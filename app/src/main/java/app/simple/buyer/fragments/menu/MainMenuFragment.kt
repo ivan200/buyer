@@ -49,7 +49,7 @@ class MainMenuFragment : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
         layoutManager = LinearLayoutManager(mActivity)
         layoutManager.onRestoreInstanceState(model.mainMenuState.asScrollState)
 
-        adapterMenu = MainMenuAdapter(model.getItems(), model::onMenuItemSelected)
+        adapterMenu = MainMenuAdapter(model.getItems(), model.getSelectedListId(), model::onMenuItemSelected)
         adapterMenu.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
 
         binding.menuRecycler.let {

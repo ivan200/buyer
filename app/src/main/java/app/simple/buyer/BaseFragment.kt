@@ -16,6 +16,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import app.simple.buyer.util.ColorUtils
+import app.simple.buyer.util.getColorResCompat
 import app.simple.buyer.util.hide
 import app.simple.buyer.util.show
 import com.google.android.material.appbar.AppBarLayout
@@ -48,6 +50,7 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
             //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
             onApplyWindowInsets(requireView(), null)
         }
+        ColorUtils.changeOverScrollGlowColor(resources, requireContext().getColorResCompat(R.attr.colorFabShadow))
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

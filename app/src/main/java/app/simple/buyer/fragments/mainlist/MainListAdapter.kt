@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
-import app.simple.buyer.R
 import app.simple.buyer.databinding.CellMainListBinding
 import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.util.hide
@@ -26,21 +25,20 @@ class MainListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainMenuHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.cell_main_list, parent, false)
-        return MainMenuHolder(itemView)
+        val binding = CellMainListBinding.inflate(LayoutInflater.from(parent.context),  parent, false)
+        return MainMenuHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MainMenuHolder, position: Int) {
         holder.bind(getItem(position)!!)
     }
 
-    inner class MainMenuHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener,
+    inner class MainMenuHolder(val binding: CellMainListBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
-        private val binding = CellMainListBinding.bind(view)
         private var itemListId: Long = 0
 
         init {
-            view.setOnClickListener(this)
+            binding.root.setOnClickListener(this)
         }
 
         fun bind(data: BuyListItem) {

@@ -26,6 +26,10 @@ class MainMenuViewModel(application: Application) : BaseViewModel(application) {
         return BuyList.getAllOrderedAsync(realm, user.order, user.sort)
     }
 
+    fun getSelectedListId(): Long {
+        return user.currentListId
+    }
+
     fun onMenuItemSelected(itemId: Long) {
         UserInteractor.selectListAsync(realm, itemId)
     }

@@ -4,11 +4,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    app:cardBackgroundColor="?colorFab"
     app:cardCornerRadius="10dp"
     app:cardElevation="@dimen/margin_half"
-    app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="?colorFab"
-    >
+    app:cardUseCompatPadding="true">
 
     <TableLayout
         android:layout_width="match_parent"
@@ -46,7 +45,7 @@
                 app:srcCompat="@drawable/ic_order_alphabet" />
         </TableRow>
 
-        <TableRow>
+        <TableRow android:layout_marginTop="-4dp">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_create_asc"
@@ -102,26 +101,9 @@
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_price" />
 
-            <LinearLayout
-                android:layout_width="@dimen/size_icon_clickable_area"
-                android:layout_height="@dimen/size_icon_clickable_area"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/margin_icon_bounding"
-                android:layout_marginEnd="@dimen/margin_icon_bounding"
-                android:gravity="center">
-
-                <CheckBox
-                    android:id="@+id/checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    />
-            </LinearLayout>
         </TableRow>
 
-        <TableRow>
+        <TableRow android:layout_marginTop="-4dp">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_popularity_asc"
@@ -150,6 +132,42 @@
 
         <TableRow>
 
+            <LinearLayout
+                android:id="@+id/checkbox_container"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/size_icon_clickable_area"
+                android:layout_gravity="center_vertical"
+                android:layout_span="3"
+                android:background="?bgSelectable"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorTransparent"
+                    android:checked="false"
+                    android:clickable="false"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:selectable="false"
+                    android:text="Завершенные" />
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow android:id="@+id/row_divider">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_span="3"
+                android:background="?colorDivider" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/row_checked"
+            android:visibility="visible">
+
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/ib_order_01"
                 android:layout_width="@dimen/size_icon_clickable_area"
@@ -177,14 +195,46 @@
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_order_03" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/ib_order_04"
-                android:layout_width="@dimen/size_icon_clickable_area"
-                android:layout_height="@dimen/size_icon_clickable_area"
-                android:background="?bgSelectable"
-                android:scaleType="center"
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/row_checked_selection"
+            android:layout_marginTop="-4dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:gravity="center">
+                <View
+                    android:id="@+id/ib_order_01_selection"
+                    android:layout_width="24dp"
+                    android:layout_height="2dp"
+                    android:background="@color/colorPrimary"
+                    android:visibility="visible"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:gravity="center">
+                <View
+                    android:id="@+id/ib_order_02_selection"
+                    android:layout_width="24dp"
+                    android:layout_height="2dp"
+                    android:background="@color/colorPrimary"
+                    android:visibility="visible"
+                    />
+            </LinearLayout><LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:gravity="center">
+            <View
+                android:id="@+id/ib_order_03_selection"
+                android:layout_width="24dp"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimary"
                 android:visibility="visible"
-                app:srcCompat="@drawable/ic_order_04" />
+                />
+        </LinearLayout>
         </TableRow>
     </TableLayout>
 

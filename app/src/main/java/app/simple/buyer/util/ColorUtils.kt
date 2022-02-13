@@ -65,20 +65,20 @@ object ColorUtils {
      * Перекрашивание цвета оверскролла на всех RecyclerView на api<21. Достаточно вызвать 1 раз в onCreate приложения
      */
     @SuppressLint("UseCompatLoadingForDrawables")
-    fun changeOverScrollGlowColor(res: Resources, colorID: Int) {
+    fun changeOverScrollGlowColor(res: Resources, @ColorInt color: Int) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             @Suppress("DEPRECATION")
-            fun changeResColor(res: Resources, resId: String, colorID: Int) {
+            fun changeResColor(res: Resources, resId: String, @ColorInt color: Int) {
                 try {
                     val drawableId = res.getIdentifier(resId, "drawable", "android")
                     val drawable = res.getDrawable(drawableId)
-                    drawable.setColorFilter(res.getColor(colorID), PorterDuff.Mode.SRC_ATOP)
+                    drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
                 } catch (ignored: Exception) {
                     //ignore exception
                 }
             }
-            changeResColor(res, "overscroll_glow", colorID)
-            changeResColor(res, "overscroll_edge", colorID)
+            changeResColor(res, "overscroll_glow", color)
+            changeResColor(res, "overscroll_edge", color)
         }
     }
 

@@ -1,15 +1,11 @@
 package app.simple.buyer.fragments.mainlist
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.PopupWindow
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,6 +17,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentMainListBinding
+import app.simple.buyer.databinding.ViewMainSortBinding
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
 import app.simple.buyer.util.ColorUtils
 import app.simple.buyer.util.ShadowRecyclerSwitcher
@@ -107,6 +104,9 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         adapter = MainListAdapter(model.getItems(), model::onItemSelected)
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
 
+
+        layoutManager.anc
+
         binding.contentMain.mainRecycler.let {
             it.layoutManager = layoutManager
             it.adapter = adapter
@@ -157,15 +157,8 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_list_order -> {
-                val view = LayoutInflater.from(context).inflate(R.layout.view_main_sort, null)
-                val popup = PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                popup.isOutsideTouchable = true
-                popup.isFocusable = true
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                    popup.elevation = 10f
-//                };
-//                popup.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.colorBackground)))
-                popup.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                val binding = ViewMainSortBinding.inflate(LayoutInflater.from(context))
+                val popup = MainPopupWindow(binding, model, viewLifecycleOwner)
                 popup.showAsDropDown(requireView().findViewById(R.id.action_list_order))
             }
         }

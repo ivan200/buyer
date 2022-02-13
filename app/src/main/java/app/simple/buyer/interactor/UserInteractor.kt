@@ -1,8 +1,9 @@
 package app.simple.buyer.interactor
 
+import app.simple.buyer.entities.User
+import app.simple.buyer.entities.enums.CheckedPosition
 import app.simple.buyer.entities.enums.OrderType
 import app.simple.buyer.entities.enums.SortType
-import app.simple.buyer.entities.User
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update
 import io.realm.Realm
@@ -74,4 +75,31 @@ object UserInteractor {
         }
     }
 
+    fun updateListItemsAsync(realm: Realm, orderType: OrderType, sortType: SortType) = realm.executeTransactionAsync {
+        getUser(it).apply {
+            if (listItemsOrderType != orderType.value || listItemsSortAscending != sortType.value) {
+                listItemsOrderType = orderType.value
+                listItemsSortAscending = sortType.value
+                update(it)
+            }
+        }
+    }
+
+    fun updateListItemsAsync(realm: Realm, sortType: SortType) = realm.executeTransactionAsync {
+        getUser(it).apply {
+            if (listItemsSortAscending != sortType.value) {
+                listItemsSortAscending = sortType.value
+                update(it)
+            }
+        }
+    }
+
+    fun updateListItemsAsync(realm: Realm, checkedPosition: CheckedPosition) = realm.executeTransactionAsync {
+        getUser(it).apply {
+            if (listItemsCheckedPosition != checkedPosition.value) {
+                listItemsCheckedPosition = checkedPosition.value
+                update(it)
+            }
+        }
+    }
 }

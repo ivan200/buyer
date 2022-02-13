@@ -2,6 +2,7 @@
 
 package app.simple.buyer.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -24,10 +25,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
+import java.util.Locale
 import java.util.logging.Level
 import java.util.logging.Logger
-import kotlin.collections.HashMap
 
 
 //
@@ -162,11 +162,35 @@ fun <T : View> T.onClick(function: () -> Unit): T {
     return this
 }
 
+fun <T : Iterable<View>> T.showIf(condition: () -> Boolean): T {
+    val result = condition()
+    this.forEach { it.showIf { result } }
+    return this
+}
+
+fun <T : Iterable<View>> T.hideIf(condition: () -> Boolean): T {
+    val result = condition()
+    this.forEach { it.hideIf { result } }
+    return this
+}
+
+fun <T : Iterable<View>> T.invisibleIf(condition: () -> Boolean): T {
+    val result = condition()
+    this.forEach { it.invisibleIf { result } }
+    return this
+}
+
 fun <T : CompoundButton> T.onCheckedChanged(function: (CompoundButton, Boolean) -> Unit): T {
     setOnCheckedChangeListener(function)
     return this
 }
 
+inline fun <T> T.applyIf(condition: T.() -> Boolean, block: T.() -> Unit): T {
+    if (condition()) {
+        return apply(block)
+    }
+    return this
+}
 
 /**
  * Extension method to get a view as bitmap.
@@ -200,7 +224,7 @@ fun Context.getDimensionDp(@DimenRes id: Int) = resources.getDimension(id) / res
 /**
  * Extension method to check String equalsIgnoreCase
  */
-fun String.equalsIgnoreCase(other: String) = this.toLowerCase(Locale.getDefault()).contentEquals(other.toLowerCase(Locale.getDefault()))
+fun String.equalsIgnoreCase(other: String) = this.lowercase().contentEquals(other.lowercase())
 
 fun String.remove(substring: String) = replace(substring, "")
 
@@ -232,4 +256,5 @@ val RecyclerView.savedState: ByteArray
     get() = (layoutManager as LinearLayoutManager).onSaveInstanceState().toByteArray() ?: ByteArray(0)
 
 val ByteArray.asScrollState: LinearLayoutManager.SavedState
+    @SuppressLint("RestrictedApi")
     get() = this.toParcelable(LinearLayoutManager.SavedState.CREATOR)

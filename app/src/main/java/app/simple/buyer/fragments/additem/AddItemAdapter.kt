@@ -1,7 +1,6 @@
 package app.simple.buyer.fragments.additem
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.R
@@ -35,20 +34,19 @@ class AddItemAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.cell_add_item, parent, false)
-        return FoodHolder(itemView)
+        val binding = CellAddItemBinding.inflate(LayoutInflater.from(parent.context),  parent, false)
+        return FoodHolder(binding)
     }
 
     override fun onBindViewHolder(holder: FoodHolder, position: Int) {
         holder.bind(getItem(position)!!)
     }
 
-    inner class FoodHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val binding = CellAddItemBinding.bind(view)
+    inner class FoodHolder(val binding: CellAddItemBinding) : RecyclerView.ViewHolder(binding.root) {
         var currentItemId: Long = 0
 
         init {
-            view.setOnClickListener {
+            binding.root.setOnClickListener {
                 onItemClicked.invoke(currentItemId)
             }
             binding.btnDetete.setOnClickListener {
@@ -58,6 +56,7 @@ class AddItemAdapter(
 
         fun bind(data: BuyItem) {
             currentItemId = data.id
+            val context = binding.root.context
 
             val listItem = itemsData?.firstOrNull { it.buyItemId == data.id }
 
@@ -66,10 +65,10 @@ class AddItemAdapter(
                 tvTitle.text = data.name
 
                 if (listItem?.isBuyed == true) {
-                    tvTitle.setTextColor(view.context.getColorResCompat(R.attr.colorTextDisabled))
+                    tvTitle.setTextColor(context.getColorResCompat(R.attr.colorTextDisabled))
                     btnDetete.show().setImageResource(R.drawable.ic_clear)
                     if (count > 1) {
-                        tvCount.show().setTextColor(view.context.getColorResCompat(R.attr.colorTextDisabled))
+                        tvCount.show().setTextColor(context.getColorResCompat(R.attr.colorTextDisabled))
                         tvCount.text = count.toString()
                     } else {
                         tvCount.hide()
@@ -78,19 +77,19 @@ class AddItemAdapter(
                 } else {
                     when (count) {
                         0L -> {
-                            tvTitle.setTextColor(view.context.getColorResCompat(R.attr.colorText))
+                            tvTitle.setTextColor(context.getColorResCompat(R.attr.colorText))
                             btnDetete.hide()
                             tvCount.hide()
                         }
                         1L -> {
-                            tvTitle.setTextColor(view.context.getColorCompat(R.color.colorCheckboxGreen))
+                            tvTitle.setTextColor(context.getColorCompat(R.color.colorCheckboxGreen))
                             btnDetete.show().setImageResource(R.drawable.ic_clear)
                             tvCount.hide()
                         }
                         else -> {
-                            tvTitle.setTextColor(view.context.getColorCompat(R.color.colorCheckboxGreen))
+                            tvTitle.setTextColor(context.getColorCompat(R.color.colorCheckboxGreen))
                             btnDetete.show().setImageResource(R.drawable.ic_remove)
-                            tvCount.show().setTextColor(view.context.getColorResCompat(R.attr.colorText))
+                            tvCount.show().setTextColor(context.getColorResCompat(R.attr.colorText))
                             tvCount.show().text = count.toString()
                         }
                     }
