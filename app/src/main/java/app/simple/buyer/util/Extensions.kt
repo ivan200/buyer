@@ -12,6 +12,7 @@ import android.os.Looper
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
@@ -25,7 +26,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.Locale
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -190,6 +190,11 @@ inline fun <T> T.applyIf(condition: T.() -> Boolean, block: T.() -> Unit): T {
         return apply(block)
     }
     return this
+}
+
+fun Number.dpToPx(context: Context? = null): Float {
+    val res = context?.resources ?: android.content.res.Resources.getSystem()
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), res.displayMetrics)
 }
 
 /**

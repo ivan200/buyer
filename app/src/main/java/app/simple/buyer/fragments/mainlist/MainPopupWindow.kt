@@ -23,9 +23,6 @@ class MainPopupWindow(val binding: ViewMainSortBinding, val model: MainListViewM
     ViewGroup.LayoutParams.WRAP_CONTENT,
     ViewGroup.LayoutParams.WRAP_CONTENT
 ) {
-
-    var defaultCheckedPosition = CheckedPosition.BOTTOM
-
     init {
         isOutsideTouchable = true
         isFocusable = true
@@ -37,7 +34,7 @@ class MainPopupWindow(val binding: ViewMainSortBinding, val model: MainListViewM
             bind()
         }
         binding.checkboxContainer.setOnClickListener {
-            onChecked()
+            model.toggleCheckedItems()
         }
         binding.ibOrder01.setOnClickListener { model.updateListItems(CheckedPosition.BOTTOM) }
         binding.ibOrder02.setOnClickListener { model.updateListItems(CheckedPosition.TOP) }
@@ -52,27 +49,13 @@ class MainPopupWindow(val binding: ViewMainSortBinding, val model: MainListViewM
         binding.ibOrderPrice.setOnClickListener         { model.updateListItems(OrderType.PRICE) }
     }
 
-    fun onChecked() {
-        val checkedPosition = model.getItemsCheck()
-        var isChecked = (checkedPosition != CheckedPosition.INVISIBLE)
-        isChecked = !isChecked
-
-        if (isChecked) {
-            model.updateListItems(defaultCheckedPosition)
-        } else {
-            defaultCheckedPosition = model.getItemsCheck()
-            model.updateListItems(CheckedPosition.INVISIBLE)
-        }
-        listOf(binding.rowChecked, binding.rowDivider, binding.rowCheckedSelection).showIf { isChecked }
-    }
-
     fun bind() {
         binding.apply {
             val checkedPosition = model.getItemsCheck()
-            val isCheckedVisible = (checkedPosition != CheckedPosition.INVISIBLE)
+            val isCheckedVisible = model.getShowCheckedItems()
             checkbox.isChecked = isCheckedVisible
 
-            listOf(rowChecked, rowDivider).showIf { isCheckedVisible }
+            listOf(rowChecked, rowDivider, rowCheckedSelection).showIf { isCheckedVisible }
 
             ibOrder01Selection.invisibleIf { checkedPosition != CheckedPosition.BOTTOM }
             ibOrder02Selection.invisibleIf { checkedPosition != CheckedPosition.TOP }

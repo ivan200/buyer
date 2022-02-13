@@ -102,4 +102,13 @@ object UserInteractor {
             }
         }
     }
+
+    fun updateShowCheckedAsync(realm: Realm, showChecked: Boolean) = realm.executeTransactionAsync {
+        getUser(it).apply {
+            if (showCheckedItems != showChecked) {
+                showCheckedItems = showChecked
+                update(it)
+            }
+        }
+    }
 }

@@ -71,6 +71,35 @@
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
         </TableRow>
+        <TableRow
+            >
+
+            <TextView
+                android:id="@+id/tv_order_create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Создан"
+                android:gravity="center"
+                android:textSize="8sp"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_order_modify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Изменён"
+                android:gravity="center"
+                android:textSize="8sp"
+                android:visibility="visible" />
+            <TextView
+                android:id="@+id/tv_order_alphabet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Алфавит"
+                android:gravity="center"
+                android:textSize="8sp"
+                android:visibility="visible" />
+        </TableRow>
 
         <TableRow>
 
@@ -102,7 +131,6 @@
                 app:srcCompat="@drawable/ic_order_price" />
 
         </TableRow>
-
         <TableRow android:layout_marginTop="-4dp">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -128,6 +156,36 @@
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
+        </TableRow>
+
+        <TableRow
+            >
+
+            <TextView
+                android:id="@+id/tv_order_popularity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Рейтинг"
+                android:gravity="center"
+                android:textSize="8sp"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_order_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Количество"
+                android:gravity="center"
+                android:textSize="8sp"
+                android:visibility="visible" />
+            <TextView
+                android:id="@+id/tv_order_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Стоимость"
+                android:gravity="center"
+                android:textSize="8sp"
+                android:visibility="visible" />
         </TableRow>
 
         <TableRow>

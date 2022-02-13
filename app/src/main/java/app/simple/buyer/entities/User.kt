@@ -8,12 +8,13 @@ import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmQuery
 import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import io.realm.annotations.RealmField
 
 /**
  * User
  */
-//@RealmClass(name = User.KEY_TABLE_NAME)
+@RealmClass(name = User.KEY_TABLE_NAME)
 open class User : RealmObject() {
     /** Уникальный Id юзера. Так как он пока один, то всегда 0 */
     @PrimaryKey
@@ -56,6 +57,10 @@ open class User : RealmObject() {
     @RealmField(name = KEY_LIST_ITEMS_CHECKED_POSITION)
     var listItemsCheckedPosition: Int = CheckedPosition.BOTTOM.value
 
+    /** Показывать или нет прочеканые элементы */
+    @RealmField(name = KEY_SHOW_CHECKED_ITEMS)
+    var showCheckedItems: Boolean = true
+
     val order get() = OrderType.getByValue(listsOrderType)
     val sort get() = SortType.getByValue(listsSortAscending)
 
@@ -82,7 +87,7 @@ open class User : RealmObject() {
             return getQuery(realm).findFirstAsync()
         }
 
-        const val KEY_TABLE_NAME = "BuyListItem"
+        const val KEY_TABLE_NAME = "User"
         const val KEY_ID = "id"
         const val KEY_CURRENT_LIST_ID = "currentListId"
         const val KEY_CURRENT_LIST = "currentList"
@@ -93,6 +98,7 @@ open class User : RealmObject() {
         const val KEY_LIST_ITEMS_ORDER_TYPE = "listItemsOrderType"
         const val KEY_LIST_ITEMS_SORT_ASCENDING = "listItemsSortAscending"
         const val KEY_LIST_ITEMS_CHECKED_POSITION = "listItemsCheckedPosition"
+        const val KEY_SHOW_CHECKED_ITEMS = "showCheckedItems"
     }
 }
 

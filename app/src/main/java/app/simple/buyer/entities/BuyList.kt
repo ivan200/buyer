@@ -11,6 +11,7 @@ import io.realm.RealmObject
 import io.realm.RealmQuery
 import io.realm.Sort
 import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import io.realm.annotations.RealmField
 import java.util.Date
 
@@ -19,7 +20,7 @@ import java.util.Date
  */
 
 //Список покупок, который мы составляем
-//@RealmClass(name = BuyList.KEY_TABLE_NAME)
+@RealmClass(name = BuyList.KEY_TABLE_NAME)
 open class BuyList : RealmObject() {
     /** Уникальный id */
     @PrimaryKey

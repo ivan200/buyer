@@ -21,10 +21,9 @@ class AddItemViewModel(application: Application) : BaseViewModel(application) {
 
     init {
         userLiveData.observeForever {
-            ltemsLiveData.update(BuyListItem.getAllByListAsync(realm, user.currentList!!.id))
+            ltemsLiveData.update(BuyListItem.getAllByListAsync(realm, user.currentListId))
         }
-        //TODO разобраться почему не работает на api 32
-//        ltemsLiveData.update(BuyListItem.getAllByListAsync(realm, user.currentList!!.id))
+        ltemsLiveData.update(BuyListItem.getAllByListAsync(realm, user.currentListId))
     }
 
     fun getItems(): RealmResults<BuyItem> {

@@ -23,7 +23,8 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         user,
         User.KEY_LIST_ITEMS_ORDER_TYPE,
         User.KEY_LIST_ITEMS_SORT_ASCENDING,
-        User.KEY_LIST_ITEMS_CHECKED_POSITION
+        User.KEY_LIST_ITEMS_CHECKED_POSITION,
+        User.KEY_SHOW_CHECKED_ITEMS
     )
 
     var scrollState: ByteArray
@@ -35,7 +36,14 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun getItems(): OrderedRealmCollection<BuyListItem> {
-        return BuyListItem.getAllOrdered(realm, user.currentListId, user.itemsOrder, user.itemsSort, user.itemsCheck)
+        return BuyListItem.getAllOrdered(
+            realm,
+            user.currentListId,
+            user.itemsOrder,
+            user.itemsSort,
+            user.itemsCheck,
+            user.showCheckedItems
+        )
     }
 
     fun onItemSelected(itemId: Long) {
@@ -45,6 +53,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     fun getItemsOrder() = user.itemsOrder
     fun getItemsSort() = user.itemsSort
     fun getItemsCheck() = user.itemsCheck
+    fun getShowCheckedItems() = user.showCheckedItems
 
     fun updateListItems(order: OrderType) {
         if(user.itemsOrder == order){
@@ -56,6 +65,12 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         } else{
             UserInteractor.updateListItemsAsync(realm, order, SortType.ASCENDING)
         }
+    }
+
+    fun toggleCheckedItems() {
+        var showChecked = user.showCheckedItems
+        showChecked = !showChecked
+        UserInteractor.updateShowCheckedAsync(realm, showChecked)
     }
 
     fun updateListItems(checkedPosition: CheckedPosition) {

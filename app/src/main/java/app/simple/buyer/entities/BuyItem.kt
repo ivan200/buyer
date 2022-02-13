@@ -8,6 +8,7 @@ import io.realm.RealmObject
 import io.realm.RealmQuery
 import io.realm.RealmResults
 import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import io.realm.annotations.RealmField
 import java.util.Locale
 
@@ -17,7 +18,7 @@ import java.util.Locale
  */
 
 //Вещь, которую можно купить
-//@RealmClass(name = BuyItem.KEY_TABLE_NAME)
+@RealmClass(name = BuyItem.KEY_TABLE_NAME)
 open class BuyItem() : RealmObject() {
 
     constructor(name: String, parentItem: BuyItem? = null) : this() {

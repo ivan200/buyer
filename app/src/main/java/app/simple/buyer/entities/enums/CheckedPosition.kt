@@ -14,10 +14,7 @@ enum class CheckedPosition(val value: Int) {
     TOP(1),
 
     /** Купленные продукты просто отмечаются и остаются на месте **/
-    BETWEEN(2),
-
-    /** Купленные продукты пропадают из списка **/
-    INVISIBLE(3);
+    BETWEEN(2);
 
     companion object {
         fun getByValue(value: Int): CheckedPosition {

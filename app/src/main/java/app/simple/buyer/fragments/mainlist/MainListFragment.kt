@@ -101,11 +101,8 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         layoutManager = LinearLayoutManager(mActivity)
         layoutManager.onRestoreInstanceState(model.scrollState.asScrollState)
 
-        adapter = MainListAdapter(model.getItems(), model::onItemSelected)
+        adapter = MainListAdapter(model.getItems(), model.getShowCheckedItems(), model::onItemSelected)
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
-
-
-        layoutManager.anc
 
         binding.contentMain.mainRecycler.let {
             it.layoutManager = layoutManager
@@ -123,6 +120,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
             binding.drawer.closeDrawer(GravityCompat.START)
         }
         model.listOrderChanged.observe(viewLifecycleOwner){
+            adapter.showCheckedItems = model.getShowCheckedItems()
             adapter.updateData(model.getItems())
         }
         updateTitle()

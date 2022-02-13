@@ -11,6 +11,7 @@ import io.realm.RealmQuery
 import io.realm.RealmResults
 import io.realm.Sort
 import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import io.realm.annotations.RealmField
 import java.util.Date
 
@@ -20,7 +21,7 @@ import java.util.Date
  */
 
 //Элемент списка покупок, которые мы составляем
-//@RealmClass(name = BuyListItem.KEY_TABLE_NAME)
+@RealmClass(name = BuyListItem.KEY_TABLE_NAME)
 open class BuyListItem : RealmObject() {
     /** Уникальный id */
     @PrimaryKey
@@ -99,7 +100,7 @@ open class BuyListItem : RealmObject() {
         fun getAllByListAsync(realm: Realm, listId: Long): RealmResults<BuyListItem> {
             return getQuery(realm)
                 .equalTo(KEY_LIST_ID, listId)
-                .findAll()
+                .findAllAsync()
         }
 
         fun getAllOrdered(
@@ -107,7 +108,8 @@ open class BuyListItem : RealmObject() {
             listId: Long,
             orderType: OrderType,
             sortType: SortType,
-            checkedPosition: CheckedPosition
+            checkedPosition: CheckedPosition,
+            showCheckedItems: Boolean
         ): RealmResults<BuyListItem> {
             val sortOrder = when (sortType) {
                 SortType.ASCENDING -> Sort.ASCENDING
@@ -123,29 +125,27 @@ open class BuyListItem : RealmObject() {
                 OrderType.SIZE -> KEY_COUNT
             }
 
-            val query = getQuery(realm).equalTo(KEY_LIST_ID, listId)
+            var query = getQuery(realm).equalTo(KEY_LIST_ID, listId)
 
-            return when (checkedPosition) {
-                CheckedPosition.INVISIBLE -> query
-                    .equalTo(KEY_IS_BUYED, false)
-                    .sort(fieldName, sortOrder)
-                    .findAllAsync()
-                CheckedPosition.BOTTOM -> query
-                    .sort(
+            query = if (showCheckedItems)
+                when (checkedPosition) {
+                    CheckedPosition.BOTTOM -> query.sort(
                         arrayOf(KEY_IS_BUYED, fieldName),
                         arrayOf(Sort.ASCENDING, sortOrder)
                     )
-                    .findAllAsync()
-                CheckedPosition.TOP -> query
-                    .sort(
+                    CheckedPosition.TOP -> query.sort(
                         arrayOf(KEY_IS_BUYED, fieldName),
                         arrayOf(Sort.DESCENDING, sortOrder)
                     )
-                    .findAllAsync()
-                CheckedPosition.BETWEEN -> query
+                    CheckedPosition.BETWEEN -> query
+                        .sort(fieldName, sortOrder)
+                }
+            else {
+                query
+                    .equalTo(KEY_IS_BUYED, false)
                     .sort(fieldName, sortOrder)
-                    .findAllAsync()
             }
+            return query.findAllAsync()
         }
 
         const val KEY_TABLE_NAME = "BuyListItem"

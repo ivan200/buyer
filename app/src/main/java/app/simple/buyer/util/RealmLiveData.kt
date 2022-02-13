@@ -3,7 +3,18 @@ package app.simple.buyer.util
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.realm.*
+import io.realm.ObjectChangeSet
+import io.realm.OrderedCollectionChangeSet
+import io.realm.OrderedRealmCollection
+import io.realm.OrderedRealmCollectionChangeListener
+import io.realm.Realm
+import io.realm.RealmChangeListener
+import io.realm.RealmList
+import io.realm.RealmModel
+import io.realm.RealmObject
+import io.realm.RealmObjectChangeListener
+import io.realm.RealmQuery
+import io.realm.RealmResults
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -75,7 +86,7 @@ class RealmResultsLiveData<M : RealmModel>(
 
 class RealmObjectFieldLiveData<T : RealmObject>(
     var realmObject: T?,
-    private vararg val fieldName: String
+    private vararg val fieldNames: String
 ) : LiveData<T?>(), RealmObjectChangeListener<T> {
     var active = false
 
@@ -100,7 +111,7 @@ class RealmObjectFieldLiveData<T : RealmObject>(
     }
 
     override fun onChange(result: T, changeSet: ObjectChangeSet?) {
-        if (fieldName.any { changeSet?.isFieldChanged(it) == true }) { postValue(result) }
+        if (fieldNames.any { changeSet?.isFieldChanged(it) == true }) { postValue(result) }
     }
 }
 
