@@ -80,6 +80,8 @@ class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
         }
 
         ColorUtils.changeFabShadowColor(binding.listsFab, requireContext().getColorResCompat(R.attr.colorFabShadow))
+
+        //TODO Переделать менюшки
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
