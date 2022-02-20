@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:cardBackgroundColor="?colorFab"
+    app:cardBackgroundColor="?colorDropdownBackground"
     app:cardCornerRadius="10dp"
     app:cardElevation="@dimen/margin_half"
     app:cardUseCompatPadding="true">
@@ -50,7 +50,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_create_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
-                android:layout_height="4dp"
+                android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
@@ -58,7 +58,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_modify_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
-                android:layout_height="4dp"
+                android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
@@ -66,7 +66,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_alphabet_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
-                android:layout_height="4dp"
+                android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
@@ -136,7 +136,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_popularity_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
-                android:layout_height="4dp"
+                android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
@@ -144,7 +144,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_size_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
-                android:layout_height="4dp"
+                android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
@@ -152,7 +152,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ib_order_price_asc"
                 android:layout_width="@dimen/size_icon_clickable_area"
-                android:layout_height="4dp"
+                android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
@@ -264,8 +264,8 @@
                 android:gravity="center">
                 <View
                     android:id="@+id/ib_order_01_selection"
-                    android:layout_width="24dp"
-                    android:layout_height="2dp"
+                    android:layout_width="@dimen/size_icon_clickable_area"
+                    android:layout_height="4dp"
                     android:background="@color/colorPrimary"
                     android:visibility="visible"
                     />
@@ -276,8 +276,8 @@
                 android:gravity="center">
                 <View
                     android:id="@+id/ib_order_02_selection"
-                    android:layout_width="24dp"
-                    android:layout_height="2dp"
+                    android:layout_width="@dimen/size_icon_clickable_area"
+                    android:layout_height="4dp"
                     android:background="@color/colorPrimary"
                     android:visibility="visible"
                     />
@@ -287,8 +287,8 @@
             android:gravity="center">
             <View
                 android:id="@+id/ib_order_03_selection"
-                android:layout_width="24dp"
-                android:layout_height="2dp"
+                android:layout_width="@dimen/size_icon_clickable_area"
+                android:layout_height="4dp"
                 android:background="@color/colorPrimary"
                 android:visibility="visible"
                 />

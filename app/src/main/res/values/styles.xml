@@ -29,9 +29,11 @@
         <item name="colorMenuIcon">             @color/colorTextBlackSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
         <item name="bgSelectable">              @drawable/bg_selectable_dark</item>
-        <item name="colorFab">                  @android:color/white</item>
-        <item name="colorFabSelected">          @color/ColorBackgroundGrey200</item>
+        <item name="colorFab">                  @color/colorPrimary</item>
+        <item name="colorFabIcon">              @android:color/white</item>
+        <item name="colorFabSelected">          @color/colorPrimaryVeryDark</item>
         <item name="colorFabShadow">            @color/ColorBackgroundGrey850</item>
+        <item name="colorDropdownBackground">   @android:color/white</item>
         <item name="colorSectionHeader">        @color/ColorBackgroundGrey100</item>
         <item name="colorBackground">           @color/colorBackgroundLight</item>
         <item name="colorText">                 @color/colorTextBlack</item>
@@ -92,9 +94,11 @@
         <item name="colorMenuIcon">             @color/colorTextWhiteSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
         <item name="bgSelectable">              @drawable/bg_selectable_light</item>
-        <item name="colorFab">                  @color/ColorBackgroundGrey800</item>
-        <item name="colorFabSelected">          @color/ColorBackgroundGrey850</item>
+        <item name="colorFab">                  @color/colorPrimary</item>
+        <item name="colorFabIcon">              @android:color/white</item>
+        <item name="colorFabSelected">          @color/colorPrimaryVeryDark</item>
         <item name="colorFabShadow">            @android:color/black </item>
+        <item name="colorDropdownBackground">   @color/ColorBackgroundGrey800</item>
         <item name="colorSectionHeader">        @color/ColorBackgroundGrey800</item>
         <item name="colorBackground">           @color/colorBackgroundDark</item>
         <item name="colorText">                 @color/colorTextWhite</item>

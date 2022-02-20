@@ -13,7 +13,7 @@ import io.realm.RealmMigration
 
 class DBMigration : RealmMigration {
     companion object {
-        const val schemaVersion: Long = 7
+        const val schemaVersion: Long = 8
     }
 
     override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
@@ -34,6 +34,9 @@ class DBMigration : RealmMigration {
             }
             6L -> {
                 schema.get(BuyListItem.KEY_TABLE_NAME)?.addField(BuyListItem.KEY_IS_SELECTED, Boolean::class.java)
+            }
+            7L -> {
+                schema.get(BuyListItem.KEY_TABLE_NAME)?.addField(BuyListItem.KEY_IS_ARCHIVED, Boolean::class.java)
             }
         }
     }

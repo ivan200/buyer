@@ -31,11 +31,12 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         android:contentDescription="@string/button_add"
-        app:useCompatPadding="true"
         app:backgroundTint="?colorFab"
         app:fabSize="normal"
         app:rippleColor="?colorFabSelected"
-        app:srcCompat="@drawable/ic_plus" />
+        app:srcCompat="@drawable/ic_plus"
+        app:tint="?colorFabIcon"
+        app:useCompatPadding="true" />
 
     <include layout="@layout/view_toolbar"/>
 

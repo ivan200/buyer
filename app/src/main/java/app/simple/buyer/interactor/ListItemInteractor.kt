@@ -17,19 +17,22 @@ object ListItemInteractor {
 
     /**
      * Добавить покупаемую вещь [buyItem] в список покупок [list], или увеличить покупаемое количество в бд [realm]
+     * @return true если создали новую, false если такой элемент уже был
      */
-    fun createOrIncrease(realm: Realm, list: BuyList, buyItem: BuyItem) {
-        var item = BuyListItem.getByListAndItem(realm, list.id, buyItem.id)
-        if (item == null) {
-            item = BuyListItem.new(realm, buyItem, list)
+    fun createOrIncrease(realm: Realm, list: BuyList, buyItem: BuyItem): Boolean {
+        var listItem = BuyListItem.getByListAndItem(realm, list.id, buyItem.id)
+        val isNew = listItem == null
+        if (listItem == null) {
+            listItem = BuyListItem.new(realm, buyItem, list)
         } else {
-            if (item.isBuyed) {
-                item.isBuyed = false
+            if (listItem.isBuyed) {
+                listItem.isBuyed = false
             } else {
-                item.count = item.count + 1
+                listItem.count = listItem.count + 1
             }
         }
-        item.update(realm)
+        listItem.update(realm)
+        return isNew
     }
 
     /**

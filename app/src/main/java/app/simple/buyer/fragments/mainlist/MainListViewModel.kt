@@ -33,8 +33,6 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         get() = BuyList.getScrollState(realm, user.currentListId)
         set(value) = ListsInteractor.updateListScrollStateAsync(realm, user.currentListId, value)
 
-    private var actionItemId = -1L
-
     private val _actionModeStart = SingleLiveEvent<Unit>()
     val actionModeStart: LiveData<Unit> get() = _actionModeStart
 

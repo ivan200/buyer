@@ -240,6 +240,12 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
                     return true
                 }
                 //TODO Добавить экспорт и импорт списков
+
+                //Экшен действия:
+                //переместить выбранное в новый список
+                //экспортировать
+                //Архивировать
+                //Удалить насовсем??
             }
             return false
         }

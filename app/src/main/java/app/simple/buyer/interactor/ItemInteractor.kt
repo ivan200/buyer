@@ -39,9 +39,15 @@ object ItemInteractor {
      */
     fun addNewItemAsync(realm: Realm, buyItemId: Long, defaultListTitle: String) {
         realm.executeTransactionAsync {
-            val buyItem = it.getById<BuyItem>(buyItemId)!!
-            val list = getCurrentList(it, defaultListTitle)
-            ListItemInteractor.createOrIncrease(it, list, buyItem)
+            val buyItem = it.getById<BuyItem>(buyItemId)
+            if(buyItem != null){
+                val list = getCurrentList(it, defaultListTitle)
+                val mkNew = ListItemInteractor.createOrIncrease(it, list, buyItem)
+                if(mkNew){
+                    buyItem.popularity = buyItem.popularity + 1
+                    buyItem.update(it)
+                }
+            }
         }
     }
 
@@ -63,7 +69,11 @@ object ItemInteractor {
         realm.executeTransactionAsync {
             val buyItem = getByName(it, buyItemName)
             val list = getCurrentList(it, defaultListTitle)
-            ListItemInteractor.createOrIncrease(it, list, buyItem)
+            val mkNew = ListItemInteractor.createOrIncrease(it, list, buyItem)
+            if(mkNew){
+                buyItem.popularity = buyItem.popularity + 1
+                buyItem.update(it)
+            }
         }
     }
 }
