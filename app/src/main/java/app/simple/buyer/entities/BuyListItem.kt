@@ -62,7 +62,11 @@ open class BuyListItem : RealmObject() {
 
     /** Куплена уже, или нет */
     @RealmField(name = KEY_IS_BUYED)
-    var isBuyed: Boolean = false
+    var isBuyed: Boolean = false    //TODO Добавить архивацию элемента (недоудаление)
+
+    /** Выделена для удаления или ещё чего нибудь */
+    @RealmField(name = KEY_IS_SELECTED)
+    var isSelected: Boolean = false
 
     /** Позиция при ручной сортировке */
     @RealmField(name = KEY_HAND_SORT_POSITION)
@@ -101,6 +105,23 @@ open class BuyListItem : RealmObject() {
             return getQuery(realm)
                 .equalTo(KEY_LIST_ID, listId)
                 .findAllAsync()
+        }
+
+        fun getSelectedCount(realm: Realm, listId: Long): Long {
+            return getQuery(realm)
+                .equalTo(KEY_LIST_ID, listId)
+                .and()
+                .equalTo(KEY_IS_SELECTED, true)
+                .count()
+        }
+
+        fun getSelectedItemId(realm: Realm, listId: Long): Long? {
+            return getQuery(realm)
+                .equalTo(KEY_LIST_ID, listId)
+                .and()
+                .equalTo(KEY_IS_SELECTED, true)
+                .findFirst()
+                ?.id
         }
 
         fun getAllOrdered(
@@ -159,6 +180,7 @@ open class BuyListItem : RealmObject() {
         const val KEY_SUM_PRICE = "sumPrice"
         const val KEY_COMMENT = "comment"
         const val KEY_IS_BUYED = "isBuyed"
+        const val KEY_IS_SELECTED = "isSelected"
         const val KEY_HAND_SORT_POSITION = "handSortPosition"
     }
 }

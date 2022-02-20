@@ -13,7 +13,9 @@ import io.realm.OrderedRealmCollection
 
 class MainListAdapter(
     data: OrderedRealmCollection<BuyListItem>,
-    val onItemSelected: Function1<Long, Unit>
+    val onItemSelected: Function2<Long, Boolean, Unit>,
+    val onItemLongClick: Function2<Long, Boolean, Unit>,
+    var isActionMode: Boolean
 ) : RealmRecyclerViewAdapter2<BuyListItem, MainListAdapter.MainListHolder>(data, true) {
     init {
         setHasStableIds(true)
@@ -32,11 +34,14 @@ class MainListAdapter(
         holder.bind(getItem(position)!!)
     }
 
-    inner class MainListHolder(val binding: CellMainListBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    inner class MainListHolder(val binding: CellMainListBinding) : RecyclerView.ViewHolder(binding.root),
+        View.OnClickListener,
+        View.OnLongClickListener {
         private var itemListId: Long = 0
 
         init {
             binding.root.setOnClickListener(this)
+            binding.root.setOnLongClickListener(this)
         }
 
         fun bind(data: BuyListItem) {
@@ -53,11 +58,18 @@ class MainListAdapter(
                 }
 
                 checkbox.isChecked = data.isBuyed
+
+                binding.root.isSelected = isActionMode && data.isSelected
             }
         }
 
         override fun onClick(v: View?) {
-            onItemSelected.invoke(itemListId)
+            onItemSelected.invoke(itemListId, isActionMode)
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            onItemLongClick.invoke(itemListId, isActionMode)
+            return true
         }
     }
 }

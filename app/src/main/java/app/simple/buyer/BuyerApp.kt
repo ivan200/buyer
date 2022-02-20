@@ -46,7 +46,7 @@ class BuyerApp : MultiDexApplication() {
         Realm.init(context)
         val realmConfiguration = RealmConfiguration.Builder()
                 .schemaVersion(DBMigration.schemaVersion)
-                .deleteRealmIfMigrationNeeded() //TODO THIS IS ONLY FOR DEVELOPMENT
+//                .deleteRealmIfMigrationNeeded() //TODO THIS IS ONLY FOR DEVELOPMENT
                 .migration(DBMigration())
                 .build()
         Realm.setDefaultConfiguration(realmConfiguration)

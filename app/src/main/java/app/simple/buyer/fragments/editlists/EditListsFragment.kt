@@ -64,8 +64,8 @@ class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
         layoutManager = LinearLayoutManager(mActivity)
         binding.rvEditLists.layoutManager = layoutManager
         binding.rvEditLists.adapter = adapter
-        binding.rvEditLists.itemAnimator?.moveDuration = 0
-        binding.rvEditLists.itemAnimator?.changeDuration = 0
+//        binding.rvEditLists.itemAnimator?.moveDuration = 0
+//        binding.rvEditLists.itemAnimator?.changeDuration = 0
 
         layoutManager.onRestoreInstanceState(model.mainMenuState.asScrollState)
         shadowToggler = ShadowRecyclerSwitcher(binding.rvEditLists, shadowView) {

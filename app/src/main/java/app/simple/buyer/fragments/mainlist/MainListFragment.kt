@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
+import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
@@ -33,6 +34,9 @@ import app.simple.buyer.util.views.drawer.DrawerLayout
 import app.simple.buyer.util.views.viewBinding
 
 
+/**
+ *
+ */
 class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMenuItemClickListener {
     override val title: Int
         get() = R.string.app_name
@@ -44,6 +48,8 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var adapter: MainListAdapter
     private lateinit var mainShadowToggler: ShadowRecyclerSwitcher
+
+    var actionMode: ActionMode? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,7 +71,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
             override fun onDrawerStateChanged(newState: Int, drawerView: View?) {
                 super.onDrawerStateChanged(newState, drawerView)
                 val isSecondaryDrawer = drawerView?.id == R.id.nav_view_right
-                if(isSecondaryDrawer) {
+                if (isSecondaryDrawer) {
                     if (newState == rDrawerState) return
                     rDrawerState = newState
                     val drawerOpen = binding.drawer.isDrawerOpen(GravityCompat.END)
@@ -102,10 +108,15 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
             binding.drawer.openDrawer(GravityCompat.END)
         }
 
-        layoutManager = LinearLayoutManager(mActivity)
+        layoutManager = object : LinearLayoutManager(activity, VERTICAL, false) {
+            override fun onLayoutCompleted(state: RecyclerView.State?) {
+                super.onLayoutCompleted(state)
+                mainShadowToggler.checkAndToggleShadow(binding.contentMain.mainRecycler, true)
+            }
+        }
         layoutManager.onRestoreInstanceState(model.scrollState.asScrollState)
 
-        adapter = MainListAdapter(model.getItems(), model::onItemSelected)
+        adapter = MainListAdapter(model.getItems(), model::onItemClick, model::onItemLongClick, false)
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
 
         binding.contentMain.mainRecycler.let {
@@ -119,12 +130,12 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
             model.scrollState = binding.contentMain.mainRecycler.savedState
         }
 
-        model.listChanged.observe(viewLifecycleOwner){
+        model.listChanged.observe(viewLifecycleOwner) {
             adapter.updateDataNoClear(model.getItems())
             updateTitle()
             binding.drawer.closeDrawer(GravityCompat.START)
         }
-        model.listOrderChanged.observe(viewLifecycleOwner){
+        model.listOrderChanged.observe(viewLifecycleOwner) {
             setRecyclerMargin(model.getShowCheckedItems(), true)
             adapter.updateDataNoClear(model.getItems())
         }
@@ -135,16 +146,28 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
         ColorUtils.changeFabShadowColor(binding.contentMain.fab, requireContext().getColorResCompat(R.attr.colorFabShadow))
 
-        binding.contentMain.mainRecycler.marginLeft
+        model.actionModeStart.observe(viewLifecycleOwner) {
+            actionMode = mActivity.startSupportActionMode(callback)
+        }
 
+        model.actionModeStop.observe(viewLifecycleOwner) {
+            actionMode?.finish()
+        }
         //TODO Добавить экспорт списка
     }
 
 
-    private fun setRecyclerMargin(showChecked: Boolean, withAnimation: Boolean){
-        val newLeftMargin = if(showChecked) 0 else -1* requireContext().getDimensionPx(R.dimen.size_icon_bounding).toInt()
+    /**
+     * Установить отступ у ресайклера (в отрицательный или 0),
+     * чтобы если мы выберем не показывать завершенные таски часть ячейки с чекбоксом уехала налево за границу экрана
+     *
+     * @param showChecked показывать ли прочеканые элементы
+     * @param withAnimation делать ли это с анимацией (при действии), или без (при старте экрана)
+     */
+    fun setRecyclerMargin(showChecked: Boolean, withAnimation: Boolean) {
+        val newLeftMargin = if (showChecked) 0 else -1 * requireContext().getDimensionPx(R.dimen.size_icon_bounding).toInt()
         val recycler = binding.contentMain.mainRecycler
-        if(recycler.marginLeft != newLeftMargin) {
+        if (recycler.marginLeft != newLeftMargin) {
             if (!withAnimation) {
                 val params = recycler.layoutParams as RelativeLayout.LayoutParams
                 params.leftMargin = newLeftMargin
@@ -156,7 +179,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
                     params.leftMargin = valueAnimator.animatedValue as Int
                     recycler.requestLayout()
                 }
-                animator.duration = 300
+                animator.duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
                 animator.start()
             }
         }
@@ -198,4 +221,34 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         }
     }
 
+    private val callback = object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
+            mode.menuInflater.inflate(R.menu.main_list_edit, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            adapter.isActionMode = true
+            binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem): Boolean {
+            when (item.itemId) {
+                R.id.action_item_delete -> {
+                    model.deleteItem()
+                    return true
+                }
+                //TODO Добавить экспорт и импорт списков
+            }
+            return false
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            model.onExitFromActionMode()
+            binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            adapter.isActionMode = false
+            actionMode = null
+        }
+    }
 }

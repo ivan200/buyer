@@ -531,6 +531,8 @@ public class ActionBarDrawerToggle implements DrawerLayout.DrawerListener {
                 a.recycle();
                 return result;
             }
+
+
             return ActionBarDrawerToggleHoneycomb.getThemeUpIndicator(mActivity);
         }
 

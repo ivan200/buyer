@@ -13,7 +13,11 @@
         >
         <action
             android:id="@+id/action_fragmentMain_to_fragmentEditLists"
-            app:destination="@id/fragmentEditLists"/>
+            app:destination="@id/fragmentEditLists"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/fragmentEditLists"

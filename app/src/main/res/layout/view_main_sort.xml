@@ -95,7 +95,7 @@
                 android:id="@+id/tv_order_alphabet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Алфавит"
+                android:text="Название"
                 android:gravity="center"
                 android:textSize="8sp"
                 android:visibility="visible" />

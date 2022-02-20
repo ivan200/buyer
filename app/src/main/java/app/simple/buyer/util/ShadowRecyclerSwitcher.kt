@@ -13,7 +13,6 @@ class ShadowRecyclerSwitcher(
     private var shadowVisible = false
 
     init {
-        canScrollUp = recyclerView.canScrollVertically(-1)
         shadowVisible = shadowView.visibility == View.VISIBLE
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -22,15 +21,19 @@ class ShadowRecyclerSwitcher(
             }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                canScrollUp = recyclerView.canScrollVertically(-1)
-                checkAndToggleShadow(true)
+                checkAndToggleShadow(recyclerView, true)
                 super.onScrolled(recyclerView, dx, dy)
             }
         })
-        checkAndToggleShadow(false)
+        checkAndToggleShadow(recyclerView, false)
     }
 
-    fun checkAndToggleShadow(withAnimation: Boolean) {
+    fun checkAndToggleShadow(recyclerView: RecyclerView, withAnimation: Boolean) {
+        canScrollUp = recyclerView.canScrollVertically(-1)
+        toggleShadow(withAnimation)
+    }
+
+    private fun toggleShadow(withAnimation: Boolean) {
         when {
             !canScrollUp && shadowVisible -> toggleShadow(false, withAnimation)
             canScrollUp && !shadowVisible -> toggleShadow(true, withAnimation)

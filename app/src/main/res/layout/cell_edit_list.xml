@@ -39,6 +39,7 @@
             android:background="?bgSelectable"
             android:scaleType="center"
             android:visibility="visible"
+            android:contentDescription="@string/button_delete"
             app:srcCompat="@drawable/ic_delete"/>
     </LinearLayout>
 </LinearLayout>

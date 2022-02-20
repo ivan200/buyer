@@ -22,6 +22,7 @@
     <string name="dialog_add_list_error">Данный список уже существует</string>
 
     <string name="button_add">Добавить</string>
+    <string name="button_delete">Удалить</string>
     <string name="button_cancel">Отмена</string>
 
     <string name="menu_sort">Сортировка</string>

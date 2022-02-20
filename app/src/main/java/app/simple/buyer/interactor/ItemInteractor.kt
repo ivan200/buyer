@@ -2,7 +2,6 @@ package app.simple.buyer.interactor
 
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyList
-import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update
 import io.realm.Realm
@@ -35,33 +34,6 @@ object ItemInteractor {
         return list
     }
 
-    private fun createOrIncrease(realm: Realm, list: BuyList, buyItem: BuyItem) {
-        var item = BuyListItem.getByListAndItem(realm, list.id, buyItem.id)
-        if (item == null) {
-            item = BuyListItem.new(realm, buyItem, list)
-//            list.items.add(item)
-        } else {
-            if (item.isBuyed) {
-                item.isBuyed = false
-            } else {
-                item.count = item.count + 1
-            }
-        }
-        item.update(realm)
-    }
-
-    private fun deleteOrDecrease(realm: Realm, list: BuyList, buyItem: BuyItem) {
-        val item = BuyListItem.getByListAndItem(realm, list.id, buyItem.id)
-        if (item != null) {
-            if (item.count > 1) {
-                item.count = item.count - 1
-                item.update(realm)
-            } else {
-                item.deleteFromRealm()
-            }
-        }
-    }
-
     /**
      * Добавить элемент списка покупок, по имеющемуся предмету
      */
@@ -69,29 +41,18 @@ object ItemInteractor {
         realm.executeTransactionAsync {
             val buyItem = it.getById<BuyItem>(buyItemId)!!
             val list = getCurrentList(it, defaultListTitle)
-            createOrIncrease(it, list, buyItem)
+            ListItemInteractor.createOrIncrease(it, list, buyItem)
         }
     }
 
     /**
-     * Добавить элемент списка покупок, по имеющемуся предмету
+     * Удалить элемент списка покупок, по имеющемуся предмету
      */
     fun deleteItemAsync(realm: Realm, buyItemId: Long, defaultListTitle: String) {
         realm.executeTransactionAsync {
             val buyItem = it.getById<BuyItem>(buyItemId)!!
             val list = getCurrentList(it, defaultListTitle)
-            deleteOrDecrease(it, list, buyItem)
-        }
-    }
-
-    /**
-     * Добавить элемент списка покупок, по имеющемуся предмету
-     */
-    fun toggleItemAsync(realm: Realm, listItemId: Long) {
-        realm.executeTransactionAsync {
-            val buyItem = it.getById<BuyListItem>(listItemId)!!
-            buyItem.isBuyed = !buyItem.isBuyed
-            buyItem.update(it)
+            ListItemInteractor.deleteOrDecrease(it, list, buyItem)
         }
     }
 
@@ -102,7 +63,7 @@ object ItemInteractor {
         realm.executeTransactionAsync {
             val buyItem = getByName(it, buyItemName)
             val list = getCurrentList(it, defaultListTitle)
-            createOrIncrease(it, list, buyItem)
+            ListItemInteractor.createOrIncrease(it, list, buyItem)
         }
     }
 }

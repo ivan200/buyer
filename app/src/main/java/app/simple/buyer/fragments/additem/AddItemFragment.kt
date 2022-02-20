@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.TextView
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +13,10 @@ import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
 import app.simple.buyer.databinding.FragmentAddItemBinding
 import app.simple.buyer.fragments.mainlist.DrawerState
-import app.simple.buyer.fragments.mainlist.DrawerState.*
+import app.simple.buyer.fragments.mainlist.DrawerState.FINISH_CLOSING
+import app.simple.buyer.fragments.mainlist.DrawerState.FINISH_OPENING
+import app.simple.buyer.fragments.mainlist.DrawerState.START_CLOSING
+import app.simple.buyer.fragments.mainlist.DrawerState.START_OPENING
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.Utils
 import app.simple.buyer.util.views.viewBinding
@@ -41,15 +45,7 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
             recyclerList.adapter = adapter
 
             editText.addTextChangedListener(Utils.simpleTextWatcher (this@AddItemFragment::onTextChanged))
-            editText.setOnEditorActionListener { v, actionId, event ->
-                if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_NEXT) {
-                    (v as EditText).text.let {
-                        model.onNewItem(it.toString())
-                        it.clear()
-                    }
-                }
-                false
-            }
+            editText.setOnEditorActionListener(this@AddItemFragment::onEditorAction)
             shadowSwitcher = ShadowRecyclerSwitcher(recyclerList, shadowView)
         }
 
@@ -69,6 +65,18 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
         blockItemUpdateOnce = true
         binding.editText.text?.clear()
         model.onItemClicked(itemId)
+    }
+
+    fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_NEXT) {
+            (v as EditText).text.let {
+                blockItemUpdateOnce = true
+                model.onNewItem(it.toString())
+                it.clear()
+            }
+            return true
+        }
+        return false
     }
 
     fun onTextChanged(text: String){

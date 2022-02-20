@@ -10,7 +10,14 @@ class MainActivityViewModel(application: Application) : BaseViewModel(applicatio
     private val user: User = UserInteractor.getUser(realm)
     val darkThemeChanged = RealmObjectFieldSingleLiveEvent(user, User.KEY_DARK_THEME)
 
-    val isDarkThemeOn get() = user.darkTheme
+    val isDarkThemeOn: Boolean
+        get() {
+            return try {
+                user.darkTheme
+            } catch (ex: Exception){
+                User.DARK_THEME_DEFAULT
+            }
+        }
 
     fun checkFirstInit() {
         Database.firstInit(context, realm)

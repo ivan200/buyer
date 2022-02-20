@@ -1,7 +1,12 @@
 package app.simple.buyer.util.views
 
 import androidx.recyclerview.widget.RecyclerView
-import io.realm.*
+import io.realm.OrderedCollectionChangeSet
+import io.realm.OrderedRealmCollection
+import io.realm.OrderedRealmCollectionChangeListener
+import io.realm.RealmList
+import io.realm.RealmModel
+import io.realm.RealmResults
 
 /**
  * The RealmBaseRecyclerAdapter class is an abstract utility class for binding RecyclerView UI elements to Realm data.

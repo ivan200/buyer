@@ -39,7 +39,7 @@ open class User : RealmObject() {
 
     /** Тёмная тема */
     @RealmField(name = KEY_DARK_THEME)
-    var darkTheme: Boolean = true
+    var darkTheme: Boolean = DARK_THEME_DEFAULT
 
     /** Текущее состояние левой панели для восстановления скролла */
     @RealmField(name = KEY_MAIN_MENU_SCROLL_STATE)
@@ -99,6 +99,8 @@ open class User : RealmObject() {
         const val KEY_LIST_ITEMS_SORT_ASCENDING = "listItemsSortAscending"
         const val KEY_LIST_ITEMS_CHECKED_POSITION = "listItemsCheckedPosition"
         const val KEY_SHOW_CHECKED_ITEMS = "showCheckedItems"
+
+        const val DARK_THEME_DEFAULT = true //также возможно нужно смотреть на android:theme в манифесте
     }
 }
 
