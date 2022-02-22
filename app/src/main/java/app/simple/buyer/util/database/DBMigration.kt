@@ -7,6 +7,7 @@ import app.simple.buyer.entities.User
 import io.realm.DynamicRealm
 import io.realm.RealmMigration
 
+
 /**
  * Created by Zakharovi on 23.01.2018.
  */
@@ -28,7 +29,7 @@ class DBMigration : RealmMigration {
                 schema.get(BuyList.KEY_TABLE_NAME)?.renameField("populatity", BuyList.KEY_POPULARITY)
             }
             5L -> {
-                if(schema.get(User.KEY_TABLE_NAME)?.hasField(User.KEY_SHOW_CHECKED_ITEMS) == false) {
+                if (schema.get(User.KEY_TABLE_NAME)?.hasField(User.KEY_SHOW_CHECKED_ITEMS) == false) {
                     schema.get(User.KEY_TABLE_NAME)?.addField(User.KEY_SHOW_CHECKED_ITEMS, Boolean::class.java)
                 }
             }

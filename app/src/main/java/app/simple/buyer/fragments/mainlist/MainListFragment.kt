@@ -51,6 +51,8 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
     var actionMode: ActionMode? = null
 
+    override val toolbar: Toolbar get() = binding.contentMain.viewToolbar.toolbar
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -142,7 +144,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         updateTitle()
 
         setHasOptionsMenu(true)
-        toolbar?.setOnMenuItemClickListener(this)
+        toolbar.setOnMenuItemClickListener(this)
 
         ColorUtils.changeFabShadowColor(binding.contentMain.fab, requireContext().getColorResCompat(R.attr.colorFabShadow))
 
@@ -216,8 +218,8 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (binding.contentMain.viewToolbar.toolbar.menu?.size() == 0) {
-            binding.contentMain.viewToolbar.toolbar.inflateMenu(R.menu.main_list)
+        if (toolbar.menu?.size() == 0) {
+            toolbar.inflateMenu(R.menu.main_list)
         }
     }
 

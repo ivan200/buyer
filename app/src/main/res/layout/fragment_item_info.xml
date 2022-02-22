@@ -1,124 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<app.simple.buyer.util.views.WindowInsetsLinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<app.simple.buyer.util.views.WindowInsetsRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lists_base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="?attr/colorBackground">
+
+
+    <include
+        android:id="@+id/view_toolbar"
+        layout="@layout/view_toolbar" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_below="@id/view_toolbar"
+        android:id="@+id/layout_icons"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_icon_bounding"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_icon_bounding"
+        android:visibility="visible">
 
-        <include layout="@layout/view_toolbar"/>
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_number_minus"
+            android:layout_width="@dimen/size_icon_clickable_area"
+            android:layout_height="@dimen/size_icon_clickable_area"
+            android:layout_gravity="center_vertical"
+            android:background="?bgSelectable"
+            android:scaleType="center"
+            android:tint="@color/colorTextWhite"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_number_minus" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/colorBackground">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_number"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_icon_clickable_area"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:imeOptions="actionDone"
+            android:minWidth="@dimen/size_icon_clickable_area"
+            android:nextFocusUp="@id/et_number"
+            android:nextFocusDown="@id/et_number"
+            android:text="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
 
-            <LinearLayout
-                android:id="@+id/layout_icons"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/size_icon_bounding"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/margin_minus_default"
-                android:layout_marginStart="@dimen/margin_minus_default"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                android:focusableInTouchMode="true"
-                android:orientation="horizontal"
-                android:visibility="visible"
-                android:padding="@dimen/margin_icon_bounding"
-                android:layout_alignParentEnd="true">
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_number_plus"
+            android:layout_width="@dimen/size_icon_clickable_area"
+            android:layout_height="@dimen/size_icon_clickable_area"
+            android:layout_gravity="center_vertical"
+            android:background="?bgSelectable"
+            android:scaleType="center"
+            android:tint="@color/colorTextWhite"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_number_plus" />
 
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/btn_number_minus"
-                    android:layout_width="@dimen/size_icon_clickable_area"
-                    android:layout_height="@dimen/size_icon_clickable_area"
-                    android:background="?bgSelectable"
-                    android:layout_gravity="center_vertical"
-                    android:scaleType="center"
-                    android:visibility="visible"
-                    android:tint="@color/colorTextWhite"
-                    app:srcCompat="@drawable/ic_number_minus"/>
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="bottom|start"
+            android:minHeight="@dimen/height_subheader"
+            android:paddingTop="@dimen/margin_half"
+            android:paddingBottom="@dimen/margin_half"
+            android:spinnerMode="dropdown"
+            android:textAlignment="viewStart" />
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/et_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/size_icon_clickable_area"
-                    android:background="@android:color/transparent"
-                    android:minWidth="@dimen/size_icon"
-                    android:gravity="center"
-                    android:nextFocusUp="@id/et_number"
-                    android:nextFocusDown="@id/et_number"
-                    android:imeOptions="actionDone"
-                    android:text="1"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Menu"
-                    />
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/btn_number_plus"
-                    android:layout_width="@dimen/size_icon_clickable_area"
-                    android:layout_height="@dimen/size_icon_clickable_area"
-                    android:background="?bgSelectable"
-                    android:layout_gravity="center_vertical"
-                    android:scaleType="center"
-                    android:visibility="visible"
-                    android:tint="@color/colorTextWhite"
-                    app:srcCompat="@drawable/ic_number_plus"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/count_layout"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/size_icon_bounding"
-                android:layout_gravity="center_vertical"
-                android:layout_toStartOf="@id/layout_icons"
-                android:layout_toLeftOf="@id/layout_icons"
-                android:orientation="horizontal"
-                android:padding="@dimen/margin_default">
-
-                <TextView
-                    android:id="@+id/tv_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="Количество"
-                    android:layout_gravity="center_vertical"
-                    android:textAlignment="viewStart"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Menu"/>
-
-            </LinearLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_below="@id/count_layout"
-                android:id="@+id/comment_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/margin_default"
-                android:paddingRight="@dimen/margin_default"
-                android:gravity="center_vertical|center_horizontal">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/comment_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Заметки"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPersonName"
-                    android:singleLine="false"
-
-                    android:textColor="?android:textColorPrimary"
-                    android:textColorHint="?attr/colorTextHint"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-        </RelativeLayout>
     </LinearLayout>
-</app.simple.buyer.util.views.WindowInsetsLinearLayout>
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_toLeftOf="@id/layout_icons"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/size_icon_bounding"
+        android:padding="@dimen/margin_default"
+        android:text="Количество"
+        android:textAlignment="viewStart"
+        android:layout_below="@id/view_toolbar"
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/comment_input_layout"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_count"
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingLeft="@dimen/margin_default"
+        android:paddingRight="@dimen/margin_default">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/comment_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            android:ems="10"
+            android:hint="Заметки"
+            android:imeOptions="actionNext"
+            android:inputType="textPersonName"
+            android:singleLine="false"
+            android:textColor="?android:textColorPrimary"
+            android:textColorHint="?attr/colorTextHint" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <include
+        android:id="@+id/view_navbar_bg"
+        layout="@layout/view_navbar_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true" />
+</app.simple.buyer.util.views.WindowInsetsRelativeLayout>

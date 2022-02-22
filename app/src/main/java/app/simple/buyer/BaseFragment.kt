@@ -32,8 +32,8 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
 
     override val emptyData: EmptyData? = null
 
-    val toolbar get() = view?.findViewById<Toolbar?>(R.id.toolbar)
-    val appBarLayout get() = view?.findViewById<AppBarLayout?>(R.id.app_bar_layout)
+    open val toolbar get() = view?.findViewById<Toolbar?>(R.id.toolbar)
+    open val appBarLayout get() = view?.findViewById<AppBarLayout?>(R.id.app_bar_layout)
 
     override val emptyViewRoot: View? get() = view
 
@@ -102,14 +102,6 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
             toolbarHeight = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
         }
         return toolbarHeight
-    }
-
-    fun showError(throwable: Throwable) {
-
-//        mActivity.showError(throwable)
-
-
-
     }
 
 

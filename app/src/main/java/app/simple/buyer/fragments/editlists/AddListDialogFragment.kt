@@ -44,7 +44,8 @@ class AddListDialogFragment : DialogFragment() {
 
         val editText = binding.tietAddList
         val inputLayout = binding.tilAddList
-        editText.hint = hint
+        inputLayout.hint = hint
+//        editText.hint = hint
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -75,10 +76,8 @@ class AddListDialogFragment : DialogFragment() {
         dialog.setOnShowListener { dialog1 ->
             editText.requestFocus()
         }
-        val window = dialog.window
-        if (window != null) {
-            dialog.window!!.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE or SOFT_INPUT_ADJUST_RESIZE)
-        }
+        dialog.window?.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE or SOFT_INPUT_ADJUST_RESIZE)
+
         model.okEnabled.observe(this) {
             val buttonOk = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             buttonOk?.isEnabled = it
