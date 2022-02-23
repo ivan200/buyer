@@ -5,8 +5,9 @@ import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update
-import app.simple.buyer.util.updateRealmObjectField
+import app.simple.buyer.util.updateRealmObjectFieldAsync
 import io.realm.Realm
+import java.util.Date
 
 /**
  *
@@ -18,10 +19,10 @@ object ListItemInteractor {
 
 
     private fun Realm.updateListItemField(buyListItemId: Long, block: BuyListItem.() -> Unit) =
-        updateRealmObjectField({ it.getById(buyListItemId) }, null, block)
+        updateRealmObjectFieldAsync({ it.getById(buyListItemId) }, null, block)
 
     private fun Realm.updateListItemField(buyListItemId: Long, condition: BuyListItem.() -> Boolean, block: BuyListItem.() -> Unit) =
-        updateRealmObjectField({ it.getById(buyListItemId) }, condition, block)
+        updateRealmObjectFieldAsync({ it.getById(buyListItemId) }, condition, block)
 
 
     /**
@@ -95,6 +96,9 @@ object ListItemInteractor {
      */
     fun toggleCheckItemAsync(realm: Realm, listItemId: Long) = realm.updateListItemField(listItemId){
         isBuyed = !isBuyed
+        if(isBuyed){
+            buyed = Date()
+        }
     }
 
     /**
@@ -128,6 +132,7 @@ object ListItemInteractor {
         {
             count = itemCount
             comment = itemComment
+            modified = Date()
         }
     )
 }

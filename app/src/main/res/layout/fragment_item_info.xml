@@ -68,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/view_toolbar"
         android:layout_gravity="center_vertical"
+        android:layout_toStartOf="@id/layout_icons"
         android:layout_toLeftOf="@id/layout_icons"
         android:gravity="center_vertical"
         android:minHeight="@dimen/size_icon_bounding"
@@ -78,7 +79,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/comment_input_layout"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_count"
@@ -90,7 +91,6 @@
             android:id="@+id/comment_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorTransparent"
             android:hint="Заметки"
             android:imeOptions="actionDone"
             android:inputType="textMultiLine|textCapSentences"
@@ -99,6 +99,42 @@
             android:textColor="?android:textColorPrimary"
             android:textColorHint="?attr/colorTextHint" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment_input_layout"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_default">
+
+        <TextView
+            android:id="@+id/tv_date_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:enabled="false"
+            android:text="Дата создания: 10.10.2022 22:32"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+        <TextView
+            android:id="@+id/tv_date_modify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:enabled="false"
+            android:text="Дата изменения: 10.10.2022 22:32"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+        <TextView
+            android:id="@+id/tv_date_buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:enabled="false"
+            android:text="Дата покупки: 10.10.2022 22:32"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+    </LinearLayout>
 
     <include
         android:id="@+id/view_navbar_bg"

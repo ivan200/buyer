@@ -1,6 +1,9 @@
 package app.simple.buyer.fragments.iteminfo
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.text.BidiFormatter
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -11,6 +14,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
@@ -20,6 +24,7 @@ import app.simple.buyer.base.BaseFragment
 import app.simple.buyer.base.OnBackPressedListener
 import app.simple.buyer.databinding.FragmentItemInfoBinding
 import app.simple.buyer.util.Utils
+import app.simple.buyer.util.showIf
 import app.simple.buyer.util.views.viewBinding
 import kotlin.math.max
 import kotlin.math.min
@@ -64,15 +69,15 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
             }
             setOnEditorActionListener { v, actionId, event ->
                 if (event?.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
-                    clearFocus()
                     Utils.hideKeyboard(mActivity)
+                    clearFocus()
                 }
                 false
             }
             onPreImeKeyListener = { keyCode: Int, event: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK && event?.action == KeyEvent.ACTION_UP) {
-                    clearFocus()
                     Utils.hideKeyboard(mActivity)
+                    clearFocus()
                 }
             }
             setOnFocusChangeListener { v, hasFocus ->
@@ -91,9 +96,9 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
         }
 
         binding.listsBaseLayout.setOnClickListener {
+            Utils.hideKeyboard(mActivity)
             binding.etNumber.clearFocus()
             binding.commentEditText.clearFocus()
-            Utils.hideKeyboard(mActivity)
         }
 
         binding.btnNumberPlus.setOnClickListener {
@@ -112,6 +117,35 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
         }
         model.isDecrementButtonEnable.observe(viewLifecycleOwner){
             binding.btnNumberMinus.isEnabled = it
+        }
+
+        model.getCreatedDate().let {
+            binding.tvDateCreate.showIf { it != null }
+            if(it != null) {
+                binding.tvDateCreate.text = requireContext().formatString(R.string.list_item_created, it)
+            }
+        }
+        model.getModifiedDate().let {
+            binding.tvDateModify.showIf { it != null }
+            if(it != null){
+                binding.tvDateModify.text = requireContext().formatString(R.string.list_item_modified, it)
+            }
+        }
+        model.getBuyedDate().let {
+            binding.tvDateBuy.showIf { it != null }
+            if(it != null) {
+                binding.tvDateBuy.text = requireContext().formatString(R.string.list_item_buyed, it)
+            }
+        }
+
+        Utils.showKeyBoard2(binding.commentEditText)
+    }
+
+    fun Context.formatString(@StringRes resId: Int, result: String): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            String.format(getString(resId), BidiFormatter.getInstance().unicodeWrap(result))
+        } else {
+            String.format(getString(resId), result)
         }
     }
 

@@ -7,6 +7,7 @@ import app.simple.buyer.entities.User
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
+import java.util.Date
 
 
 /**
@@ -15,7 +16,7 @@ import io.realm.RealmMigration
 
 class DBMigration : RealmMigration {
     companion object {
-        const val schemaVersion: Long = 9
+        const val schemaVersion: Long = 11
     }
 
     override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
@@ -44,6 +45,17 @@ class DBMigration : RealmMigration {
                 schema.get(BuyItem.KEY_TABLE_NAME)?.addField(BuyItem.KEY_UNIT, Int::class.java)
                 schema.get(BuyListItem.KEY_TABLE_NAME)?.addField(BuyListItem.KEY_SCROLL_STATE, ByteArray::class.java, FieldAttribute.REQUIRED)
                 schema.get(User.KEY_TABLE_NAME)?.addField(User.KEY_CURRENT_ITEM_ID, Long::class.java)
+            }
+            10L -> {
+                schema.get(BuyListItem.KEY_TABLE_NAME)?.addField(BuyListItem.KEY_BUYED, Date::class.java, FieldAttribute.REQUIRED)
+            }
+            11L -> {
+                realm.executeTransactionAsync {
+                    val tt = it.where(BuyListItem::class.java.name).findAll()
+                    tt.forEach { buyListItem ->
+                        buyListItem.set(BuyListItem.KEY_BUYED, buyListItem.get(BuyListItem.KEY_MODIFIED))
+                    }
+                }
             }
         }
     }

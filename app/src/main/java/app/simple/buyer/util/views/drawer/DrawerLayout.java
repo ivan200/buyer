@@ -488,7 +488,7 @@ public class DrawerLayout extends ViewGroup implements Openable {
      */
     public void setDrawerShadow(Drawable shadowDrawable, @EdgeGravity int gravity) {
         /*
-         * TODO Someone someday might want to set more complex drawables here.
+         * Someone someday might want to set more complex drawables here.
          * They're probably nuts, but we might want to consider registering callbacks,
          * setting states, etc. properly.
          */
@@ -1108,7 +1108,7 @@ public class DrawerLayout extends ViewGroup implements Openable {
             if (isInEditMode()) {
                 // Don't crash the layout editor. Consume all of the space if specified
                 // or pick a magic number from thin air otherwise.
-                // TODO Better communication with tools of this bogus state.
+                // TO DO Better communication with tools of this bogus state.
                 // It will crash on a real device.
                 if (widthMode == MeasureSpec.UNSPECIFIED) {
                     widthSize = 300;

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.R
+import app.simple.buyer.base.ItemAction
 import app.simple.buyer.databinding.CellAddItemBinding
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyListItem
@@ -16,8 +17,7 @@ import io.realm.OrderedRealmCollection
 
 class AddItemAdapter(
     data: OrderedRealmCollection<BuyItem>,
-    private val onItemClicked: Function1<Long, Unit>,
-    private val onDelClicked: Function1<Long, Unit>
+    private val onItemAction: Function2<ItemAction, Long, Unit>
 ) : RealmRecyclerViewAdapter2<BuyItem, AddItemAdapter.FoodHolder>(data, true) {
     init {
         setHasStableIds(true)
@@ -47,10 +47,14 @@ class AddItemAdapter(
 
         init {
             binding.root.setOnClickListener {
-                onItemClicked.invoke(currentItemId)
+                onItemAction.invoke(ItemAction.CLICK, currentItemId)
+            }
+            binding.root.setOnLongClickListener {
+                onItemAction.invoke(ItemAction.LONG_CLICK, currentItemId)
+                return@setOnLongClickListener true
             }
             binding.btnDetete.setOnClickListener {
-                onDelClicked.invoke(currentItemId)
+                onItemAction.invoke(ItemAction.OPTIONAL_CLICK, currentItemId)
             }
         }
 

@@ -38,7 +38,7 @@ import app.simple.buyer.util.views.viewBinding
 /**
  *
  */
-class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMenuItemClickListener {
+class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMenuItemClickListener, DrawerStateSupplier {
     override val title: Int
         get() = R.string.app_name
 
@@ -170,6 +170,15 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         }
     }
 
+    /**
+     * Возможность шарить другим фрагментам текущее состояние дравера
+     * для примера, если нажимается кнопка назад на фрагменте просмотра инфо,
+     * основной фрагмент пересоздаётся с уже открытым правым дравером,
+     * и желательно сразу поместить фокус в поле ввода и открыть клавиатуру
+     */
+    override fun isDrawerOpen(drawerGravity: Int): Boolean {
+        return binding.drawer.isDrawerVisible(drawerGravity)
+    }
 
     /**
      * Установить отступ у ресайклера (в отрицательный или 0),

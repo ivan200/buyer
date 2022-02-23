@@ -57,4 +57,8 @@
     <string name="measure_kilogram">кг.</string>
     <string name="measure_gram">г.</string>
     <string name="measure_liter">л.</string>
+
+    <string name="list_item_created">Создание: %s</string>
+    <string name="list_item_modified">Изменение: %s</string>
+    <string name="list_item_buyed">Завершение: %s</string>
 </resources>

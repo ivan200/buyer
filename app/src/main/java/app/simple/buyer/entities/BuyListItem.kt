@@ -48,6 +48,10 @@ open class BuyListItem : RealmObject() {
     @RealmField(name = KEY_MODIFIED)
     var modified: Date = Date()
 
+    /** Дата покупки элемента */
+    @RealmField(name = KEY_BUYED)
+    var buyed: Date = Date()
+
     /** Количество (если пользователь вводил) */
     @RealmField(name = KEY_COUNT)
     var count: Long = MIN_COUNT
@@ -190,6 +194,7 @@ open class BuyListItem : RealmObject() {
         const val KEY_LIST_ID = "listId"
         const val KEY_CREATED = "created"
         const val KEY_MODIFIED = "modified"
+        const val KEY_BUYED = "buyed"
         const val KEY_COUNT = "count"
         const val KEY_SUM_PRICE = "sumPrice"
         const val KEY_COMMENT = "comment"

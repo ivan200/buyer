@@ -2,6 +2,7 @@ package app.simple.buyer.interactor
 
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyList
+import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update
 import io.realm.Realm
@@ -73,6 +74,22 @@ object ItemInteractor {
             if(mkNew){
                 buyItem.popularity = buyItem.popularity + 1
                 buyItem.update(it)
+            }
+        }
+    }
+
+    /**
+     * Выбрать для редактирования элемент списка покупок по вещи
+     */
+    fun openItemAsync(realm: Realm, buyItemId: Long, defaultListTitle: String) {
+        realm.executeTransactionAsync {
+            val buyItem = it.getById<BuyItem>(buyItemId)
+            if(buyItem != null){
+                val list = getCurrentList(it, defaultListTitle)
+                val listItem = BuyListItem.getByListAndItem(it, list.id, buyItem.id)
+                if(listItem != null){
+                    UserInteractor.selectItem(it, listItem.id)
+                }
             }
         }
     }

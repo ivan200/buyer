@@ -112,7 +112,9 @@ class RealmObjectFieldLiveData<T : RealmObject>(
     }
 
     override fun onChange(result: T, changeSet: ObjectChangeSet?) {
-        if (fieldNames.any { changeSet?.isFieldChanged(it) == true }) { postValue(result) }
+        if (fieldNames.any { changeSet?.isFieldChanged(it) == true }) {
+            postValue(result)
+        }
     }
 }
 
@@ -127,13 +129,11 @@ class RealmObjectFieldSingleLiveEvent<T : RealmObject>(
     override fun onInactive() = realmObject.removeChangeListener(this)
 
     override fun onChange(result: T, changeSet: ObjectChangeSet?) {
-        if (fieldName.any { changeSet?.isFieldChanged(it) == true }) { postValue(result) }
+        if (fieldName.any { changeSet?.isFieldChanged(it) == true }) {
+            postValue(result)
+        }
     }
 }
-
-
-
-
 
 
 class LiveRealmObject<T : RealmModel?> @MainThread constructor(obj: T?) : MutableLiveData<T>() {
@@ -293,7 +293,10 @@ fun <T : RealmModel> OrderedRealmCollection<T>.removeListener(
     else -> throw IllegalArgumentException("RealmCollection not supported: " + this.javaClass)
 }
 
-fun <T : RealmObject> Realm.updateRealmObjectField(
+fun <T : RealmObject> Realm.updateRealmObjectFieldAsync(init: (Realm) -> T?, block: T.() -> Unit) =
+    updateRealmObjectFieldAsync(init, null, block)
+
+fun <T : RealmObject> Realm.updateRealmObjectFieldAsync(
     init: (Realm) -> T?,
     condition: (T.() -> Boolean)? = null,
     block: T.() -> Unit
@@ -307,6 +310,3 @@ fun <T : RealmObject> Realm.updateRealmObjectField(
         }
     }
 }
-
-fun <T : RealmObject> Realm.updateRealmObjectField(init: (Realm) -> T?, block: T.() -> Unit) = updateRealmObjectField(init, null, block)
-

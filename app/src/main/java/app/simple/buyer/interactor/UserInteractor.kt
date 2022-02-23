@@ -6,7 +6,7 @@ import app.simple.buyer.entities.enums.OrderType
 import app.simple.buyer.entities.enums.SortType
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update
-import app.simple.buyer.util.updateRealmObjectField
+import app.simple.buyer.util.updateRealmObjectFieldAsync
 import io.realm.Realm
 
 object UserInteractor {
@@ -27,7 +27,7 @@ object UserInteractor {
     }
 
     private fun Realm.updateUserField(condition: User.() -> Boolean, block: User.() -> Unit) =
-        updateRealmObjectField({ getUser(it) }, condition, block)
+        updateRealmObjectFieldAsync({ getUser(it) }, condition, block)
 
     fun selectListAsync(realm: Realm, listId: Long) = realm.executeTransactionAsync {
         getUser(it).apply {
@@ -39,10 +39,18 @@ object UserInteractor {
         }
     }
 
-    fun selectItemAsync(realm: Realm, itemId: Long) = realm.updateUserField(
-        { currentItemId != itemId },
-        { currentItemId = itemId }
+    fun selectItemAsync(realm: Realm, listItemId: Long) = realm.updateUserField(
+        { currentItemId != listItemId },
+        { currentItemId = listItemId }
     )
+
+    fun selectItem(realm: Realm, listItemId: Long) {
+        val user = getUser(realm)
+        if(user.currentItemId != listItemId){
+            user.currentItemId = listItemId
+            user.update(realm)
+        }
+    }
 
     fun deselectItemAsync(realm: Realm) = realm.updateUserField(
         { currentItemId != 0L },

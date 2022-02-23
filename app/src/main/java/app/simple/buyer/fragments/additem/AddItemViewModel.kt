@@ -17,6 +17,8 @@ class AddItemViewModel(application: Application) : BaseViewModel(application) {
 
     val userLiveData = RealmObjectFieldLiveData(user, User.KEY_CURRENT_LIST)
 
+    val userCurrentItem = RealmObjectFieldLiveData(user, User.KEY_CURRENT_ITEM_ID)
+
     val ltemsLiveData: RealmResultsLiveData<BuyListItem> = RealmResultsLiveData(null)
 
     init {
@@ -45,5 +47,10 @@ class AddItemViewModel(application: Application) : BaseViewModel(application) {
 
     fun onItemDeleted(itemId: Long) {
         ItemInteractor.deleteItemAsync(realm, itemId, context.getString(R.string.default_first_list_name))
+    }
+
+
+    fun onItemPreview(itemId: Long) {
+        ItemInteractor.openItemAsync(realm, itemId, context.getString(R.string.default_first_list_name))
     }
 }
