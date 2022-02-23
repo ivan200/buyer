@@ -5,6 +5,7 @@ import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update
+import app.simple.buyer.util.updateRealmObjectField
 import io.realm.Realm
 
 /**
@@ -14,6 +15,14 @@ import io.realm.Realm
  * @since 16.02.2022
  */
 object ListItemInteractor {
+
+
+    private fun Realm.updateListItemField(buyListItemId: Long, block: BuyListItem.() -> Unit) =
+        updateRealmObjectField({ it.getById(buyListItemId) }, null, block)
+
+    private fun Realm.updateListItemField(buyListItemId: Long, condition: BuyListItem.() -> Boolean, block: BuyListItem.() -> Unit) =
+        updateRealmObjectField({ it.getById(buyListItemId) }, condition, block)
+
 
     /**
      * Добавить покупаемую вещь [buyItem] в список покупок [list], или увеличить покупаемое количество в бд [realm]
@@ -64,7 +73,7 @@ object ListItemInteractor {
      * Развыделить все предметы из списка [listId] (перед первым лонгкликом на ячейке) в бд [realm]
      */
     fun deSelectAll(realm: Realm, listId: Long) {
-        val listItems = BuyListItem.getAllByList(realm, listId)
+        val listItems = BuyListItem.getAllSelectedByList(realm, listId)
         listItems.forEach {
             it.isSelected = false
         }
@@ -84,12 +93,8 @@ object ListItemInteractor {
     /**
      * Завершить покупку предмета (поставить чекбокс) на элемент [listItemId] в бд [realm]
      */
-    fun toggleCheckItemAsync(realm: Realm, listItemId: Long) {
-        realm.executeTransactionAsync {
-            val buyItem = it.getById<BuyListItem>(listItemId)!!
-            buyItem.isBuyed = !buyItem.isBuyed
-            buyItem.update(it)
-        }
+    fun toggleCheckItemAsync(realm: Realm, listItemId: Long) = realm.updateListItemField(listItemId){
+        isBuyed = !isBuyed
     }
 
     /**
@@ -113,13 +118,16 @@ object ListItemInteractor {
     /**
      * Выделить элемент списка покупок (в экшенмоде) [listItemId] в бд [realm]
      */
-    fun toggleActionAsync(realm: Realm, listItemId: Long) {
-        realm.executeTransactionAsync {
-            val item = it.getById<BuyListItem>(listItemId)
-            if (item != null) {
-                item.isSelected = !item.isSelected
-                item.update(it)
-            }
-        }
+    fun toggleActionAsync(realm: Realm, listItemId: Long) = realm.updateListItemField(listItemId){
+        isSelected = !isSelected
     }
+
+    fun setItemInfo(realm: Realm, listItemId: Long, itemCount: Long, itemComment: String) = realm.updateListItemField(
+        listItemId,
+        { count != itemCount || comment != itemComment },
+        {
+            count = itemCount
+            comment = itemComment
+        }
+    )
 }

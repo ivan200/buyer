@@ -14,6 +14,7 @@
 
     <string name="lists_title">Списки</string>
     <string name="lists_edit_title">Редактирование списков</string>
+    <string name="lists_item_info">Информация о продукте</string>
 
     <string name="cat_other">Другое</string>
 
@@ -51,5 +52,10 @@
     <string name="empty_getting_data">Нечего отображать</string>
 
     <string name="default_first_list_name">Продукты</string>
+
+    <string name="measure_piece">шт.</string>
+    <string name="measure_kilogram">кг.</string>
+    <string name="measure_gram">г.</string>
+    <string name="measure_liter">л.</string>
 
 </resources>

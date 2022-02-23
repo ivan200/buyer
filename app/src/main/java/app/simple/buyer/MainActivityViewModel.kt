@@ -1,10 +1,11 @@
 package app.simple.buyer
 
 import android.app.Application
+import app.simple.buyer.base.BaseViewModel
 import app.simple.buyer.entities.User
+import app.simple.buyer.interactor.Database
 import app.simple.buyer.interactor.UserInteractor
 import app.simple.buyer.util.RealmObjectFieldSingleLiveEvent
-import app.simple.buyer.util.database.Database
 
 class MainActivityViewModel(application: Application) : BaseViewModel(application) {
     private val user: User = UserInteractor.getUser(realm)

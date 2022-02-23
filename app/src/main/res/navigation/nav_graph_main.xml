@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/nav_graph_section_calendar"
-            app:startDestination="@id/fragmentMain">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_section_calendar"
+    app:startDestination="@id/fragmentMain">
 
     <fragment
         android:id="@+id/fragmentMain"
         android:name="app.simple.buyer.fragments.mainlist.MainListFragment"
         android:label="FragmentMain"
-        tools:layout="@layout/fragment_main_list"
-        >
+        tools:layout="@layout/fragment_main_list">
         <action
             android:id="@+id/action_fragmentMain_to_fragmentEditLists"
             app:destination="@id/fragmentEditLists"
@@ -18,12 +17,27 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentItemInfo"
+            app:destination="@id/fragmentItemInfo"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+
     </fragment>
     <fragment
         android:id="@+id/fragmentEditLists"
         android:name="app.simple.buyer.fragments.editlists.EditListsFragment"
         android:label="FragmentEditLists"
-        tools:layout="@layout/fragment_edit_lists"
+        tools:layout="@layout/fragment_edit_lists" />
+
+    <fragment
+        android:id="@+id/fragmentItemInfo"
+        android:name="app.simple.buyer.fragments.iteminfo.ItemInfoFragment"
+        android:label="fragmentItemInfo"
+        tools:layout="@layout/fragment_item_info"
         />
 
 </navigation>

@@ -11,8 +11,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
+import app.simple.buyer.base.BaseFragment
 import app.simple.buyer.databinding.FragmentEditListsBinding
 import app.simple.buyer.entities.User
 import app.simple.buyer.entities.enums.OrderType

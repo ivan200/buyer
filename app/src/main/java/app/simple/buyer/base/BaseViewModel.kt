@@ -1,10 +1,14 @@
-package app.simple.buyer
+package app.simple.buyer.base
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.Realm
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {

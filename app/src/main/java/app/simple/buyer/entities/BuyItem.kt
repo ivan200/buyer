@@ -1,5 +1,6 @@
 package app.simple.buyer.entities
 
+import app.simple.buyer.entities.enums.UnitMeasure
 import app.simple.buyer.util.database.PrimaryKeyFactory
 import app.simple.buyer.util.update
 import io.realm.Realm
@@ -51,6 +52,10 @@ open class BuyItem() : RealmObject() {
     /** Цена, запоминается (к сожалению храним во флоте)*/
     @RealmField(name=KEY_PRICE)
     var price: Float = 0f
+
+    /** Единица измерения продукта (обычно - штуки)*/
+    @RealmField(name=KEY_UNIT)
+    var unit: Int = UnitMeasure.PIECE.value
 
     /** Название без заглавных и букв ё */
     @RealmField(name=KEY_SEARCH_NAME)
@@ -120,6 +125,7 @@ open class BuyItem() : RealmObject() {
         const val KEY_POPULARITY = "popularity"
         const val KEY_PARENT_ITEM = "parentItem"
         const val KEY_PRICE = "price"
+        const val KEY_UNIT = "unit"
         const val KEY_SEARCH_NAME = "searchName"
         const val KEY_WORD_COUNT = "wordCount"
         const val KEY_ORDER_COMBINE_STRING = "orderCombineString"

@@ -50,7 +50,7 @@ open class BuyListItem : RealmObject() {
 
     /** Количество (если пользователь вводил) */
     @RealmField(name = KEY_COUNT)
-    var count: Long = 1
+    var count: Long = MIN_COUNT
 
     /** Сумарная цена (цена вещи, умноженая на количество) */
     @RealmField(name = KEY_SUM_PRICE)
@@ -76,6 +76,9 @@ open class BuyListItem : RealmObject() {
     @RealmField(name = KEY_HAND_SORT_POSITION)
     var handSortPosition: Long = 0
 
+    /** Позиция скролла комментария (если он большой и не влез на экран) */
+    @RealmField(name = KEY_SCROLL_STATE)
+    var scrollState: ByteArray = ByteArray(0)
 
     companion object {
         fun new(realm: Realm, buyItem: BuyItem, buyList: BuyList): BuyListItem = realm.createObject(
@@ -102,6 +105,13 @@ open class BuyListItem : RealmObject() {
         fun getAllByList(realm: Realm, listId: Long): RealmResults<BuyListItem> {
             return getQuery(realm)
                 .equalTo(KEY_LIST_ID, listId)
+                .findAll()
+        }
+
+        fun getAllSelectedByList(realm: Realm, listId: Long): RealmResults<BuyListItem> {
+            return getQuery(realm)
+                .equalTo(KEY_LIST_ID, listId)
+                .equalTo(KEY_IS_SELECTED, true)
                 .findAll()
         }
 
@@ -187,6 +197,9 @@ open class BuyListItem : RealmObject() {
         const val KEY_IS_ARCHIVED = "isArchived"
         const val KEY_IS_SELECTED = "isSelected"
         const val KEY_HAND_SORT_POSITION = "handSortPosition"
+        const val KEY_SCROLL_STATE = "scrollState"
+
+        const val MIN_COUNT = 1L
     }
 }
 

@@ -6,6 +6,7 @@ import app.simple.buyer.entities.enums.OrderType
 import app.simple.buyer.entities.enums.SortType
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update
+import app.simple.buyer.util.updateRealmObjectField
 import io.realm.Realm
 
 object UserInteractor {
@@ -25,6 +26,9 @@ object UserInteractor {
         return User.get(realm) ?: User.new(realm)
     }
 
+    private fun Realm.updateUserField(condition: User.() -> Boolean, block: User.() -> Unit) =
+        updateRealmObjectField({ getUser(it) }, condition, block)
+
     fun selectListAsync(realm: Realm, listId: Long) = realm.executeTransactionAsync {
         getUser(it).apply {
             if (currentListId != listId) {
@@ -35,80 +39,61 @@ object UserInteractor {
         }
     }
 
-    fun updateMainMenuStateAsync(realm: Realm, scrollState: ByteArray){
-        realm.executeTransactionAsync {
-            getUser(it).apply {
-                if (!mainMenuScrollState.contentEquals(scrollState)) {
-                    mainMenuScrollState = scrollState
-                    update(it)
-                }
-            }
+    fun selectItemAsync(realm: Realm, itemId: Long) = realm.updateUserField(
+        { currentItemId != itemId },
+        { currentItemId = itemId }
+    )
+
+    fun deselectItemAsync(realm: Realm) = realm.updateUserField(
+        { currentItemId != 0L },
+        { currentItemId = 0L }
+    )
+
+
+
+    fun updateMainMenuStateAsync(realm: Realm, scrollState: ByteArray) = realm.updateUserField(
+        { !mainMenuScrollState.contentEquals(scrollState) },
+        { mainMenuScrollState = scrollState }
+    )
+
+    fun updateOrderTypeAsync(realm: Realm, orderType: OrderType) = realm.updateUserField(
+        { listsOrderType != orderType.value },
+        { listsOrderType = orderType.value }
+    )
+
+
+    fun updateSortAscendingAsync(realm: Realm, sortType: SortType) = realm.updateUserField(
+        { listsSortAscending != sortType.value },
+        { listsSortAscending = sortType.value }
+    )
+
+
+    fun updateDarkThemeAsync(realm: Realm, dark: Boolean) = realm.updateUserField(
+        { darkTheme != dark },
+        { darkTheme = dark }
+    )
+
+    fun updateListItemsAsync(realm: Realm, orderType: OrderType, sortType: SortType) = realm.updateUserField(
+        { listItemsOrderType != orderType.value || listItemsSortAscending != sortType.value },
+        {
+            listItemsOrderType = orderType.value
+            listItemsSortAscending = sortType.value
         }
-    }
+    )
 
-    fun updateOrderTypeAsync(realm: Realm, orderType: OrderType) = realm.executeTransactionAsync {
-        getUser(it).apply {
-            if (listsOrderType != orderType.value) {
-                listsOrderType = orderType.value
-                update(it)
-            }
-        }
-    }
+    fun updateListItemsAsync(realm: Realm, sortType: SortType) = realm.updateUserField(
+        { listItemsSortAscending != sortType.value },
+        { listItemsSortAscending = sortType.value }
+    )
 
 
-    fun updateSortAscendingAsync(realm: Realm, sortType: SortType) = realm.executeTransactionAsync {
-        getUser(it).apply {
-            if (listsSortAscending != sortType.value) {
-                listsSortAscending = sortType.value
-                update(it)
-            }
-        }
-    }
+    fun updateListItemsAsync(realm: Realm, checkedPosition: CheckedPosition) = realm.updateUserField(
+        { listItemsCheckedPosition != checkedPosition.value },
+        { listItemsCheckedPosition = checkedPosition.value }
+    )
 
-
-    fun updateDarkThemeAsync(realm: Realm, dark: Boolean) = realm.executeTransactionAsync {
-        getUser(it).apply {
-            if (darkTheme != dark) {
-                darkTheme = dark
-                update(it)
-            }
-        }
-    }
-
-    fun updateListItemsAsync(realm: Realm, orderType: OrderType, sortType: SortType) = realm.executeTransactionAsync {
-        getUser(it).apply {
-            if (listItemsOrderType != orderType.value || listItemsSortAscending != sortType.value) {
-                listItemsOrderType = orderType.value
-                listItemsSortAscending = sortType.value
-                update(it)
-            }
-        }
-    }
-
-    fun updateListItemsAsync(realm: Realm, sortType: SortType) = realm.executeTransactionAsync {
-        getUser(it).apply {
-            if (listItemsSortAscending != sortType.value) {
-                listItemsSortAscending = sortType.value
-                update(it)
-            }
-        }
-    }
-
-    fun updateListItemsAsync(realm: Realm, checkedPosition: CheckedPosition) = realm.executeTransactionAsync {
-        getUser(it).apply {
-            if (listItemsCheckedPosition != checkedPosition.value) {
-                listItemsCheckedPosition = checkedPosition.value
-                update(it)
-            }
-        }
-    }
-
-    fun updateShowCheckedAsync(realm: Realm, showChecked: Boolean) = realm.executeTransactionAsync {
-        getUser(it).apply {
-            if (showCheckedItems != showChecked) {
-                showCheckedItems = showChecked
-                update(it)
-            }
-        }
-    }
+    fun updateShowCheckedAsync(realm: Realm, showChecked: Boolean) = realm.updateUserField(
+        { showCheckedItems != showChecked },
+        { showCheckedItems = showChecked }
+    )
 }

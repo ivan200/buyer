@@ -15,11 +15,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.marginLeft
 import androidx.customview.widget.ViewDragHelper
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
+import app.simple.buyer.base.BaseFragment
 import app.simple.buyer.databinding.FragmentMainListBinding
 import app.simple.buyer.databinding.ViewMainSortBinding
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
@@ -43,6 +44,8 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
     private val model: MainListViewModel by viewModels()
     private val binding by viewBinding(FragmentMainListBinding::bind)
+
+    private val navigateItemInfo = Navigation.createNavigateOnClickListener(R.id.action_fragmentMain_to_fragmentItemInfo)
 
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
     private lateinit var layoutManager: LinearLayoutManager
@@ -155,7 +158,16 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         model.actionModeStop.observe(viewLifecycleOwner) {
             actionMode?.finish()
         }
-        //TODO Добавить экспорт списка
+
+        model.currentItemIdChanged.observe(viewLifecycleOwner) {
+            model.onCurrentItemIdChanged()
+        }
+        model.openItemInfo.observe(viewLifecycleOwner){
+            navigateItemInfo.onClick(requireView())
+        }
+        model.showEditIconInActionMode.observe(viewLifecycleOwner){
+            actionMode?.menu?.findItem(R.id.action_item_edit)?.isVisible = it
+        }
     }
 
 
@@ -232,6 +244,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
             adapter.isActionMode = true
             binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            menu?.findItem(R.id.action_item_edit)?.isVisible = model.showEditIconInActionMode.value ?: true
             return false
         }
 
@@ -240,6 +253,9 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
                 R.id.action_item_delete -> {
                     model.deleteItem()
                     return true
+                }
+                R.id.action_item_edit -> {
+                    model.editItem()
                 }
                 //TODO Добавить экспорт и импорт списков
 

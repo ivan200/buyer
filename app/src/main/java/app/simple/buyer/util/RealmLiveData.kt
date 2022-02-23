@@ -88,6 +88,7 @@ class RealmObjectFieldLiveData<T : RealmObject>(
     var realmObject: T?,
     private vararg val fieldNames: String
 ) : LiveData<T?>(), RealmObjectChangeListener<T> {
+
     var active = false
 
     fun update(newRealmObject: T) {
@@ -291,3 +292,21 @@ fun <T : RealmModel> OrderedRealmCollection<T>.removeListener(
     is RealmList<T> -> this.removeChangeListener(listener as OrderedRealmCollectionChangeListener<RealmList<T>>)
     else -> throw IllegalArgumentException("RealmCollection not supported: " + this.javaClass)
 }
+
+fun <T : RealmObject> Realm.updateRealmObjectField(
+    init: (Realm) -> T?,
+    condition: (T.() -> Boolean)? = null,
+    block: T.() -> Unit
+) {
+    executeTransactionAsync {
+        init(it)?.apply {
+            if (condition == null || condition(this)) {
+                block(this)
+                update(it)
+            }
+        }
+    }
+}
+
+fun <T : RealmObject> Realm.updateRealmObjectField(init: (Realm) -> T?, block: T.() -> Unit) = updateRealmObjectField(init, null, block)
+

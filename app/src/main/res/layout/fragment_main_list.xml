@@ -23,9 +23,9 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="false">
 
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_main_menu"
-                class="app.simple.buyer.fragments.menu.MainMenuFragment"
+                android:name="app.simple.buyer.fragments.menu.MainMenuFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout="@layout/fragment_main_menu" />
@@ -39,9 +39,9 @@
             android:layout_gravity="end"
             android:fitsSystemWindows="false">
 
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_right_panel"
-                class="app.simple.buyer.fragments.additem.AddItemFragment"
+                android:name="app.simple.buyer.fragments.additem.AddItemFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout="@layout/fragment_add_item" />

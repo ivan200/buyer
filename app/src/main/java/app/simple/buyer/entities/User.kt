@@ -68,6 +68,10 @@ open class User : RealmObject() {
     val itemsSort get() = SortType.getByValue(listItemsSortAscending)
     val itemsCheck get() = CheckedPosition.getByValue(listItemsCheckedPosition)
 
+    /** Текущий просматриваемый элемент списка */
+    @RealmField(name = KEY_CURRENT_ITEM_ID)
+    var currentItemId: Long = 0L
+
     companion object {
         fun new(realm: Realm): User = realm.createObject(
             User::class.java, 0
@@ -99,6 +103,7 @@ open class User : RealmObject() {
         const val KEY_LIST_ITEMS_SORT_ASCENDING = "listItemsSortAscending"
         const val KEY_LIST_ITEMS_CHECKED_POSITION = "listItemsCheckedPosition"
         const val KEY_SHOW_CHECKED_ITEMS = "showCheckedItems"
+        const val KEY_CURRENT_ITEM_ID = "currentItemId"
 
         const val DARK_THEME_DEFAULT = true //также возможно нужно смотреть на android:theme в манифесте
     }

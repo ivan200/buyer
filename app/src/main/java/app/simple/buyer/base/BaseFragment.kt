@@ -1,4 +1,4 @@
-package app.simple.buyer
+package app.simple.buyer.base
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -16,6 +16,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import app.simple.buyer.MainActivity
+import app.simple.buyer.R
 import app.simple.buyer.util.ColorUtils
 import app.simple.buyer.util.getColorResCompat
 import app.simple.buyer.util.hide

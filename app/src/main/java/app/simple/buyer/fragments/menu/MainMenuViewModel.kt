@@ -1,7 +1,7 @@
 package app.simple.buyer.fragments.menu
 
 import android.app.Application
-import app.simple.buyer.BaseViewModel
+import app.simple.buyer.base.BaseViewModel
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.User
 import app.simple.buyer.interactor.UserInteractor

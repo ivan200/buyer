@@ -6,16 +6,15 @@
     android:layout_height="match_parent"
     android:background="?attr/colorBackground">
 
-
     <include
         android:id="@+id/view_toolbar"
         layout="@layout/view_toolbar" />
 
     <LinearLayout
-        android:layout_below="@id/view_toolbar"
         android:id="@+id/layout_icons"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_icon_bounding"
+        android:layout_below="@id/view_toolbar"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
@@ -32,20 +31,21 @@
             android:layout_gravity="center_vertical"
             android:background="?bgSelectable"
             android:scaleType="center"
-            android:tint="@color/colorTextWhite"
             android:visibility="visible"
-            app:srcCompat="@drawable/ic_number_minus" />
+            app:srcCompat="@drawable/ic_number_minus"
+            app:tint="?android:textColorPrimary" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <app.simple.buyer.util.views.PreImeEditText
             android:id="@+id/et_number"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/size_icon_clickable_area"
             android:background="@android:color/transparent"
             android:gravity="center"
             android:imeOptions="actionDone"
+            android:inputType="number|numberPassword"
             android:minWidth="@dimen/size_icon_clickable_area"
             android:nextFocusUp="@id/et_number"
-            android:nextFocusDown="@id/et_number"
+            android:nextFocusDown="@id/comment_edit_text"
             android:text="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
 
@@ -56,21 +56,9 @@
             android:layout_gravity="center_vertical"
             android:background="?bgSelectable"
             android:scaleType="center"
-            android:tint="@color/colorTextWhite"
             android:visibility="visible"
-            app:srcCompat="@drawable/ic_number_plus" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="bottom|start"
-            android:minHeight="@dimen/height_subheader"
-            android:paddingTop="@dimen/margin_half"
-            android:paddingBottom="@dimen/margin_half"
-            android:spinnerMode="dropdown"
-            android:textAlignment="viewStart" />
+            app:srcCompat="@drawable/ic_number_plus"
+            app:tint="?android:textColorPrimary" />
 
     </LinearLayout>
 
@@ -78,6 +66,7 @@
         android:id="@+id/tv_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/view_toolbar"
         android:layout_gravity="center_vertical"
         android:layout_toLeftOf="@id/layout_icons"
         android:gravity="center_vertical"
@@ -85,7 +74,6 @@
         android:padding="@dimen/margin_default"
         android:text="Количество"
         android:textAlignment="viewStart"
-        android:layout_below="@id/view_toolbar"
         android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -103,10 +91,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorTransparent"
-            android:ems="10"
             android:hint="Заметки"
-            android:imeOptions="actionNext"
-            android:inputType="textPersonName"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine|textCapSentences"
+            android:nextFocusUp="@id/et_number"
             android:singleLine="false"
             android:textColor="?android:textColorPrimary"
             android:textColorHint="?attr/colorTextHint" />

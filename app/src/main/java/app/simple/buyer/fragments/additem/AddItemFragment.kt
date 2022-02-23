@@ -7,10 +7,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
+import app.simple.buyer.base.BaseFragment
 import app.simple.buyer.databinding.FragmentAddItemBinding
 import app.simple.buyer.fragments.mainlist.DrawerState
 import app.simple.buyer.fragments.mainlist.DrawerState.FINISH_CLOSING
@@ -43,8 +44,7 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
             recyclerList.itemAnimator = null
             recyclerList.layoutManager = LinearLayoutManager(mActivity)
             recyclerList.adapter = adapter
-
-            editText.addTextChangedListener(Utils.simpleTextWatcher (this@AddItemFragment::onTextChanged))
+            editText.doAfterTextChanged { this@AddItemFragment.onTextChanged(it?.toString().orEmpty())}
             editText.setOnEditorActionListener(this@AddItemFragment::onEditorAction)
             shadowSwitcher = ShadowRecyclerSwitcher(recyclerList, shadowView)
         }

@@ -1,10 +1,9 @@
-package app.simple.buyer.util.database
+package app.simple.buyer.interactor
 
 import android.content.Context
 import android.os.AsyncTask
 import app.simple.buyer.R
 import app.simple.buyer.entities.BuyItem
-import app.simple.buyer.interactor.ListsInteractor
 import app.simple.buyer.util.count
 import app.simple.buyer.util.update
 import io.realm.Realm

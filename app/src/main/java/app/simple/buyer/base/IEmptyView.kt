@@ -1,8 +1,9 @@
-package app.simple.buyer
+package app.simple.buyer.base
 
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import app.simple.buyer.R
 
 interface IEmptyView {
     val emptyViewRoot: View?

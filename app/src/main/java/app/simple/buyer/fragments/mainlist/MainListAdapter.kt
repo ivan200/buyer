@@ -60,6 +60,13 @@ class MainListAdapter(
                 checkbox.isChecked = data.isBuyed
 
                 binding.root.isSelected = isActionMode && data.isSelected
+
+                if(data.comment.isNullOrEmpty()){
+                    tvSubtitle.hide()
+                } else{
+                    tvSubtitle.text = data.comment
+                    tvSubtitle.show()
+                }
             }
         }
 

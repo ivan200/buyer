@@ -2,7 +2,8 @@ package app.simple.buyer.fragments.mainlist
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import app.simple.buyer.BaseViewModel
+import androidx.lifecycle.MutableLiveData
+import app.simple.buyer.base.BaseViewModel
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.entities.User
@@ -13,6 +14,7 @@ import app.simple.buyer.interactor.ListItemInteractor
 import app.simple.buyer.interactor.ListsInteractor
 import app.simple.buyer.interactor.UserInteractor
 import app.simple.buyer.util.RealmObjectFieldLiveData
+import app.simple.buyer.util.RealmObjectFieldSingleLiveEvent
 import app.simple.buyer.util.SingleLiveEvent
 import app.simple.buyer.util.getById
 import io.realm.OrderedRealmCollection
@@ -29,6 +31,11 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         User.KEY_SHOW_CHECKED_ITEMS
     )
 
+    val currentItemIdChanged = RealmObjectFieldSingleLiveEvent(
+        user,
+        User.KEY_CURRENT_ITEM_ID
+    )
+
     var scrollState: ByteArray
         get() = BuyList.getScrollState(realm, user.currentListId)
         set(value) = ListsInteractor.updateListScrollStateAsync(realm, user.currentListId, value)
@@ -39,6 +46,24 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     private val _actionModeStop = SingleLiveEvent<Unit>()
     val actionModeStop: LiveData<Unit> get() = _actionModeStop
 
+    private val _openItemInfo = SingleLiveEvent<Unit>()
+    val openItemInfo: LiveData<Unit> get() = _openItemInfo
+
+    private val _showEditIconInActionMode = MutableLiveData(true)
+    val showEditIconInActionMode: LiveData<Boolean> get() = _showEditIconInActionMode
+
+    init {
+        if(user.currentItemId != 0L) {
+            _openItemInfo.call()
+        }
+    }
+
+    fun onCurrentItemIdChanged() {
+        if(user.currentItemId != 0L) {
+            _actionModeStop.call()
+            _openItemInfo.call()
+        }
+    }
 
     fun getTitle(): String? {
         return realm.getById<BuyList>(user.currentListId)?.name
@@ -58,10 +83,20 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     fun onItemClick(itemId: Long, isActionMode: Boolean = false) {
         if (isActionMode) {
             val selectedCount = BuyListItem.getSelectedCount(realm, user.currentListId)
-            if (selectedCount == 1L) {
-                val selectedItemId = BuyListItem.getSelectedItemId(realm, user.currentListId)
-                if(selectedItemId == itemId){
-                    _actionModeStop.call()
+            when {
+                selectedCount == 0L -> {
+                    _showEditIconInActionMode.postValue(true)
+                }
+                selectedCount == 1L -> {
+                    val isItemAlreadySelected = realm.getById<BuyListItem>(itemId)?.isSelected == true
+                    if(isItemAlreadySelected){
+                        _actionModeStop.call()
+                    } else {
+                        _showEditIconInActionMode.postValue(false)
+                    }
+                }
+                selectedCount == 2L && realm.getById<BuyListItem>(itemId)?.isSelected == true -> {
+                    _showEditIconInActionMode.postValue(true)
                 }
             }
             ListItemInteractor.toggleActionAsync(realm, itemId)
@@ -72,9 +107,10 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
 
     fun onItemLongClick(itemId: Long, isActionMode: Boolean = false) {
         if(isActionMode){
-            //
+            onItemClick(itemId, isActionMode)
         } else {
             _actionModeStart.call()
+            _showEditIconInActionMode.postValue(true)
             ListItemInteractor.actionFirstItemAsync(realm, user.currentListId, itemId)
         }
     }
@@ -107,11 +143,20 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun deleteItem() {
+        //TODO Докрутить удаление
+
 //        ListItemInteractor.deleteAsync(realm, actionItemId)
         _actionModeStop.call()
     }
 
     fun onExitFromActionMode() {
         ListItemInteractor.deSelectAllAsync(realm, user.currentListId)
+    }
+
+    fun editItem() {
+        val selectedItemId = BuyListItem.getSelectedItemId(realm, user.currentListId)
+        if(selectedItemId != null) {
+            UserInteractor.selectItemAsync(realm, selectedItemId)
+        }
     }
 }

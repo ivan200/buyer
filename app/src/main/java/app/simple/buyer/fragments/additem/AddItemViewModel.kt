@@ -1,8 +1,8 @@
 package app.simple.buyer.fragments.additem
 
 import android.app.Application
-import app.simple.buyer.BaseViewModel
 import app.simple.buyer.R
+import app.simple.buyer.base.BaseViewModel
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.entities.User

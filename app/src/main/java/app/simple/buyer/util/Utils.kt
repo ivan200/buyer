@@ -10,7 +10,11 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -18,9 +22,7 @@ import android.graphics.drawable.VectorDrawable
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.Window
@@ -36,7 +38,7 @@ import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import app.simple.buyer.BuildConfig
 import app.simple.buyer.R
-import java.util.*
+import java.util.Random
 import kotlin.math.max
 import kotlin.math.min
 
@@ -331,22 +333,6 @@ object Utils {
             }
         }
         return false
-    }
-
-    /**
-     * Views
-     **/
-
-    fun simpleTextWatcher(onTextChanged: Function1<String, Unit>?): TextWatcher {
-        return object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-
-            override fun afterTextChanged(s: Editable) {
-                onTextChanged?.invoke(s.toString())
-            }
-        }
     }
 
     /**

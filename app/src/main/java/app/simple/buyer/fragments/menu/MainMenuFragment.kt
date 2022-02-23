@@ -11,8 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.simple.buyer.BaseFragment
 import app.simple.buyer.R
+import app.simple.buyer.base.BaseFragment
 import app.simple.buyer.databinding.FragmentMainMenuBinding
 import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.asScrollState

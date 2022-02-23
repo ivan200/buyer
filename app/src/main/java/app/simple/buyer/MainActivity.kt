@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import app.simple.buyer.base.OnBackPressedListener
 import app.simple.buyer.util.Utils
 
 
@@ -36,6 +37,12 @@ class MainActivity : AppCompatActivity() {
 //    }
 
     override fun onBackPressed() {
+        supportFragmentManager.fragments.firstOrNull()?.childFragmentManager?.fragments?.firstOrNull()?.let {
+            if(it is OnBackPressedListener && !it.onBackPressed()){
+                return
+            }
+        }
+
         findNavController(R.id.fragment_main).let {
             if (!it.popBackStack()) finish()
         }
