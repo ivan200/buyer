@@ -153,9 +153,14 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
 
     override fun onResume() {
         super.onResume()
+
+        //Если мы попали на этот экран то показываем клавиатуру сразу в заметках
         Utils.showKeyBoard3(binding.commentEditText)
     }
 
+    /**
+     * Форматирование вывода строки [result] которая упоминается в ресурсе [resId]
+     */
     fun Context.formatString(@StringRes resId: Int, result: String): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             String.format(getString(resId), BidiFormatter.getInstance().unicodeWrap(result))
@@ -195,7 +200,6 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
 
     override fun onBackPressed(): Boolean {
         model.onBackPressed()
-        Utils.hideKeyboard(mActivity)
         return true
     }
 

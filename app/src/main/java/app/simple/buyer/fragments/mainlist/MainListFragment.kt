@@ -29,6 +29,7 @@ import app.simple.buyer.databinding.ViewMainSortBinding
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
 import app.simple.buyer.util.ColorUtils
 import app.simple.buyer.util.ShadowRecyclerSwitcher
+import app.simple.buyer.util.Utils
 import app.simple.buyer.util.asScrollState
 import app.simple.buyer.util.getColorResCompat
 import app.simple.buyer.util.getDimensionPx
@@ -173,6 +174,15 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        //Если мы возвращаемся с любого экрана и правый дравер спрятан (а клавиатура открыта), то убираем клаву
+        if(!isDrawerOpen(GravityCompat.END)){
+            Utils.hideKeyboardFrom(requireView())
+        }
+    }
+
     /**
      * Возможность шарить другим фрагментам текущее состояние дравера
      * для примера, если нажимается кнопка назад на фрагменте просмотра инфо,
@@ -275,12 +285,21 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
                     return true
                 }
                 R.id.action_item_copy -> {
-                    val clipboard = getSystemService(requireContext(),ClipboardManager::class.java)
+                    val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
                     val clip = ClipData.newPlainText(model.getTitle(), model.getSelected())
                     clipboard?.setPrimaryClip(clip)
+
+//                    ShareCompat.IntentBuilder(requireContext())
+//                        .setText(model.getSelected())
+//                        .setType(Intent.normalizeMimeType("text/plain"))
+//                        .setChooserTitle(model.getTitle())
+//                        .startChooser()
+
 //                    Toast.makeText(requireContext(), "Скопировано", Toast.LENGTH_SHORT).show()
                     return true
                 }
+
+
                 //TODO Добавить экспорт и импорт списков
 
                 //Экшен действия:

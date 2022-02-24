@@ -56,17 +56,17 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
             adapter.itemsUpdated(it)
         }
 
-        model.userCurrentItem.observe(viewLifecycleOwner){
-            if(it?.currentItemId ?: 0 > 0L){
-                Utils.hideKeyboardFrom(requireView())
-            }
-        }
+//        model.userCurrentItem.observe(viewLifecycleOwner){
+//            if(it?.currentItemId ?: 0 > 0L){
+//                Utils.hideKeyboardFrom(requireView())
+//            }
+//        }
     }
 
     override fun onResume() {
         super.onResume()
         if((parentFragment as? DrawerStateSupplier)?.isDrawerOpen(GravityCompat.END) == true){
-            Utils.showKeyBoard2(binding.editText)
+            Utils.showKeyBoard3(binding.editText)
         }
     }
 
