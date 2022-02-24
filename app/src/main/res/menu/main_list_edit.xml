@@ -8,7 +8,12 @@
         android:title="@string/button_edit"
         app:showAsAction="ifRoom">
     </item>
-
+    <item
+        android:id="@+id/action_item_done"
+        android:icon="@drawable/ic_done"
+        android:title="@string/button_done"
+        app:showAsAction="ifRoom">
+    </item>
     <item
         android:id="@+id/action_item_delete"
         android:icon="@drawable/ic_delete"

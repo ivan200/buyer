@@ -70,44 +70,42 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun getItems(): OrderedRealmCollection<BuyListItem> {
-        return BuyListItem.getAllOrdered(
-            realm,
-            user.currentListId,
-            user.itemsOrder,
-            user.itemsSort,
-            user.itemsCheck,
-            user.showCheckedItems
-        )
+        return BuyListItem.getAllOrderedAsync(realm,user)
     }
 
     fun onItemClick(itemId: Long, isActionMode: Boolean = false) {
         if (isActionMode) {
-            val selectedCount = BuyListItem.getSelectedCount(realm, user.currentListId)
-            when {
-                selectedCount == 0L -> {
-                    _showEditIconInActionMode.postValue(true)
-                }
-                selectedCount == 1L -> {
-                    val isItemAlreadySelected = realm.getById<BuyListItem>(itemId)?.isSelected == true
-                    if(isItemAlreadySelected){
-                        _actionModeStop.call()
-                    } else {
-                        _showEditIconInActionMode.postValue(false)
-                    }
-                }
-                selectedCount == 2L && realm.getById<BuyListItem>(itemId)?.isSelected == true -> {
-                    _showEditIconInActionMode.postValue(true)
-                }
-            }
+            checkShowEditIcon(itemId)
             ListItemInteractor.toggleActionAsync(realm, itemId)
         } else {
             ListItemInteractor.toggleCheckItemAsync(realm, itemId)
         }
     }
 
+    fun checkShowEditIcon(itemId: Long){
+        val selectedCount = BuyListItem.getSelectedCount(realm, user.currentListId)
+        when {
+            selectedCount == 0L -> {
+                _showEditIconInActionMode.postValue(true)
+            }
+            selectedCount == 1L -> {
+                val isItemAlreadySelected = realm.getById<BuyListItem>(itemId)?.isSelected == true
+                if(isItemAlreadySelected){
+                    _actionModeStop.call()
+                } else {
+                    _showEditIconInActionMode.postValue(false)
+                }
+            }
+            selectedCount == 2L && realm.getById<BuyListItem>(itemId)?.isSelected == true -> {
+                _showEditIconInActionMode.postValue(true)
+            }
+        }
+    }
+
     fun onItemLongClick(itemId: Long, isActionMode: Boolean = false) {
         if(isActionMode){
-            onItemClick(itemId, isActionMode)
+            checkShowEditIcon(itemId)
+            ListItemInteractor.selectRangeAsync(realm, itemId)
         } else {
             _actionModeStart.call()
             _showEditIconInActionMode.postValue(true)
@@ -158,5 +156,9 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         if(selectedItemId != null) {
             UserInteractor.selectItemAsync(realm, selectedItemId)
         }
+    }
+
+    fun doneItems() {
+        ListItemInteractor.doneSelectedAsync(realm, user.currentListId)
     }
 }

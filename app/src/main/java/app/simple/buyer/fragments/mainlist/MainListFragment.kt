@@ -265,6 +265,11 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
                 }
                 R.id.action_item_edit -> {
                     model.editItem()
+                    return true
+                }
+                R.id.action_item_done -> {
+                    model.doneItems()
+                    return true
                 }
                 //TODO Добавить экспорт и импорт списков
 

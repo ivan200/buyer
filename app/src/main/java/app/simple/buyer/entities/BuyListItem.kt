@@ -125,6 +125,14 @@ open class BuyListItem : RealmObject() {
                 .findAllAsync()
         }
 
+        fun getSelectedItems(realm: Realm, listId: Long): RealmResults<BuyListItem> {
+            return getQuery(realm)
+                .equalTo(KEY_LIST_ID, listId)
+                .and()
+                .equalTo(KEY_IS_SELECTED, true)
+                .findAll()
+        }
+
         fun getSelectedCount(realm: Realm, listId: Long): Long {
             return getQuery(realm)
                 .equalTo(KEY_LIST_ID, listId)
@@ -142,28 +150,32 @@ open class BuyListItem : RealmObject() {
                 ?.id
         }
 
-        fun getAllOrdered(
+
+        private fun getSortOrder(sortType: SortType): Sort = when (sortType) {
+            SortType.ASCENDING -> Sort.ASCENDING
+            SortType.DESCENDING -> Sort.DESCENDING
+        }
+
+        private fun getSortFieldName(orderType: OrderType): String = when (orderType) {
+            OrderType.ALPHABET -> KEY_BUY_ITEM + "." + BuyItem.KEY_SEARCH_NAME
+            OrderType.POPULARITY -> KEY_BUY_ITEM + "." + BuyItem.KEY_POPULARITY
+            OrderType.CREATED -> KEY_CREATED
+            OrderType.MODIFIED -> KEY_MODIFIED
+            OrderType.PRICE -> KEY_SUM_PRICE
+            OrderType.HAND -> KEY_HAND_SORT_POSITION
+            OrderType.SIZE -> KEY_COUNT
+        }
+
+        private fun getAllOrderedQuery(
             realm: Realm,
             listId: Long,
             orderType: OrderType,
             sortType: SortType,
             checkedPosition: CheckedPosition,
             showCheckedItems: Boolean
-        ): RealmResults<BuyListItem> {
-            val sortOrder = when (sortType) {
-                SortType.ASCENDING -> Sort.ASCENDING
-                SortType.DESCENDING -> Sort.DESCENDING
-            }
-            val fieldName = when (orderType) {
-                OrderType.ALPHABET -> KEY_BUY_ITEM + "." + BuyItem.KEY_SEARCH_NAME
-                OrderType.POPULARITY -> KEY_BUY_ITEM + "." + BuyItem.KEY_POPULARITY
-                OrderType.CREATED -> KEY_CREATED
-                OrderType.MODIFIED -> KEY_MODIFIED
-                OrderType.PRICE -> KEY_SUM_PRICE
-                OrderType.HAND -> KEY_HAND_SORT_POSITION
-                OrderType.SIZE -> KEY_COUNT
-            }
-
+        ): RealmQuery<BuyListItem> {
+            val sortOrder = getSortOrder (sortType)
+            val fieldName = getSortFieldName (orderType)
             var query = getQuery(realm).equalTo(KEY_LIST_ID, listId)
 
             query = if (showCheckedItems)
@@ -184,7 +196,43 @@ open class BuyListItem : RealmObject() {
                     .equalTo(KEY_IS_BUYED, false)
                     .sort(fieldName, sortOrder)
             }
-            return query.findAllAsync()
+            return query
+        }
+
+        fun getAllOrdered(realm: Realm, user: User): RealmResults<BuyListItem> {
+            return getAllOrderedQuery(
+                realm,
+                user.currentListId,
+                user.itemsOrder,
+                user.itemsSort,
+                user.itemsCheck,
+                user.showCheckedItems
+            ).findAll()
+        }
+
+        fun getAllOrderedSelected(realm: Realm, user: User): RealmResults<BuyListItem> {
+            return getAllOrderedQuery(
+                realm,
+                user.currentListId,
+                user.itemsOrder,
+                user.itemsSort,
+                user.itemsCheck,
+                user.showCheckedItems
+            )
+                .and()
+                .equalTo(KEY_IS_SELECTED, true)
+                .findAll()
+        }
+
+        fun getAllOrderedAsync(realm: Realm, user: User): RealmResults<BuyListItem> {
+            return getAllOrderedQuery(
+                realm,
+                user.currentListId,
+                user.itemsOrder,
+                user.itemsSort,
+                user.itemsCheck,
+                user.showCheckedItems
+            ).findAllAsync()
         }
 
         const val KEY_TABLE_NAME = "BuyListItem"

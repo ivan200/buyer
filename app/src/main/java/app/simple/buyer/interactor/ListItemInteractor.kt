@@ -126,6 +126,49 @@ object ListItemInteractor {
         isSelected = !isSelected
     }
 
+    /**
+     * Выделить несколько элементов списка покупок (в экшенмоде) [listItemId] в бд [realm]
+     */
+    fun selectRangeAsync(realm: Realm, listItemId: Long) {
+        realm.executeTransactionAsync {
+            val user = UserInteractor.getUser(it)
+            val allOrdered = BuyListItem.getAllOrdered(it, user)
+            val first = allOrdered.indexOfFirst { listItem -> listItem.isSelected || listItem.id == listItemId}
+            val last = allOrdered.indexOfLast { listItem -> listItem.isSelected || listItem.id == listItemId }
+            for(i in first..last){
+                allOrdered[i]?.apply {
+                    if(!isSelected){
+                        isSelected = true
+                        update(it)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Выделить несколько элементов списка покупок (в экшенмоде) [listItemId] в бд [realm]
+     */
+    fun doneSelectedAsync(realm: Realm, listItemId: Long) {
+        realm.executeTransactionAsync {
+            val selected = BuyListItem.getSelectedItems(it, listItemId)
+            val hasUndone = selected.any { item -> !item.isBuyed }
+            if(hasUndone){
+                selected.forEach { item ->
+                    if(!item.isBuyed) {
+                        item.isBuyed = true
+                        item.update(it)
+                    }
+                }
+            } else {
+                selected.forEach { item ->
+                    item.isBuyed = false
+                    item.update(it)
+                }
+            }
+        }
+    }
+
     fun setItemInfo(realm: Realm, listItemId: Long, itemCount: Long, itemComment: String) = realm.updateListItemField(
         listItemId,
         { count != itemCount || comment != itemComment },
