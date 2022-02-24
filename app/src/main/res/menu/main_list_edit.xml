@@ -6,18 +6,25 @@
         android:id="@+id/action_item_edit"
         android:icon="@drawable/ic_edit"
         android:title="@string/button_edit"
-        app:showAsAction="ifRoom">
+        app:showAsAction="always">
     </item>
     <item
         android:id="@+id/action_item_done"
         android:icon="@drawable/ic_done"
         android:title="@string/button_done"
-        app:showAsAction="ifRoom">
+        app:showAsAction="always">
+    </item>
+    <item
+        android:id="@+id/action_item_copy"
+        android:icon="@drawable/ic_copy"
+        android:title="@string/button_copy"
+        app:showAsAction="always">
     </item>
     <item
         android:id="@+id/action_item_delete"
         android:icon="@drawable/ic_delete"
         android:title="@string/button_delete"
-        app:showAsAction="ifRoom">
+        app:showAsAction="always"
+        >
     </item>
 </menu>

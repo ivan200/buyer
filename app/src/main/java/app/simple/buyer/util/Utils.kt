@@ -87,6 +87,13 @@ object Utils {
         }
     }
 
+    fun showKeyBoard3(editText: View?) {
+        if (editText != null && editText.requestFocus()) {
+            val inputMethodManager = ContextCompat.getSystemService(editText.context, InputMethodManager::class.java)
+            inputMethodManager?.showSoftInput(editText, InputMethodManager.SHOW_FORCED)
+        }
+    }
+
     /**
      * Resources
      **/

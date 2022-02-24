@@ -24,6 +24,7 @@
 
     <string name="button_add">Добавить</string>
     <string name="button_delete">Удалить</string>
+    <string name="button_copy">Скопировать</string>
     <string name="button_done">Выполнить</string>
     <string name="button_cancel">Отмена</string>
     <string name="button_edit">Редактировать</string>

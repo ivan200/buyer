@@ -62,38 +62,7 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
             model.commentChanged(it?.toString().orEmpty())
         }
 
-        binding.etNumber.apply {
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-            transformationMethod = object : PasswordTransformationMethod() {
-                override fun getTransformation(source: CharSequence, view: View): CharSequence = source
-            }
-            setOnEditorActionListener { v, actionId, event ->
-                if (event?.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
-                    Utils.hideKeyboard(mActivity)
-                    clearFocus()
-                }
-                false
-            }
-            onPreImeKeyListener = { keyCode: Int, event: KeyEvent? ->
-                if (keyCode == KeyEvent.KEYCODE_BACK && event?.action == KeyEvent.ACTION_UP) {
-                    Utils.hideKeyboard(mActivity)
-                    clearFocus()
-                }
-            }
-            setOnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) {
-                    setText("")
-                    setSelection(0)
-                    Utils.showKeyboard(mActivity, this)
-                } else if (!hasFocus) {
-                    if(text.isNullOrEmpty()){
-                        setText("${model.count.value!!}")
-                    }
-                    clearFocus()
-                }
-            }
-            addTextChangedListener(getTextWatcher())
-        }
+        configureNumberEditText()
 
         binding.listsBaseLayout.setOnClickListener {
             Utils.hideKeyboard(mActivity)
@@ -106,17 +75,6 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
         }
         binding.btnNumberMinus.setOnClickListener {
             model.decrementCount()
-        }
-
-        model.count.observe(viewLifecycleOwner){
-            val strValue = "$it"
-            if(binding.etNumber.text?.toString().orEmpty() != strValue) {
-                binding.etNumber.setText(strValue)
-                binding.etNumber.setSelection(strValue.length)
-            }
-        }
-        model.isDecrementButtonEnable.observe(viewLifecycleOwner){
-            binding.btnNumberMinus.isEnabled = it
         }
 
         model.getCreatedDate().let {
@@ -138,7 +96,64 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
             }
         }
 
-        Utils.showKeyBoard2(binding.commentEditText)
+        observeModel()
+
+        binding.fab.setOnClickListener {
+            mActivity.onBackPressed()
+        }
+    }
+
+
+    private fun configureNumberEditText(){
+        binding.etNumber.apply {
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+            transformationMethod = simpleTransformationMethod
+            setOnEditorActionListener { _, actionId, event ->
+                if (event?.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
+                    Utils.hideKeyboard(mActivity)
+                    clearFocus()
+                }
+                false
+            }
+            onPreImeKeyListener = { keyCode: Int, event: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK && event?.action == KeyEvent.ACTION_UP) {
+                    Utils.hideKeyboard(mActivity)
+                    clearFocus()
+                }
+            }
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    setText("")
+                    setSelection(0)
+                    Utils.showKeyboard(mActivity, this)
+                } else if (text.isNullOrEmpty()) {
+                    setText("${model.count.value!!}")
+                }
+            }
+            addTextChangedListener(getTextWatcher())
+        }
+    }
+
+    val simpleTransformationMethod = object : PasswordTransformationMethod() {
+        override fun getTransformation(source: CharSequence, view: View): CharSequence = source
+    }
+
+    private fun observeModel(){
+        model.count.observe(viewLifecycleOwner){
+            val strValue = "$it"
+            if(binding.etNumber.text?.toString().orEmpty() != strValue) {
+                binding.etNumber.setText(strValue)
+                binding.etNumber.setSelection(strValue.length)
+            }
+        }
+        model.isDecrementButtonEnable.observe(viewLifecycleOwner){
+            binding.btnNumberMinus.isEnabled = it
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Utils.showKeyBoard3(binding.commentEditText)
     }
 
     fun Context.formatString(@StringRes resId: Int, result: String): String {
@@ -150,8 +165,12 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
     }
 
     fun getTextWatcher() = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            //not used
+        }
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            //not used
+        }
         override fun afterTextChanged(s: Editable?) {
             val input = s?.toString().orEmpty()
             if (input.isNotEmpty() && input != "${model.count.value!!}") {
@@ -181,7 +200,7 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
-        setRecyclerPaddings(null, appBarLayout, null, insets, navBarBg = navbarBg)
+        setRecyclerPaddings(null, appBarLayout, binding.fab, insets, navBarBg = navbarBg)
         return super.onApplyWindowInsets(v, insets)
     }
 

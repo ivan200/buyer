@@ -53,13 +53,13 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     val showEditIconInActionMode: LiveData<Boolean> get() = _showEditIconInActionMode
 
     init {
-        if(user.currentItemId != 0L) {
+        if (user.currentItemId != 0L) {
             _openItemInfo.call()
         }
     }
 
     fun onCurrentItemIdChanged() {
-        if(user.currentItemId != 0L) {
+        if (user.currentItemId != 0L) {
             _actionModeStop.call()
             _openItemInfo.call()
         }
@@ -70,7 +70,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun getItems(): OrderedRealmCollection<BuyListItem> {
-        return BuyListItem.getAllOrderedAsync(realm,user)
+        return BuyListItem.getAllOrderedAsync(realm, user)
     }
 
     fun onItemClick(itemId: Long, isActionMode: Boolean = false) {
@@ -82,7 +82,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    fun checkShowEditIcon(itemId: Long){
+    fun checkShowEditIcon(itemId: Long) {
         val selectedCount = BuyListItem.getSelectedCount(realm, user.currentListId)
         when {
             selectedCount == 0L -> {
@@ -90,8 +90,8 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
             }
             selectedCount == 1L -> {
                 val isItemAlreadySelected = realm.getById<BuyListItem>(itemId)?.isSelected == true
-                if(isItemAlreadySelected){
-                    _actionModeStop.call()
+                if (isItemAlreadySelected) {
+                    UserInteractor.selectItemAsync(realm, itemId)
                 } else {
                     _showEditIconInActionMode.postValue(false)
                 }
@@ -103,7 +103,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onItemLongClick(itemId: Long, isActionMode: Boolean = false) {
-        if(isActionMode){
+        if (isActionMode) {
             checkShowEditIcon(itemId)
             ListItemInteractor.selectRangeAsync(realm, itemId)
         } else {
@@ -119,13 +119,13 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     fun getShowCheckedItems() = user.showCheckedItems
 
     fun updateListItems(order: OrderType) {
-        if(user.itemsOrder == order){
-            val newSort = when(user.itemsSort){
+        if (user.itemsOrder == order) {
+            val newSort = when (user.itemsSort) {
                 SortType.ASCENDING -> SortType.DESCENDING
                 SortType.DESCENDING -> SortType.ASCENDING
             }
             UserInteractor.updateListItemsAsync(realm, newSort)
-        } else{
+        } else {
             UserInteractor.updateListItemsAsync(realm, order, SortType.ASCENDING)
         }
     }
@@ -153,12 +153,36 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
 
     fun editItem() {
         val selectedItemId = BuyListItem.getSelectedItemId(realm, user.currentListId)
-        if(selectedItemId != null) {
+        if (selectedItemId != null) {
             UserInteractor.selectItemAsync(realm, selectedItemId)
         }
     }
 
     fun doneItems() {
         ListItemInteractor.doneSelectedAsync(realm, user.currentListId)
+        if (!user.showCheckedItems) {
+            _actionModeStop.call()
+        }
+    }
+
+    fun getSelected(): String {
+        val itemsList = BuyListItem.getAllOrderedSelected(realm, user)
+        val list: MutableList<String> = mutableListOf()
+
+        itemsList.forEach {
+//          val checkSymbol = if(it.isBuyed) "\uD83D\uDDF8" else "\u2610"
+            val checkSymbol = if (it.isBuyed) "+" else "-"
+            val b = StringBuilder()
+            b.append(checkSymbol)
+            b.append(" ")
+            b.append(it.buyItem?.name)
+            val comment = it.comment
+            if (!comment.isNullOrBlank()) {
+                b.append("\n")
+                b.append(comment)
+            }
+            list.add(b.toString())
+        }
+        return list.joinToString("\n")
     }
 }

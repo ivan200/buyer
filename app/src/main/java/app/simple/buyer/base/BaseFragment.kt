@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.Type.ime
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,7 @@ import app.simple.buyer.util.hide
 import app.simple.buyer.util.show
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlin.math.max
 
 abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), IEmptyView, OnApplyWindowInsetsListener {
     @StringRes
@@ -129,8 +131,10 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
             appBar?.setPadding(insetLeft, systemInsets.top, insetRight, 0)
 
             if (fab != null) {
+                val imeInsets = insets.getInsets(ime())
+
                 val ll = fab.layoutParams as ViewGroup.MarginLayoutParams
-                ll.bottomMargin = margin + systemInsets.bottom
+                ll.bottomMargin = margin + max(systemInsets.bottom, imeInsets.bottom)
                 ll.rightMargin = margin + insetRight
                 ll.leftMargin = margin + insetLeft
                 fab.layoutParams = ll

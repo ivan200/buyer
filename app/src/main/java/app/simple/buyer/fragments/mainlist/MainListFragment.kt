@@ -1,6 +1,8 @@
 package app.simple.buyer.fragments.mainlist
 
 import android.animation.ValueAnimator
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -10,6 +12,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.marginLeft
@@ -36,7 +39,7 @@ import app.simple.buyer.util.views.viewBinding
 
 
 /**
- *
+ * Основной фрагмент с текущим списком покупок
  */
 class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMenuItemClickListener, DrawerStateSupplier {
     override val title: Int
@@ -109,7 +112,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
         mDrawerToggle.syncState()
 
-        binding.contentMain.fab.setOnClickListener { v ->
+        binding.contentMain.fab.setOnClickListener {
             binding.drawer.openDrawer(GravityCompat.END)
         }
 
@@ -269,6 +272,13 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
                 }
                 R.id.action_item_done -> {
                     model.doneItems()
+                    return true
+                }
+                R.id.action_item_copy -> {
+                    val clipboard = getSystemService(requireContext(),ClipboardManager::class.java)
+                    val clip = ClipData.newPlainText(model.getTitle(), model.getSelected())
+                    clipboard?.setPrimaryClip(clip)
+//                    Toast.makeText(requireContext(), "Скопировано", Toast.LENGTH_SHORT).show()
                     return true
                 }
                 //TODO Добавить экспорт и импорт списков
