@@ -3,6 +3,7 @@ package app.simple.buyer.fragments.mainlist
 import android.animation.ValueAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -56,6 +57,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
     private lateinit var adapter: MainListAdapter
     private lateinit var mainShadowToggler: ShadowRecyclerSwitcher
 
+    var animator: ValueAnimator? = null
     var actionMode: ActionMode? = null
 
     override val toolbar: Toolbar get() = binding.contentMain.viewToolbar.toolbar
@@ -200,7 +202,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
      * @param showChecked показывать ли прочеканые элементы
      * @param withAnimation делать ли это с анимацией (при действии), или без (при старте экрана)
      */
-    fun setRecyclerMargin(showChecked: Boolean, withAnimation: Boolean) {
+    private fun setRecyclerMargin(showChecked: Boolean, withAnimation: Boolean) {
         val newLeftMargin = if (showChecked) 0 else -1 * requireContext().getDimensionPx(R.dimen.size_icon_clickable_area).toInt()
         val recycler = binding.contentMain.mainRecycler
         if (recycler.marginLeft != newLeftMargin) {
@@ -210,13 +212,18 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
                 recycler.layoutParams = params
             } else {
                 val params = recycler.layoutParams as RelativeLayout.LayoutParams
-                val animator = ValueAnimator.ofInt(params.leftMargin, newLeftMargin)
-                animator.addUpdateListener { valueAnimator ->
-                    params.leftMargin = valueAnimator.animatedValue as Int
-                    recycler.requestLayout()
+                animator?.apply {
+                    removeAllListeners()
+                    cancel()
                 }
-                animator.duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-                animator.start()
+                animator = ValueAnimator.ofInt(params.leftMargin, newLeftMargin)?.apply {
+                    addUpdateListener { valueAnimator ->
+                        params.leftMargin = valueAnimator.animatedValue as Int
+                        recycler.requestLayout()
+                    }
+                    duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+                    start()
+                }
             }
         }
     }
@@ -229,8 +236,12 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
             insets,
             navBarBg = binding.navbar.navBarLayoutBg
         )
-        childFragmentManager.fragments.forEach {
-            (it as? BaseFragment)?.onApplyWindowInsets(v, insets)//TODO починить это на 4 андроидах
+        //На телефонах со старыми апи этот метод вызовется сам из BaseFragment в onViewCreated,
+        //так что рассылать изменения инсетов не нужно
+        if (Build.VERSION.SDK_INT >= 21) {
+            childFragmentManager.fragments.forEach {
+                (it as? BaseFragment)?.onApplyWindowInsets(v, insets)
+            }
         }
         return super.onApplyWindowInsets(v, insets)
     }
