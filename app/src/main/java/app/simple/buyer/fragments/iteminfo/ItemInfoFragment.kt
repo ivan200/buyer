@@ -52,10 +52,7 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
         setHasOptionsMenu(true)
         toolbar.setOnMenuItemClickListener(this)
 
-        model.getTitle()?.let {
-            toolbar.title = it
-            mActivity.title = it
-        }
+        updateTitle(model.getTitle())
 
         binding.commentEditText.setText(model.comment)
         binding.commentEditText.doAfterTextChanged {

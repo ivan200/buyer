@@ -526,4 +526,20 @@ object Utils {
     }
 
     fun isColorBright(@ColorInt color: Int) = getColorBrightness(color) > 50
+
+    /**
+     * Получить приватное поле из объекта
+     * @param fieldName Название поля
+     * @param clazz - класс, к которому этот объект относится.
+     * Так как объекты наследники абстрактных классов могут в разных местах содержать поля,
+     * то надо обязательно понимать, в каком из классов находится поле
+     */
+    inline fun <reified O> O.getPrivateFieldOrNull(fieldName: String, clazz: Class<*>? = null): Any? = try {
+        (clazz ?: this!!::class.java).getDeclaredField(fieldName).let {
+            it.isAccessible = true
+            it.get(this)
+        }
+    } catch (t: Throwable) {
+        null
+    }
 }

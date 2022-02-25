@@ -13,9 +13,8 @@
         <item name="actionMenuTextColor">       ?attr/colorToolbarText</item>
         <item name="android:itemBackground">    @color/colorBackgroundLightMenu</item>
         <item name="actionModeStyle">           @style/MyTheme.ActionMode.Light</item>
-        <item name="android:actionModeStyle">           @style/MyTheme.ActionMode.Light</item>
-<!--        <item name="android:actionModeBackground"> @color/colorBackgroundLight</item>-->
-<!--        <item name="actionModeBackground"> @color/colorBackgroundLight</item>-->
+        <item name="android:actionModeStyle">   @style/MyTheme.ActionMode.Light</item>
+        <item name="actionModeCloseDrawable">   @drawable/ic_clear</item>
 
         <item name="android:windowTranslucentStatus"        tools:targetApi="kitkat">true</item>
         <item name="android:windowTranslucentNavigation"    tools:targetApi="kitkat">true</item>
@@ -25,7 +24,7 @@
 
         <item name="colorToolbar">              @color/colorBackgroundLightTransparent</item>
         <item name="colorToolbarText">          @color/colorTextBlack</item>
-        <item name="colorToolbarIcon">          @color/colorTextBlackSecondary</item>
+        <item name="colorToolbarIcon">          @color/colorTextBlack</item>
         <item name="colorMenuIcon">             @color/colorTextBlackSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
         <item name="bgSelectable">              @drawable/bg_selectable_dark</item>
@@ -43,6 +42,7 @@
         <item name="colorTextHint">             @color/colorTextBlackHint</item>
         <item name="colorDivider">              @color/colorTextBlackDivider</item>
         <item name="colorNavbar">               @color/colorBackgroundDarkTransparent</item>
+        <item name="colorMenuBackground">       @color/colorBackgroundLightMenu</item>
 
         <!--<item name="android:windowAnimationStyle">@null</item>-->
     </style>
@@ -56,13 +56,10 @@
     </style>
 
     <style name="MyTheme.ActionMode.Light" parent="@style/Widget.Material3.ActionMode">
-        <item name="android:actionModeBackground"> @color/colorBackgroundLightMenu</item>
-        <item name="actionModeBackground"> @color/colorBackgroundLightMenu</item>
-        <item name="android:background">@color/colorBackgroundLightMenu</item>
-        <item name="background">@color/colorBackgroundLightMenu</item>
-<!--        <item name="android:height">?android:attr/actionBarSize</item>-->
-<!--        <item name="height">?android:attr/actionBarSize</item>-->
-<!--        <item name="android:layout_height">?android:attr/actionBarSize</item>-->
+        <item name="android:actionModeBackground"> @color/colorBackgroundLight</item>
+        <item name="actionModeBackground"> @color/colorBackgroundLight</item>
+        <item name="android:background">@color/colorBackgroundLight</item>
+        <item name="background">@color/colorBackgroundLight</item>
     </style>
 
     <style name="AppThemeDark.Base" parent="Theme.Material3.Dark">
@@ -79,6 +76,7 @@
         <item name="android:itemBackground">    @color/colorBackgroundDarkMenu</item>
         <item name="actionModeStyle">           @style/MyTheme.ActionMode.Dark</item>
         <item name="android:actionModeStyle">   @style/MyTheme.ActionMode.Dark</item>
+        <item name="actionModeCloseDrawable">   @drawable/ic_clear</item>
 <!--        <item name="android:actionModeBackground"> @color/colorBackgroundDark</item>-->
 <!--        <item name="actionModeBackground">@color/colorBackgroundDark</item>-->
 
@@ -90,7 +88,7 @@
 
         <item name="colorToolbar">              @color/colorBackgroundDarkTransparent</item>
         <item name="colorToolbarText">          @color/colorTextWhite</item>
-        <item name="colorToolbarIcon">          @color/colorTextWhiteSecondary</item>
+        <item name="colorToolbarIcon">          @color/colorTextWhite</item>
         <item name="colorMenuIcon">             @color/colorTextWhiteSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
         <item name="bgSelectable">              @drawable/bg_selectable_light</item>
@@ -108,6 +106,7 @@
         <item name="colorTextHint">             @color/colorTextWhiteHint</item>
         <item name="colorDivider">              @color/colorTextWhiteDivider</item>
         <item name="colorNavbar">               @color/colorBackgroundDarkTransparent</item>
+        <item name="colorMenuBackground">       @color/colorBackgroundDarkMenu</item>
     </style>
 
     <style name="AppThemeDark" parent="AppThemeDark.Base"/>
@@ -120,13 +119,10 @@
     </style>
 
     <style name="MyTheme.ActionMode.Dark" parent="@style/Widget.Material3.ActionMode">
-        <item name="android:actionModeBackground"> @color/colorBackgroundDarkMenu</item>
-        <item name="actionModeBackground">@color/colorBackgroundDarkMenu</item>
-        <item name="android:background">@color/colorBackgroundDarkMenu</item>
-        <item name="background">@color/colorBackgroundDarkMenu</item>
-<!--        <item name="android:height">?android:attr/actionBarSize</item>-->
-<!--        <item name="height">?android:attr/actionBarSize</item>-->
-<!--        <item name="android:layout_height">?android:attr/actionBarSize</item>-->
+        <item name="android:actionModeBackground"> @color/colorBackgroundDark</item>
+        <item name="actionModeBackground">@color/colorBackgroundDark</item>
+        <item name="android:background">@color/colorBackgroundDark</item>
+        <item name="background">@color/colorBackgroundDark</item>
     </style>
 
 </resources>

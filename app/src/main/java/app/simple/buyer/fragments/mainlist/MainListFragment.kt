@@ -141,14 +141,14 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
         model.listChanged.observe(viewLifecycleOwner) {
             adapter.updateDataNoClear(model.getItems())
-            updateTitle()
+            updateTitle(model.getTitle())
             binding.drawer.closeDrawer(GravityCompat.START)
         }
         model.listOrderChanged.observe(viewLifecycleOwner) {
             setRecyclerMargin(model.getShowCheckedItems(), true)
             adapter.updateDataNoClear(model.getItems())
         }
-        updateTitle()
+        updateTitle(model.getTitle())
 
         setHasOptionsMenu(true)
         toolbar.setOnMenuItemClickListener(this)
@@ -201,7 +201,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
      * @param withAnimation делать ли это с анимацией (при действии), или без (при старте экрана)
      */
     fun setRecyclerMargin(showChecked: Boolean, withAnimation: Boolean) {
-        val newLeftMargin = if (showChecked) 0 else -1 * requireContext().getDimensionPx(R.dimen.size_icon_bounding).toInt()
+        val newLeftMargin = if (showChecked) 0 else -1 * requireContext().getDimensionPx(R.dimen.size_icon_clickable_area).toInt()
         val recycler = binding.contentMain.mainRecycler
         if (recycler.marginLeft != newLeftMargin) {
             if (!withAnimation) {
@@ -221,10 +221,6 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         }
     }
 
-    private fun updateTitle() {
-        mActivity.title = model.getTitle() ?: getString(title)
-    }
-
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
         setRecyclerPaddings(
             binding.contentMain.mainRecycler,
@@ -234,7 +230,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
             navBarBg = binding.navbar.navBarLayoutBg
         )
         childFragmentManager.fragments.forEach {
-            (it as? BaseFragment)?.onApplyWindowInsets(v, insets)
+            (it as? BaseFragment)?.onApplyWindowInsets(v, insets)//TODO починить это на 4 андроидах
         }
         return super.onApplyWindowInsets(v, insets)
     }

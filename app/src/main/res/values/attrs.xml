@@ -22,6 +22,7 @@
         <attr name="colorTextHint" format="color"/>
         <attr name="colorDivider" format="color"/>
         <attr name="colorNavbar" format="color"/>
+        <attr name="colorMenuBackground" format="color"/>
 
     </declare-styleable>
 </resources>

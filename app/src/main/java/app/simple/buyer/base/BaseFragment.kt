@@ -57,6 +57,12 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
         ColorUtils.changeOverScrollGlowColor(resources, requireContext().getColorResCompat(R.attr.colorFabShadow))
     }
 
+    fun updateTitle(newTitle: String?) {
+        val t = newTitle ?: titleString ?: getString(title)
+        toolbar?.title = t
+        mActivity.title = t
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (Build.VERSION.SDK_INT < 21) {
