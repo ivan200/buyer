@@ -201,7 +201,7 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
-        setRecyclerPaddings(null, appBarLayout, binding.fab, insets, navBarBg = navbarBg)
+        setRecyclerPaddings(mActivity, null, appBarLayout, binding.fab, insets, navBarBg = navbarBg)
         return super.onApplyWindowInsets(v, insets)
     }
 

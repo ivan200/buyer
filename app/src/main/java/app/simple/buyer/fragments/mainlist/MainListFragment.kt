@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import app.simple.buyer.R
 import app.simple.buyer.base.BaseFragment
+import app.simple.buyer.base.ManualResumeListener
 import app.simple.buyer.databinding.FragmentMainListBinding
 import app.simple.buyer.databinding.ViewMainSortBinding
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
@@ -43,7 +44,8 @@ import app.simple.buyer.util.views.viewBinding
 /**
  * Основной фрагмент с текущим списком покупок
  */
-class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMenuItemClickListener, DrawerStateSupplier {
+class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMenuItemClickListener, DrawerStateSupplier,
+    ManualResumeListener {
     override val title: Int
         get() = R.string.app_name
 
@@ -178,7 +180,10 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
     override fun onResume() {
         super.onResume()
+        onManualResume()
+    }
 
+    override fun onManualResume() {
         //Если мы возвращаемся с любого экрана и правый дравер спрятан (а клавиатура открыта), то убираем клаву
         if(!isDrawerOpen(GravityCompat.END)){
             Utils.hideKeyboardFrom(requireView())
@@ -230,6 +235,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
         setRecyclerPaddings(
+            mActivity,
             binding.contentMain.mainRecycler,
             appBarLayout,
             binding.contentMain.fab,

@@ -40,11 +40,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        supportFragmentManager.fragments.firstOrNull()?.childFragmentManager?.fragments?.firstOrNull()?.let {
-            if(it is OnBackPressedListener && !it.onBackPressed()){
-                return
+        supportFragmentManager
+            .fragments
+            .firstOrNull()
+            ?.childFragmentManager
+            ?.fragments
+            ?.lastOrNull()
+            ?.let {
+                if (it is OnBackPressedListener && !it.onBackPressed()) {
+                    return
+                }
             }
-        }
 
         findNavController(R.id.fragment_main).let {
             if (!it.popBackStack()) finish()

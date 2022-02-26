@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_section_calendar"
@@ -33,7 +34,7 @@
         android:label="FragmentEditLists"
         tools:layout="@layout/fragment_edit_lists" />
 
-    <fragment
+    <addfragment
         android:id="@+id/fragmentItemInfo"
         android:name="app.simple.buyer.fragments.iteminfo.ItemInfoFragment"
         android:label="fragmentItemInfo"

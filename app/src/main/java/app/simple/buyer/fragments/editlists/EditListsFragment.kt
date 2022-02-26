@@ -85,7 +85,7 @@ class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
-        setRecyclerPaddings(binding.rvEditLists, appBarLayout, binding.listsFab, insets, navBarBg = navbarBg)
+        setRecyclerPaddings(mActivity, binding.rvEditLists, appBarLayout, binding.listsFab, insets, navBarBg = navbarBg)
         return super.onApplyWindowInsets(v, insets)
     }
 

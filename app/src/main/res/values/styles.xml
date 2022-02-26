@@ -12,9 +12,10 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="actionMenuTextColor">       ?attr/colorToolbarText</item>
         <item name="android:itemBackground">    @color/colorBackgroundLightMenu</item>
-        <item name="actionModeStyle">           @style/MyTheme.ActionMode.Light</item>
-        <item name="android:actionModeStyle">   @style/MyTheme.ActionMode.Light</item>
+        <item name="actionModeStyle">           @style/AppThemeLight.ActionMode</item>
+        <item name="android:actionModeStyle">   @style/AppThemeLight.ActionMode</item>
         <item name="actionModeCloseDrawable">   @drawable/ic_clear</item>
+        <item name="drawerArrowStyle">          @style/AppThemeLight.DrawerArrowStyle</item>
 
         <item name="android:windowTranslucentStatus"        tools:targetApi="kitkat">true</item>
         <item name="android:windowTranslucentNavigation"    tools:targetApi="kitkat">true</item>
@@ -48,37 +49,30 @@
     </style>
     <style name="AppThemeLight" parent="AppThemeLight.Base"/>
 
-    <style name="AppThemeLight.Dialog" parent="Theme.Material3.Light.Dialog.Alert" >
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorBackground">@color/colorBackgroundLightMenu</item>
-    </style>
-
-    <style name="MyTheme.ActionMode.Light" parent="@style/Widget.Material3.ActionMode">
-        <item name="android:actionModeBackground"> @color/colorBackgroundLight</item>
-        <item name="actionModeBackground"> @color/colorBackgroundLight</item>
-        <item name="android:background">@color/colorBackgroundLight</item>
-        <item name="background">@color/colorBackgroundLight</item>
-    </style>
-
     <style name="AppThemeDark.Base" parent="Theme.Material3.Dark">
         <item name="colorPrimary">              @color/colorPrimary</item>
         <item name="colorPrimaryDark">          @color/colorPrimaryDark</item>
         <item name="colorAccent">               @color/colorAccent</item>
         <item name="colorControlNormal">        ?android:textColorSecondary</item>
         <item name="colorControlActivated">     @color/colorAccent</item>
+
+<!--    выключить системный общий экшенмар от активити, вместо него юзаются тулбары на фрагментах-->
         <item name="windowActionBar">           false</item>
-        <item name="windowActionModeOverlay">   true</item>
         <item name="windowNoTitle">             true</item>
-        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowDisablePreview">true</item>   <!--быстрее загрузка в первый раз-->
         <item name="actionMenuTextColor">       ?attr/colorToolbarText</item>
         <item name="android:itemBackground">    @color/colorBackgroundDarkMenu</item>
-        <item name="actionModeStyle">           @style/MyTheme.ActionMode.Dark</item>
-        <item name="android:actionModeStyle">   @style/MyTheme.ActionMode.Dark</item>
+
+<!--    установка цвета экшенмода-->
+        <item name="windowActionModeOverlay">   true</item>
+        <item name="actionModeStyle">           @style/AppThemeDark.ActionMode</item>
+        <item name="android:actionModeStyle">   @style/AppThemeDark.ActionMode</item>
+
+<!--    крестик вместо кнопки назад в экшенмоде-->
         <item name="actionModeCloseDrawable">   @drawable/ic_clear</item>
-<!--        <item name="android:actionModeBackground"> @color/colorBackgroundDark</item>-->
-<!--        <item name="actionModeBackground">@color/colorBackgroundDark</item>-->
+
+<!--    установка цвета иконок на тулбаре-->
+        <item name="drawerArrowStyle">          @style/AppThemeDark.DrawerArrowStyle</item>
 
         <item name="android:windowTranslucentStatus"        tools:targetApi="kitkat">true</item>
         <item name="android:windowTranslucentNavigation"    tools:targetApi="kitkat">true</item>
@@ -111,6 +105,14 @@
 
     <style name="AppThemeDark" parent="AppThemeDark.Base"/>
 
+
+    <style name="AppThemeLight.Dialog" parent="Theme.Material3.Light.Dialog.Alert" >
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorBackgroundLightMenu</item>
+    </style>
+
     <style name="AppThemeDark.Dialog" parent="Theme.Material3.Dark.Dialog.Alert" >
         <item name="colorPrimary">  @color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -118,11 +120,32 @@
         <item name="android:colorBackground">@color/colorBackgroundDarkMenu</item>
     </style>
 
-    <style name="MyTheme.ActionMode.Dark" parent="@style/Widget.Material3.ActionMode">
+
+    <!--    цвета фона в экшенмоде-->
+    <style name="AppThemeLight.ActionMode" parent="@style/Widget.Material3.ActionMode">
+        <item name="android:actionModeBackground"> @color/colorBackgroundLight</item>
+        <item name="actionModeBackground"> @color/colorBackgroundLight</item>
+        <item name="android:background">@color/colorBackgroundLight</item>
+        <item name="background">@color/colorBackgroundLight</item>
+    </style>
+
+    <style name="AppThemeDark.ActionMode" parent="@style/Widget.Material3.ActionMode">
         <item name="android:actionModeBackground"> @color/colorBackgroundDark</item>
         <item name="actionModeBackground">@color/colorBackgroundDark</item>
         <item name="android:background">@color/colorBackgroundDark</item>
         <item name="background">@color/colorBackgroundDark</item>
+    </style>
+
+
+
+    <style name="AppThemeLight.DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">?colorToolbarIcon</item>
+    </style>
+
+    <style name="AppThemeDark.DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">?colorToolbarIcon</item>
     </style>
 
 </resources>

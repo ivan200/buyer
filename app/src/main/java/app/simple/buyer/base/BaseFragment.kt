@@ -2,6 +2,7 @@ package app.simple.buyer.base
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.Activity
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -105,56 +106,66 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
         }
     }
 
-    fun getToolbarHeight(): Int {
-        var toolbarHeight = 0
-        val tv = TypedValue()
-        if (mActivity.theme.resolveAttribute(androidx.appcompat.R.attr.actionBarSize, tv, true)) {
-            toolbarHeight = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
-        }
-        return toolbarHeight
-    }
+    companion object {
 
-
-    fun setRecyclerPaddings(
-        rView: RecyclerView?, appBar: AppBarLayout?, fab: FloatingActionButton?,
-        insets: WindowInsetsCompat? = null, usePaddingLeft: Boolean = true, usePaddingRight: Boolean = true, navBarBg: View? = null
-    ) {
-        val toolbarHeight = getToolbarHeight()
-        val margin = resources.getDimensionPixelOffset(R.dimen.margin_default)
-
-        val fabOffset = if (fab == null) 0 else resources.getDimensionPixelOffset(R.dimen.size_fab) + margin * 2
-
-        if (insets != null) {
-            val rtl = resources.getBoolean(R.bool.is_rtl)
-            val useLeft = if (rtl) usePaddingRight else usePaddingLeft
-            val useRight = if (rtl) usePaddingLeft else usePaddingRight
-
-            val systemInsets = insets.getInsets(systemBars())
-
-            val insetLeft = if (useLeft) systemInsets.left else 0
-            val insetRight = if (useRight) systemInsets.right else 0
-
-            appBar?.setPadding(insetLeft, systemInsets.top, insetRight, 0)
-
-            if (fab != null) {
-                val imeInsets = insets.getInsets(ime())
-
-                val ll = fab.layoutParams as ViewGroup.MarginLayoutParams
-                ll.bottomMargin = margin + max(systemInsets.bottom, imeInsets.bottom)
-                ll.rightMargin = margin + insetRight
-                ll.leftMargin = margin + insetLeft
-                fab.layoutParams = ll
+        private fun getToolbarHeight(activity: Activity): Int {
+            var toolbarHeight = 0
+            val tv = TypedValue()
+            if (activity.theme.resolveAttribute(androidx.appcompat.R.attr.actionBarSize, tv, true)) {
+                toolbarHeight = TypedValue.complexToDimensionPixelSize(tv.data, activity.resources.displayMetrics)
             }
+            return toolbarHeight
+        }
 
-            rView?.setPadding(
-                insetLeft, systemInsets.top + toolbarHeight,
-                insetRight, systemInsets.bottom + fabOffset
-            )
+        fun setRecyclerPaddings(
+            activity: Activity,
+            rView: RecyclerView?,
+            appBar: AppBarLayout?,
+            fab: FloatingActionButton?,
+            insets: WindowInsetsCompat? = null,
+            usePaddingLeft: Boolean = true,
+            usePaddingRight: Boolean = true,
+            navBarBg: View? = null
+        ) {
+            val toolbarHeight = getToolbarHeight(activity)
+            val margin = activity.resources.getDimensionPixelOffset(R.dimen.margin_default)
 
-            navBarBg?.layoutParams?.height = systemInsets.bottom
-        } else {
-            //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
-            rView?.setPadding(rView.paddingLeft, toolbarHeight, rView.paddingRight, fabOffset)
+            val fabOffset = if (fab == null) 0 else activity.resources.getDimensionPixelOffset(R.dimen.size_fab) + margin * 2
+
+            if (insets != null) {
+                val rtl = activity.resources.getBoolean(R.bool.is_rtl)
+                val useLeft = if (rtl) usePaddingRight else usePaddingLeft
+                val useRight = if (rtl) usePaddingLeft else usePaddingRight
+
+                val systemInsets = insets.getInsets(systemBars())
+
+                val insetLeft = if (useLeft) systemInsets.left else 0
+                val insetRight = if (useRight) systemInsets.right else 0
+
+                appBar?.setPadding(insetLeft, systemInsets.top, insetRight, 0)
+
+                if (fab != null) {
+                    val imeInsets = insets.getInsets(ime())
+
+                    val ll = fab.layoutParams as ViewGroup.MarginLayoutParams
+                    ll.bottomMargin = margin + max(systemInsets.bottom, imeInsets.bottom)
+                    ll.rightMargin = margin + insetRight
+                    ll.leftMargin = margin + insetLeft
+                    fab.layoutParams = ll
+                }
+
+                rView?.setPadding(
+                    insetLeft, systemInsets.top + toolbarHeight,
+                    insetRight, systemInsets.bottom + fabOffset
+                )
+
+                navBarBg?.layoutParams?.height = systemInsets.bottom
+            } else {
+                //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
+                rView?.setPadding(rView.paddingLeft, toolbarHeight, rView.paddingRight, fabOffset)
+            }
         }
     }
 }
+
+

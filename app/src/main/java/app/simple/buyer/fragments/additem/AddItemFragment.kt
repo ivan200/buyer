@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.simple.buyer.R
 import app.simple.buyer.base.BaseFragment
 import app.simple.buyer.base.ItemAction
+import app.simple.buyer.base.ManualResumeListener
 import app.simple.buyer.databinding.FragmentAddItemBinding
 import app.simple.buyer.fragments.mainlist.DrawerState
 import app.simple.buyer.fragments.mainlist.DrawerState.FINISH_CLOSING
@@ -25,7 +26,7 @@ import app.simple.buyer.util.ShadowRecyclerSwitcher
 import app.simple.buyer.util.Utils
 import app.simple.buyer.util.views.viewBinding
 
-class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateConsumer {
+class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateConsumer, ManualResumeListener {
 
     override val title: Int
         get() = R.string.app_name
@@ -55,23 +56,22 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
         model.ltemsLiveData.observe(viewLifecycleOwner){
             adapter.itemsUpdated(it)
         }
-
-//        model.userCurrentItem.observe(viewLifecycleOwner){
-//            if(it?.currentItemId ?: 0 > 0L){
-//                Utils.hideKeyboardFrom(requireView())
-//            }
-//        }
     }
 
     override fun onResume() {
         super.onResume()
-        if((parentFragment as? DrawerStateSupplier)?.isDrawerOpen(GravityCompat.END) == true){
+        onManualResume()
+    }
+
+    override fun onManualResume() {
+        if ((parentFragment as? DrawerStateSupplier)?.isDrawerOpen(GravityCompat.END) == true) {
             Utils.showKeyBoard3(binding.editText)
         }
     }
 
+
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
-        setRecyclerPaddings(binding.recyclerList, binding.addAppbar, null, insets, usePaddingLeft = false, usePaddingRight = true)
+        setRecyclerPaddings(mActivity, binding.recyclerList, binding.addAppbar, null, insets, usePaddingLeft = false, usePaddingRight = true)
         return super.onApplyWindowInsets(v, insets)
     }
 
