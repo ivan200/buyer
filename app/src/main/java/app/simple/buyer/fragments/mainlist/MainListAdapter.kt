@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import app.simple.buyer.databinding.CellMainListBinding
 import app.simple.buyer.entities.BuyListItem
+import app.simple.buyer.entities.enums.ActionModeType
 import app.simple.buyer.util.hide
 import app.simple.buyer.util.show
 import app.simple.buyer.util.views.RealmRecyclerViewAdapter2
@@ -13,9 +14,9 @@ import io.realm.OrderedRealmCollection
 
 class MainListAdapter(
     data: OrderedRealmCollection<BuyListItem>,
-    val onItemSelected: Function2<Long, Boolean, Unit>,
-    val onItemLongClick: Function2<Long, Boolean, Unit>,
-    var isActionMode: Boolean
+    val onItemSelected: Function2<Long, ActionModeType, Unit>,
+    val onItemLongClick: Function2<Long, ActionModeType, Unit>,
+    var actionModeType: ActionModeType
 ) : RealmRecyclerViewAdapter2<BuyListItem, MainListAdapter.MainListHolder>(data, true) {
     init {
         setHasStableIds(true)
@@ -59,7 +60,7 @@ class MainListAdapter(
 
                 checkbox.isChecked = data.isBuyed
 
-                binding.root.isSelected = isActionMode && data.isSelected
+                binding.root.isSelected = actionModeType != ActionModeType.NO && data.isSelected
 
                 if(data.comment.isNullOrEmpty()){
                     tvSubtitle.hide()
@@ -71,11 +72,11 @@ class MainListAdapter(
         }
 
         override fun onClick(v: View?) {
-            onItemSelected.invoke(itemListId, isActionMode)
+            onItemSelected.invoke(itemListId, actionModeType)
         }
 
         override fun onLongClick(v: View?): Boolean {
-            onItemLongClick.invoke(itemListId, isActionMode)
+            onItemLongClick.invoke(itemListId, actionModeType)
             return true
         }
     }

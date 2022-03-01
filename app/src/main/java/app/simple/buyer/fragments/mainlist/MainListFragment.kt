@@ -28,6 +28,7 @@ import app.simple.buyer.base.BaseFragment
 import app.simple.buyer.base.ManualResumeListener
 import app.simple.buyer.databinding.FragmentMainListBinding
 import app.simple.buyer.databinding.ViewMainSortBinding
+import app.simple.buyer.entities.enums.ActionModeType
 import app.simple.buyer.fragments.additem.DrawerStateConsumer
 import app.simple.buyer.util.ColorUtils
 import app.simple.buyer.util.ShadowRecyclerSwitcher
@@ -130,7 +131,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         }
         layoutManager.onRestoreInstanceState(model.scrollState.asScrollState)
 
-        adapter = MainListAdapter(model.getItems(), model::onItemClick, model::onItemLongClick, false)
+        adapter = MainListAdapter(model.getItems(), model::onItemClick, model::onItemLongClick, ActionModeType.NO)
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
 
         binding.contentMain.mainRecycler.let {
@@ -167,13 +168,18 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
         ColorUtils.changeFabShadowColor(binding.contentMain.fab, requireContext().getColorResCompat(R.attr.colorFabShadow))
 
-        model.actionModeStart.observe(viewLifecycleOwner) {
-            actionMode = mActivity.startSupportActionMode(callback)
+        model.actionModeChange.observe(viewLifecycleOwner){
+            adapter.actionModeType = it!!
+            when(it){
+                ActionModeType.SINGLE -> actionMode = mActivity.startSupportActionMode(callback)
+                ActionModeType.MULTI -> Unit
+                ActionModeType.NO -> {
+                    actionMode?.finish()
+                }
+            }
         }
 
-        model.actionModeStop.observe(viewLifecycleOwner) {
-            actionMode?.finish()
-        }
+        android.R.anim.slide_in_left
 
         model.currentItemIdChanged.observe(viewLifecycleOwner) {
             model.onCurrentItemIdChanged()
@@ -285,7 +291,6 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         }
 
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            adapter.isActionMode = true
             binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             menu?.findItem(R.id.action_item_edit)?.isVisible = model.showEditIconInActionMode.value ?: true
             return false
@@ -334,8 +339,8 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
         override fun onDestroyActionMode(mode: ActionMode?) {
             model.onExitFromActionMode()
+            adapter.actionModeType = ActionModeType.NO
             binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-            adapter.isActionMode = false
             actionMode = null
         }
     }

@@ -7,6 +7,7 @@ import app.simple.buyer.base.BaseViewModel
 import app.simple.buyer.entities.BuyList
 import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.entities.User
+import app.simple.buyer.entities.enums.ActionModeType
 import app.simple.buyer.entities.enums.CheckedPosition
 import app.simple.buyer.entities.enums.OrderType
 import app.simple.buyer.entities.enums.SortType
@@ -40,11 +41,15 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         get() = BuyList.getScrollState(realm, user.currentListId)
         set(value) = ListsInteractor.updateListScrollStateAsync(realm, user.currentListId, value)
 
-    private val _actionModeStart = SingleLiveEvent<Unit>()
-    val actionModeStart: LiveData<Unit> get() = _actionModeStart
 
-    private val _actionModeStop = SingleLiveEvent<Unit>()
-    val actionModeStop: LiveData<Unit> get() = _actionModeStop
+    private val _actionModeChange = SingleLiveEvent<ActionModeType>()
+    val actionModeChange: LiveData<ActionModeType> get() = _actionModeChange
+
+//    private val _actionModeStart = SingleLiveEvent<Unit>()
+//    val actionModeStart: LiveData<Unit> get() = _actionModeStart
+//
+//    private val _actionModeStop = SingleLiveEvent<Unit>()
+//    val actionModeStop: LiveData<Unit> get() = _actionModeStop
 
     private val _openItemInfo = SingleLiveEvent<Unit>()
     val openItemInfo: LiveData<Unit> get() = _openItemInfo
@@ -60,7 +65,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
 
     fun onCurrentItemIdChanged() {
         if (user.currentItemId != 0L) {
-            _actionModeStop.call()
+            _actionModeChange.postValue(ActionModeType.NO)
             _openItemInfo.call()
         }
     }
@@ -73,43 +78,47 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         return BuyListItem.getAllOrderedAsync(realm, user)
     }
 
-    fun onItemClick(itemId: Long, isActionMode: Boolean = false) {
-        if (isActionMode) {
-            checkShowEditIcon(itemId, true)
+    fun onItemClick(itemId: Long, actionModeType: ActionModeType) {
+        if (actionModeType != ActionModeType.NO) {
+            operateSelected(itemId, actionModeType, true)
             ListItemInteractor.toggleActionAsync(realm, itemId)
         } else {
             ListItemInteractor.toggleCheckItemAsync(realm, itemId)
         }
     }
 
-    fun checkShowEditIcon(itemId: Long, click: Boolean) {
-        val selectedCount = BuyListItem.getSelectedCount(realm, user.currentListId)
-        when {
-            selectedCount == 0L -> {
-                _showEditIconInActionMode.postValue(true)
-            }
-            selectedCount == 1L -> {
-                val isItemAlreadySelected = realm.getById<BuyListItem>(itemId)?.isSelected == true
-                if (isItemAlreadySelected) {
-                    UserInteractor.selectItemAsync(realm, itemId)
-                } else {
-                    _showEditIconInActionMode.postValue(false)
-                }
-            }
-            click && selectedCount == 2L && realm.getById<BuyListItem>(itemId)?.isSelected == true -> {
-                _showEditIconInActionMode.postValue(true)
-            }
+    fun onItemLongClick(itemId: Long, actionModeType: ActionModeType) {
+        if (actionModeType != ActionModeType.NO) {
+            operateSelected(itemId, actionModeType, false)
+            ListItemInteractor.selectRangeAsync(realm, itemId)
+        } else {
+            _actionModeChange.postValue(ActionModeType.SINGLE)
+            _showEditIconInActionMode.postValue(true)
+            ListItemInteractor.actionFirstItemAsync(realm, user.currentListId, itemId)
         }
     }
 
-    fun onItemLongClick(itemId: Long, isActionMode: Boolean = false) {
-        if (isActionMode) {
-            checkShowEditIcon(itemId, false)
-            ListItemInteractor.selectRangeAsync(realm, itemId)
+    private fun operateSelected(itemId: Long, actionModeType: ActionModeType, click: Boolean) {
+        val selectedCount = BuyListItem.getSelectedCount(realm, user.currentListId)
+        val nextSelectedCount = if (selectedCount == 0L) {
+            1L
         } else {
-            _actionModeStart.call()
-            _showEditIconInActionMode.postValue(true)
-            ListItemInteractor.actionFirstItemAsync(realm, user.currentListId, itemId)
+            val isItemAlreadySelected = realm.getById<BuyListItem>(itemId)?.isSelected == true
+            if (isItemAlreadySelected) {
+                if(click) selectedCount - 1 else selectedCount
+            } else {
+                selectedCount + 1
+            }
+        }
+        _showEditIconInActionMode.postValue(nextSelectedCount == 1L)
+        if(actionModeType == ActionModeType.SINGLE && nextSelectedCount == 0L){
+            UserInteractor.selectItemAsync(realm, itemId)
+        }
+        if(nextSelectedCount == 0L){
+            _actionModeChange.postValue(ActionModeType.NO)
+        }
+        if(nextSelectedCount > 1){
+            _actionModeChange.postValue(ActionModeType.MULTI)
         }
     }
 
@@ -144,7 +153,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         //TODO Докрутить удаление
 
 //        ListItemInteractor.deleteAsync(realm, actionItemId)
-        _actionModeStop.call()
+        _actionModeChange.postValue(ActionModeType.NO)
     }
 
     fun onExitFromActionMode() {
@@ -161,7 +170,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     fun doneItems() {
         ListItemInteractor.doneSelectedAsync(realm, user.currentListId)
         if (!user.showCheckedItems) {
-            _actionModeStop.call()
+            _actionModeChange.postValue(ActionModeType.NO)
         }
     }
 
