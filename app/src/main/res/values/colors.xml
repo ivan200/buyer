@@ -23,10 +23,15 @@
     <color name="colorTextWhiteDivider">#1fffffff</color> <!--white 12%-->
 
     <!--Получено путём сверки цветов с дефолтными на draw'ере-->
-    <color name="background_selected">#1f000000</color>          <!--black 12%-->
-    <color name="background_selected_white">#33ffffff</color>    <!--white 20%-->
-    <color name="background_pressed">#0f000000</color>           <!--black 6%-->
-    <color name="background_pressed_white">#1Affffff</color>     <!--white 10%-->
+    <color name="background_pressed_light_theme">#0f000000</color>    <!--black 6%-->
+    <color name="background_pressed_dark_theme">#1Affffff</color>     <!--white 10%-->
+    <color name="background_old_selected_light_theme">#1f000000</color>   <!--black 12%-->
+    <color name="background_old_selected_dark_theme">#33ffffff</color>    <!--white 20%-->
+    <color name="background_selected_light_theme">#334caf50</color>   <!--primary 20%-->
+    <color name="background_selected_dark_theme">#334caf50</color>    <!--primary 20%-->
+
+    <color name="background_selected_actionmode_dark">#1f4caf50</color>     <!--black 12%-->
+    <color name="background_selected_actionmode_light">#334caf50</color>    <!--white 20%-->
 
     <!--https://material.io/guidelines/style/color.html#color-themes -->
     <color name="ColorBackgroundGrey900">#ff212121</color>
@@ -51,7 +56,7 @@
     <color name="colorCheckboxGreen">#4caf50</color>
     <color name="colorCheckboxRed">#D50000</color>
 
-<!--  Исправление цветов статусбара при входе в экшенмод  -->
+<!--  Исправление цветов экшенбара при входе в экшенмод  -->
     <color name="abc_decor_view_status_guard_light" tools:override="true">@color/colorBackgroundLight</color>
     <color name="abc_decor_view_status_guard" tools:override="true">@color/colorBackgroundDark</color>
 

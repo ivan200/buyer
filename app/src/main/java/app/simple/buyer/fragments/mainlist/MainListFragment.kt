@@ -35,6 +35,7 @@ import app.simple.buyer.util.Utils
 import app.simple.buyer.util.asScrollState
 import app.simple.buyer.util.getColorResCompat
 import app.simple.buyer.util.getDimensionPx
+import app.simple.buyer.util.getDrawableResCompat
 import app.simple.buyer.util.savedState
 import app.simple.buyer.util.views.drawer.ActionBarDrawerToggle
 import app.simple.buyer.util.views.drawer.DrawerLayout
@@ -137,6 +138,13 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
             it.adapter = adapter
             (it.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
             setRecyclerMargin(model.getShowCheckedItems(), false)
+
+            it.addItemDecoration(
+                DividerSelectableItemDecoration(
+                    requireContext().getDrawableResCompat(R.attr.bgDivider),
+                    requireContext().getDrawableResCompat(R.attr.bgDividerSelected)
+                )
+            )
         }
 
         mainShadowToggler = ShadowRecyclerSwitcher(binding.contentMain.mainRecycler, binding.contentMain.viewToolbar.shadowView) {

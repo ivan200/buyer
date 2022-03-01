@@ -28,7 +28,7 @@
         <item name="colorToolbarIcon">          @color/colorTextBlack</item>
         <item name="colorMenuIcon">             @color/colorTextBlackSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
-        <item name="bgSelectable">              @drawable/bg_selectable_dark</item>
+        <item name="bgSelectable">              @drawable/bg_selectable_light_theme</item>
         <item name="colorFab">                  @color/colorPrimary</item>
         <item name="colorFabIcon">              @android:color/white</item>
         <item name="colorFabSelected">          @color/colorPrimaryVeryDark</item>
@@ -42,6 +42,8 @@
         <item name="colorTextSecondaryDisabled">@color/colorTextBlackSecondaryDisabled</item>
         <item name="colorTextHint">             @color/colorTextBlackHint</item>
         <item name="colorDivider">              @color/colorTextBlackDivider</item>
+        <item name="bgDivider">                 @drawable/divider_light</item>
+        <item name="bgDividerSelected">         @drawable/divider_light_selected</item>
         <item name="colorNavbar">               @color/colorBackgroundDarkTransparent</item>
         <item name="colorMenuBackground">       @color/colorBackgroundLightMenu</item>
 
@@ -85,7 +87,7 @@
         <item name="colorToolbarIcon">          @color/colorTextWhite</item>
         <item name="colorMenuIcon">             @color/colorTextWhiteSecondary</item>
         <item name="colorStatusBar">            @color/colorPrimaryDark</item>
-        <item name="bgSelectable">              @drawable/bg_selectable_light</item>
+        <item name="bgSelectable">              @drawable/bg_selectable_dark_theme</item>
         <item name="colorFab">                  @color/colorPrimary</item>
         <item name="colorFabIcon">              @android:color/white</item>
         <item name="colorFabSelected">          @color/colorPrimaryVeryDark</item>
@@ -99,6 +101,8 @@
         <item name="colorTextSecondaryDisabled">@color/colorTextWhiteSecondaryDisabled</item>
         <item name="colorTextHint">             @color/colorTextWhiteHint</item>
         <item name="colorDivider">              @color/colorTextWhiteDivider</item>
+        <item name="bgDivider">                 @drawable/divider_dark</item>
+        <item name="bgDividerSelected">         @drawable/divider_dark_selected</item>
         <item name="colorNavbar">               @color/colorBackgroundDarkTransparent</item>
         <item name="colorMenuBackground">       @color/colorBackgroundDarkMenu</item>
     </style>

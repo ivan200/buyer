@@ -24,6 +24,9 @@
     <dimen name="size_icon_big2">96dp</dimen>
     <dimen name="size_fab">56dp</dimen>
 
+    <dimen name="size_divider_inset_left">60dp</dimen>
+    <dimen name="size_divider_height">1px</dimen>
+
     <dimen name="size_icon_bounding">56dp</dimen>
     <dimen name="size_icon_clickable_area">48dp</dimen>
     <dimen name="size_double_icon_clickable_area">96dp</dimen>

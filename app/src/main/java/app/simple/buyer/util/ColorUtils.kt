@@ -40,24 +40,31 @@ fun Context.getColorCompat(@ColorRes id: Int) = ContextCompat.getColor(this, id)
 @ColorInt
 fun Context.getColorResCompat(@AttrRes id: Int) = ColorUtils.getColorIdFromAttribute(this, id)
 
+/**
+ * Получение ресурса drawable, привязаного к теме через аттрибуты, например android.R.attr.selectableItemBackground
+ */
+fun Context.getDrawableResCompat(@AttrRes id: Int): Drawable? {
+    return TypedValue()
+        .also { this.theme.resolveAttribute(id, it, true) }
+        .let { ContextCompat.getDrawable(this, if (it.resourceId != 0) it.resourceId else it.data) }
+}
+
 
 fun Menu.tintAllIcons(@ColorInt color: Int) = ColorUtils.tintAllIcons(this, color)
 
 object ColorUtils {
-    fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {
-        return when {
-            drawable == null -> null
-            drawable is VectorDrawableCompat -> {
-                drawable.apply { setTintList(ColorStateList.valueOf(color)) }
-            }
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && drawable is VectorDrawable -> {
-                drawable.apply { setTintList(ColorStateList.valueOf(color)) }
-            }
-            else -> {
-                DrawableCompat.wrap(drawable)
-                    .also { DrawableCompat.setTint(it, color) }
-                    .let { DrawableCompat.unwrap(it) }
-            }
+    fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? = when {
+        drawable == null -> null
+        drawable is VectorDrawableCompat -> {
+            drawable.apply { setTintList(ColorStateList.valueOf(color)) }
+        }
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && drawable is VectorDrawable -> {
+            drawable.apply { setTintList(ColorStateList.valueOf(color)) }
+        }
+        else -> {
+            DrawableCompat.wrap(drawable)
+                .also { DrawableCompat.setTint(it, color) }
+                .let { DrawableCompat.unwrap(it) }
         }
     }
 
@@ -67,7 +74,8 @@ object ColorUtils {
     @SuppressLint("UseCompatLoadingForDrawables")
     fun changeOverScrollGlowColor(res: Resources, @ColorInt color: Int) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            @Suppress("DEPRECATION")
+            @Suppress("DEPRECATION", "kotlin:S1874")
+
             fun changeResColor(res: Resources, resId: String, @ColorInt color: Int) {
                 try {
                     val drawableId = res.getIdentifier(resId, "drawable", "android")

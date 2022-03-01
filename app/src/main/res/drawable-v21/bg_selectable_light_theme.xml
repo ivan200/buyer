@@ -3,7 +3,7 @@
     <item>
         <selector>
             <item
-                android:drawable="@color/background_selected_white"
+                android:drawable="@color/background_selected_light_theme"
                 android:state_selected="true" />
         </selector>
     </item>

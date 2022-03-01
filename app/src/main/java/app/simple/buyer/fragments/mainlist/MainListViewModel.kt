@@ -75,14 +75,14 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
 
     fun onItemClick(itemId: Long, isActionMode: Boolean = false) {
         if (isActionMode) {
-            checkShowEditIcon(itemId)
+            checkShowEditIcon(itemId, true)
             ListItemInteractor.toggleActionAsync(realm, itemId)
         } else {
             ListItemInteractor.toggleCheckItemAsync(realm, itemId)
         }
     }
 
-    fun checkShowEditIcon(itemId: Long) {
+    fun checkShowEditIcon(itemId: Long, click: Boolean) {
         val selectedCount = BuyListItem.getSelectedCount(realm, user.currentListId)
         when {
             selectedCount == 0L -> {
@@ -96,7 +96,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
                     _showEditIconInActionMode.postValue(false)
                 }
             }
-            selectedCount == 2L && realm.getById<BuyListItem>(itemId)?.isSelected == true -> {
+            click && selectedCount == 2L && realm.getById<BuyListItem>(itemId)?.isSelected == true -> {
                 _showEditIconInActionMode.postValue(true)
             }
         }
@@ -104,7 +104,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
 
     fun onItemLongClick(itemId: Long, isActionMode: Boolean = false) {
         if (isActionMode) {
-            checkShowEditIcon(itemId)
+            checkShowEditIcon(itemId, false)
             ListItemInteractor.selectRangeAsync(realm, itemId)
         } else {
             _actionModeStart.call()
