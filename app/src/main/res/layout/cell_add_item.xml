@@ -71,8 +71,9 @@
         android:layout_height="@dimen/size_icon_clickable_area"
         android:background="?bgSelectable"
         android:scaleType="center"
-        android:tint="@color/colorCheckboxRed"
         android:visibility="visible"
-        app:srcCompat="@drawable/ic_clear" />
+        app:srcCompat="@drawable/ic_clear"
+        app:tint="@color/colorCheckboxRed"
+        />
 
 </LinearLayout>

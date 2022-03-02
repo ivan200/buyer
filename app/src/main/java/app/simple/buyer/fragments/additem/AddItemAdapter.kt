@@ -92,7 +92,7 @@ class AddItemAdapter(
                         }
                         else -> {
                             tvTitle.setTextColor(context.getColorCompat(R.color.colorCheckboxGreen))
-                            btnDetete.show().setImageResource(R.drawable.ic_remove)
+                            btnDetete.show().setImageResource(R.drawable.ic_minus)
                             tvCount.show().setTextColor(context.getColorResCompat(R.attr.colorText))
                             tvCount.show().text = count.toString()
                         }

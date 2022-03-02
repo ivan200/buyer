@@ -40,6 +40,8 @@
             android:scaleType="center"
             android:visibility="visible"
             android:contentDescription="@string/button_delete"
-            app:srcCompat="@drawable/ic_delete"/>
+            app:srcCompat="@drawable/ic_delete"
+            app:tint="?android:textColorPrimary"
+            />
     </LinearLayout>
 </LinearLayout>

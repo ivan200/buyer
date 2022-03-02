@@ -32,7 +32,7 @@
             android:background="?bgSelectable"
             android:scaleType="center"
             android:visibility="visible"
-            app:srcCompat="@drawable/ic_number_minus"
+            app:srcCompat="@drawable/ic_minus"
             app:tint="?android:textColorPrimary" />
 
         <app.simple.buyer.util.views.PreImeEditText
@@ -57,7 +57,7 @@
             android:background="?bgSelectable"
             android:scaleType="center"
             android:visibility="visible"
-            app:srcCompat="@drawable/ic_number_plus"
+            app:srcCompat="@drawable/ic_plus"
             app:tint="?android:textColorPrimary" />
 
     </LinearLayout>

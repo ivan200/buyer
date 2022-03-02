@@ -6,6 +6,7 @@
         android:id="@+id/action_list_order"
         android:icon="@drawable/ic_sort"
         android:title="@string/menu_sort"
+        app:iconTint="?colorToolbarIcon"
         app:showAsAction="ifRoom">
     </item>
 </menu>

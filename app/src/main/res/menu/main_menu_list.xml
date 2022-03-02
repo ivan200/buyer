@@ -6,6 +6,7 @@
         android:id="@+id/darkTheme"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        android:icon="@drawable/ic_pref_night_theme"
+        android:icon="@drawable/ic_night_theme"
+        app:iconTint="?colorToolbarIcon"
         app:showAsAction="always"/>
 </menu>

@@ -24,7 +24,9 @@
                 android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
-                app:srcCompat="@drawable/ic_order_create" />
+                app:srcCompat="@drawable/ic_order_create"
+                app:tint="?colorToolbarIcon"
+                />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/ib_order_modify"
@@ -33,6 +35,7 @@
                 android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorToolbarIcon"
                 app:srcCompat="@drawable/ic_order_modify" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -42,6 +45,7 @@
                 android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorToolbarIcon"
                 app:srcCompat="@drawable/ic_order_alphabet" />
         </TableRow>
 
@@ -53,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorPrimary"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -61,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorPrimary"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -69,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorPrimary"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
         </TableRow>
         <TableRow
@@ -110,6 +117,7 @@
                 android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorToolbarIcon"
                 app:srcCompat="@drawable/ic_order_popularity" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -119,6 +127,7 @@
                 android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorToolbarIcon"
                 app:srcCompat="@drawable/ic_order_size" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -128,6 +137,7 @@
                 android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorToolbarIcon"
                 app:srcCompat="@drawable/ic_order_price" />
 
         </TableRow>
@@ -139,6 +149,7 @@
                 android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorPrimary"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -147,6 +158,7 @@
                 android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorPrimary"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -155,6 +167,7 @@
                 android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:visibility="visible"
+                app:tint="?colorPrimary"
                 app:srcCompat="@drawable/ic_arrow_order_asc" />
         </TableRow>
 
@@ -233,7 +246,7 @@
                 android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
-                app:srcCompat="@drawable/ic_order_01" />
+                app:srcCompat="@drawable/ic_order_checked_down" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/ib_order_02"
@@ -242,7 +255,7 @@
                 android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
-                app:srcCompat="@drawable/ic_order_02" />
+                app:srcCompat="@drawable/ic_order_checked_up" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/ib_order_03"
@@ -251,7 +264,7 @@
                 android:background="?bgSelectable"
                 android:scaleType="center"
                 android:visibility="visible"
-                app:srcCompat="@drawable/ic_order_03" />
+                app:srcCompat="@drawable/ic_order_checked_mixed" />
 
         </TableRow>
 

@@ -5,24 +5,28 @@
     <item
         android:id="@+id/action_item_edit"
         android:icon="@drawable/ic_edit"
+        app:iconTint="?colorToolbarIcon"
         android:title="@string/button_edit"
         app:showAsAction="always">
     </item>
     <item
         android:id="@+id/action_item_done"
         android:icon="@drawable/ic_done"
+        app:iconTint="?colorToolbarIcon"
         android:title="@string/button_done"
         app:showAsAction="always">
     </item>
     <item
         android:id="@+id/action_item_copy"
         android:icon="@drawable/ic_copy"
+        app:iconTint="?colorToolbarIcon"
         android:title="@string/button_copy"
         app:showAsAction="always">
     </item>
     <item
         android:id="@+id/action_item_delete"
         android:icon="@drawable/ic_delete"
+        app:iconTint="?colorToolbarIcon"
         android:title="@string/button_delete"
         app:showAsAction="always"
         >
