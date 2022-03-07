@@ -21,14 +21,29 @@
         android:icon="@drawable/ic_copy"
         app:iconTint="?colorToolbarIcon"
         android:title="@string/button_copy"
-        app:showAsAction="always">
+        app:showAsAction="never">
+    </item>
+    <item
+        android:id="@+id/action_item_share"
+        android:icon="@drawable/ic_share"
+        app:iconTint="?colorToolbarIcon"
+        android:title="@string/button_share"
+        app:showAsAction="never">
+    </item>
+    <item
+        android:id="@+id/action_item_move"
+        android:icon="@drawable/ic_move"
+        app:iconTint="?colorToolbarIcon"
+        android:title="@string/button_move"
+        app:showAsAction="never">
     </item>
     <item
         android:id="@+id/action_item_delete"
         android:icon="@drawable/ic_delete"
         app:iconTint="?colorToolbarIcon"
         android:title="@string/button_delete"
-        app:showAsAction="always"
+        app:showAsAction="never"
         >
     </item>
+
 </menu>

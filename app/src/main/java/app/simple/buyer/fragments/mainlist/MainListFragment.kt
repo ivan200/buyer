@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.view.ActionMode
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.GravityCompat
@@ -293,6 +294,9 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
             binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             menu?.findItem(R.id.action_item_edit)?.isVisible = model.showEditIconInActionMode.value ?: true
+
+            //noinspection RestrictedApi
+            (menu as? MenuBuilder)?.setOptionalIconsVisible(true)
             return false
         }
 

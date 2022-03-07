@@ -25,6 +25,7 @@
     <string name="button_add">Добавить</string>
     <string name="button_delete">Удалить</string>
     <string name="button_copy">Скопировать</string>
+    <string name="button_share">Поделиться</string>
     <string name="button_done">Выполнить</string>
     <string name="button_cancel">Отмена</string>
     <string name="button_edit">Редактировать</string>
@@ -63,4 +64,6 @@
     <string name="list_item_created">Создание: %s</string>
     <string name="list_item_modified">Изменение: %s</string>
     <string name="list_item_buyed">Завершение: %s</string>
+    <string name="button_import">Импортировать</string>
+    <string name="button_move">Переместить</string>
 </resources>

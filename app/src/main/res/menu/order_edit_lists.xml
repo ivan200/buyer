@@ -69,6 +69,13 @@
             android:title="@string/order_ascending"
             app:iconTint="?colorToolbarIcon"
             app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/action_item_import"
+            android:icon="@drawable/ic_import"
+            app:iconTint="?colorToolbarIcon"
+            android:title="@string/button_import"
+            app:showAsAction="never">
+        </item>
     </group>
     <group android:id="@+id/group_reorder_mode">
         <item
