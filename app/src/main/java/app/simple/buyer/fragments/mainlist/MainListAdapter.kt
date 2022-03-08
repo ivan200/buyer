@@ -58,7 +58,7 @@ class MainListAdapter(
                     tvCount.text = data.count.toString()
                 }
 
-                checkbox.isChecked = data.isBuyed
+                checkbox.setChecked(data.isBuyed, true)
 
                 binding.root.isSelected = actionModeType != ActionModeType.NO && data.isSelected
 

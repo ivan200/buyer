@@ -212,17 +212,18 @@
                 android:background="?bgSelectable"
                 android:gravity="center">
 
-                <CheckBox
+                <app.simple.buyer.util.views.CheckBoxSquare
                     android:id="@+id/checkbox"
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"/>
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorTransparent"
-                    android:checked="false"
-                    android:clickable="false"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:selectable="false"
-                    android:text="Завершенные" />
+                    android:text="Завершенные"
+                    android:layout_marginLeft="@dimen/margin_half"
+                    />
+
             </LinearLayout>
         </TableRow>
 

@@ -10,6 +10,7 @@ import app.simple.buyer.databinding.ViewMainSortBinding
 import app.simple.buyer.entities.enums.CheckedPosition
 import app.simple.buyer.entities.enums.OrderType
 import app.simple.buyer.entities.enums.SortType
+import app.simple.buyer.util.getColorResCompat
 import app.simple.buyer.util.invisibleIf
 import app.simple.buyer.util.showIf
 
@@ -40,20 +41,27 @@ class MainPopupWindow(val binding: ViewMainSortBinding, val model: MainListViewM
         binding.ibOrder02.setOnClickListener { model.updateListItems(CheckedPosition.TOP) }
         binding.ibOrder03.setOnClickListener { model.updateListItems(CheckedPosition.BETWEEN) }
 
-
         binding.ibOrderCreate.setOnClickListener        { model.updateListItems(OrderType.CREATED) }
         binding.ibOrderModify.setOnClickListener        { model.updateListItems(OrderType.MODIFIED) }
         binding.ibOrderAlphabet.setOnClickListener      { model.updateListItems(OrderType.ALPHABET) }
         binding.ibOrderPopularity.setOnClickListener    { model.updateListItems(OrderType.POPULARITY) }
         binding.ibOrderSize.setOnClickListener          { model.updateListItems(OrderType.SIZE) }
         binding.ibOrderPrice.setOnClickListener         { model.updateListItems(OrderType.PRICE) }
+
+        binding.checkbox.apply {
+            setColors(
+                context.getColorResCompat(R.attr.colorToolbarIcon),
+                context.getColorResCompat(R.attr.colorPrimary),
+                context.getColorResCompat(R.attr.colorDropdownBackground)
+            )
+        }
     }
 
     fun bind() {
         binding.apply {
             val checkedPosition = model.getItemsCheck()
             val isCheckedVisible = model.getShowCheckedItems()
-            checkbox.isChecked = isCheckedVisible
+            checkbox.setChecked(isCheckedVisible, true)
 
             listOf(rowChecked, rowDivider, rowCheckedSelection).showIf { isCheckedVisible }
 

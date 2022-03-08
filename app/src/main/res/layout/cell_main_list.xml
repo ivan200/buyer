@@ -21,16 +21,11 @@
         android:gravity="center"
         android:visibility="visible">
 
-        <CheckBox
+        <app.simple.buyer.util.views.CheckBoxSquare
             android:id="@+id/checkbox"
-            style="@style/Widget.Material3.CompoundButton.CheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorTransparent"
-            android:checked="false"
-            android:clickable="false"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+            android:layout_width="19dp"
+            android:layout_height="19dp"/>
+
     </LinearLayout>
 
     <LinearLayout

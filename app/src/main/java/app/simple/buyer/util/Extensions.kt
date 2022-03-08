@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlin.math.ceil
 
 
 //
@@ -192,10 +193,18 @@ inline fun <T> T.applyIf(condition: T.() -> Boolean, block: T.() -> Unit): T {
     return this
 }
 
+@JvmOverloads
 fun Number.dpToPx(context: Context? = null): Float {
     val res = context?.resources ?: android.content.res.Resources.getSystem()
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), res.displayMetrics)
 }
+
+@JvmOverloads
+fun Number.dpToPxInt(context: Context? = null): Int {
+    val res = context?.resources ?: android.content.res.Resources.getSystem()
+    return ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), res.displayMetrics)).toInt()
+}
+
 
 /**
  * Extension method to get a view as bitmap.

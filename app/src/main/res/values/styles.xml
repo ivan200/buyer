@@ -15,6 +15,7 @@
         <item name="actionModeStyle">           @style/AppThemeLight.ActionMode</item>
         <item name="android:actionModeStyle">   @style/AppThemeLight.ActionMode</item>
         <item name="actionModeCloseDrawable">   @drawable/ic_clear</item>
+        <item name="actionModeCloseButtonStyle">@style/Widget.AppCompat.ActionButton.CloseMode</item>
         <item name="drawerArrowStyle">          @style/AppThemeLight.DrawerArrowStyle</item>
 
         <item name="android:windowTranslucentStatus"        tools:targetApi="kitkat">true</item>
@@ -72,6 +73,7 @@
 
 <!--    крестик вместо кнопки назад в экшенмоде-->
         <item name="actionModeCloseDrawable">   @drawable/ic_clear</item>
+        <item name="actionModeCloseButtonStyle">@style/Widget.AppCompat.ActionButton.CloseMode</item>
 
 <!--    установка цвета иконок на тулбаре-->
         <item name="drawerArrowStyle">          @style/AppThemeDark.DrawerArrowStyle</item>
