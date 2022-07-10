@@ -69,10 +69,8 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
         }
     }
 
-
-    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+    override fun reApplyInsets(insets: WindowInsetsCompat?) {
         setRecyclerPaddings(mActivity, binding.recyclerList, binding.addAppbar, null, insets, usePaddingLeft = false, usePaddingRight = true)
-        return super.onApplyWindowInsets(v, insets)
     }
 
     var blockItemUpdateOnce = false

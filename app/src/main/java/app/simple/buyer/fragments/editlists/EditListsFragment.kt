@@ -84,9 +84,8 @@ class EditListsFragment : BaseFragment(R.layout.fragment_edit_lists), Toolbar.On
         //TODO Переделать менюшки
     }
 
-    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+    override fun reApplyInsets(insets: WindowInsetsCompat?) {
         setRecyclerPaddings(mActivity, binding.rvEditLists, appBarLayout, binding.listsFab, insets, navBarBg = navbarBg)
-        return super.onApplyWindowInsets(v, insets)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

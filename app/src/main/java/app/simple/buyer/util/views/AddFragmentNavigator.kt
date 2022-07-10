@@ -92,7 +92,7 @@ open class AddFragmentNavigator(
         state.pop(popUpTo, savedState)
     }
 
-    public override fun createDestination(): Destination {
+    override fun createDestination(): Destination {
         return Destination(this)
     }
 
@@ -115,7 +115,7 @@ open class AddFragmentNavigator(
       {@link FragmentManager#setFragmentFactory(FragmentFactory)} to control
       instantiation of Fragments."""
     )
-    public open fun instantiateFragment(
+    open fun instantiateFragment(
         context: Context,
         fragmentManager: FragmentManager,
         className: String,
@@ -139,7 +139,7 @@ open class AddFragmentNavigator(
     override fun navigate(
         entries: List<NavBackStackEntry>,
         navOptions: NavOptions?,
-        navigatorExtras: Navigator.Extras?
+        navigatorExtras: Extras?
     ) {
         if (fragmentManager.isStateSaved) {
             Log.i(
@@ -155,7 +155,7 @@ open class AddFragmentNavigator(
     private fun navigate(
         entry: NavBackStackEntry,
         navOptions: NavOptions?,
-        navigatorExtras: Navigator.Extras?
+        navigatorExtras: Extras?
     ) {
         val backStack = state.backStack.value
         val initialNavigation = backStack.isEmpty()
@@ -242,14 +242,14 @@ open class AddFragmentNavigator(
         }
     }
 
-    public override fun onSaveState(): Bundle? {
+    override fun onSaveState(): Bundle? {
         if (savedIds.isEmpty()) {
             return null
         }
         return bundleOf(KEY_SAVED_IDS to ArrayList(savedIds))
     }
 
-    public override fun onRestoreState(savedState: Bundle) {
+    override fun onRestoreState(savedState: Bundle) {
         val savedIds = savedState.getStringArrayList(KEY_SAVED_IDS)
         if (savedIds != null) {
             this.savedIds.clear()

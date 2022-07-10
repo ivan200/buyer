@@ -11,9 +11,9 @@ import io.realm.Realm
  * @author ivan200
  * @since 24.07.2021
  */
-object ItemInteractor {
+object BuyItemInteractor {
 
-    private fun getByName(realm: Realm, buyItemName: String): BuyItem {
+    fun getByName(realm: Realm, buyItemName: String): BuyItem {
         val trimmedName = buyItemName.trim()
         var buyItem = BuyItem.getByName(realm, trimmedName)
         if (buyItem == null) {

@@ -69,9 +69,8 @@ class MainMenuFragment : BaseFragment(R.layout.fragment_main_menu), Toolbar.OnMe
         }
     }
 
-    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+    override fun reApplyInsets(insets: WindowInsetsCompat?) {
         setRecyclerPaddings(mActivity, binding.menuRecycler, binding.viewToolbar.appBarLayout, null, insets, usePaddingLeft = true, usePaddingRight = false)
-        return super.onApplyWindowInsets(v, insets)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

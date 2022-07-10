@@ -53,7 +53,7 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
             ViewCompat.setOnApplyWindowInsetsListener(requireView(), this)
         } else {
             //На телефонах со старыми api не работает onApplyWindowInsetsListener, потому выставляем ручками паддинг под тулбаром
-            onApplyWindowInsets(requireView(), null)
+            reApplyInsets(null)
         }
         ColorUtils.changeOverScrollGlowColor(resources, requireContext().getColorResCompat(R.attr.colorFabShadow))
     }
@@ -68,11 +68,14 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), I
         super.onConfigurationChanged(newConfig)
         if (Build.VERSION.SDK_INT < 21) {
             //На телефонах со старыми api при изменении лейаута onApplyWindowInsetsListener не сработает, потому вызываем ручками
-            onApplyWindowInsets(requireView(), null)
+            reApplyInsets(null)
         }
     }
 
-    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+    open fun reApplyInsets(insets: WindowInsetsCompat?){}
+
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+        reApplyInsets(insets)
         return insets
     }
 

@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         supportFragmentManager
             .fragments
-            .firstOrNull()
+            .lastOrNull()
             ?.childFragmentManager
             ?.fragments
             ?.lastOrNull()

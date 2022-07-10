@@ -1,6 +1,7 @@
 package app.simple.buyer.interactor
 
 import app.simple.buyer.entities.BuyList
+import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.util.count
 import app.simple.buyer.util.getById
 import app.simple.buyer.util.update
@@ -57,9 +58,11 @@ object ListsInteractor {
                 user.update(it)
             }
 
+            val listItems = BuyListItem.getAllByList(it, listId)
+            listItems.deleteAllFromRealm()
+
             val list = it.getById<BuyList>(listId)
             list?.apply {
-//                items.deleteAllFromRealm()
                 deleteFromRealm()
             }
         }

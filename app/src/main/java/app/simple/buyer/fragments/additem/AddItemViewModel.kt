@@ -6,7 +6,7 @@ import app.simple.buyer.base.BaseViewModel
 import app.simple.buyer.entities.BuyItem
 import app.simple.buyer.entities.BuyListItem
 import app.simple.buyer.entities.User
-import app.simple.buyer.interactor.ItemInteractor
+import app.simple.buyer.interactor.BuyItemInteractor
 import app.simple.buyer.interactor.UserInteractor
 import app.simple.buyer.util.RealmObjectFieldLiveData
 import app.simple.buyer.util.RealmResultsLiveData
@@ -38,19 +38,19 @@ class AddItemViewModel(application: Application) : BaseViewModel(application) {
 
 
     fun onNewItem(buyItemName: String) {
-        ItemInteractor.addNewItemAsync(realm, buyItemName, context.getString(R.string.default_first_list_name))
+        BuyItemInteractor.addNewItemAsync(realm, buyItemName, context.getString(R.string.default_first_list_name))
     }
 
     fun onItemClicked(itemId: Long) {
-        ItemInteractor.addNewItemAsync(realm, itemId, context.getString(R.string.default_first_list_name))
+        BuyItemInteractor.addNewItemAsync(realm, itemId, context.getString(R.string.default_first_list_name))
     }
 
     fun onItemDeleted(itemId: Long) {
-        ItemInteractor.deleteItemAsync(realm, itemId, context.getString(R.string.default_first_list_name))
+        BuyItemInteractor.deleteItemAsync(realm, itemId, context.getString(R.string.default_first_list_name))
     }
 
 
     fun onItemPreview(itemId: Long) {
-        ItemInteractor.openItemAsync(realm, itemId, context.getString(R.string.default_first_list_name))
+        BuyItemInteractor.openItemAsync(realm, itemId, context.getString(R.string.default_first_list_name))
     }
 }

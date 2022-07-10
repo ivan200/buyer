@@ -57,6 +57,10 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     private val _showEditIconInActionMode = MutableLiveData(true)
     val showEditIconInActionMode: LiveData<Boolean> get() = _showEditIconInActionMode
 
+
+    private val _selectedCount = MutableLiveData(0L)
+    val selectedCount: LiveData<Long> get() = _selectedCount
+
     init {
         if (user.currentItemId != 0L) {
             _openItemInfo.call()
@@ -81,7 +85,9 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     fun onItemClick(itemId: Long, actionModeType: ActionModeType) {
         if (actionModeType != ActionModeType.NO) {
             operateSelected(itemId, actionModeType, true)
-            ListItemInteractor.toggleActionAsync(realm, itemId)
+            ListItemInteractor.toggleActionAsync(realm, itemId){
+                _selectedCount.postValue(BuyListItem.getSelectedCount(realm, user.currentListId))
+            }
         } else {
             ListItemInteractor.toggleCheckItemAsync(realm, itemId)
         }
@@ -90,14 +96,29 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     fun onItemLongClick(itemId: Long, actionModeType: ActionModeType) {
         if (actionModeType != ActionModeType.NO) {
             operateSelected(itemId, actionModeType, false)
-            ListItemInteractor.selectRangeAsync(realm, itemId)
+            ListItemInteractor.selectRangeAsync(realm, itemId) {
+                _selectedCount.postValue(BuyListItem.getSelectedCount(realm, user.currentListId))
+            }
         } else {
             _actionModeChange.postValue(ActionModeType.SINGLE)
+            _selectedCount.postValue(1L)
             _showEditIconInActionMode.postValue(true)
             ListItemInteractor.actionFirstItemAsync(realm, user.currentListId, itemId)
         }
     }
-
+//    private fun operateAfterSelected() {
+//        val selectedCount = BuyListItem.getSelectedCount(realm, user.currentListId)
+//        val newActionMode = when(selectedCount){
+//            0L -> ActionModeType.NO
+//            1L -> ActionModeType.SINGLE
+//            else -> ActionModeType.MULTI
+//        }
+//        if(_actionModeChange.value != newActionMode){
+//            _actionModeChange.postValue(newActionMode)
+//        }
+//        _showEditIconInActionMode.postValue(newActionMode == ActionModeType.SINGLE)
+//        _selectedCount.postValue(selectedCount)
+//    }
     private fun operateSelected(itemId: Long, actionModeType: ActionModeType, click: Boolean) {
         val selectedCount = BuyListItem.getSelectedCount(realm, user.currentListId)
         val nextSelectedCount = if (selectedCount == 0L) {
@@ -119,6 +140,9 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
         }
         if(nextSelectedCount > 1){
             _actionModeChange.postValue(ActionModeType.MULTI)
+        }
+        if (click) {
+            _selectedCount.postValue(nextSelectedCount)
         }
     }
 
@@ -150,9 +174,7 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun deleteItem() {
-        //TODO Докрутить удаление
-
-//        ListItemInteractor.deleteAsync(realm, actionItemId)
+        ListItemInteractor.deleteSelectedAsync(realm, user.currentListId)
         _actionModeChange.postValue(ActionModeType.NO)
     }
 
@@ -185,6 +207,10 @@ class MainListViewModel(application: Application) : BaseViewModel(application) {
             b.append(checkSymbol)
             b.append(" ")
             b.append(it.buyItem?.name)
+            if(it.count > 1){
+                b.append(" ")
+                b.append(it.count.toString())
+            }
             val comment = it.comment
             if (!comment.isNullOrBlank()) {
                 b.append("\n")

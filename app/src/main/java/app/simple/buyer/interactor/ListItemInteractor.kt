@@ -45,6 +45,9 @@ object ListItemInteractor {
         return isNew
     }
 
+
+
+
     /**
      * Удалить покупаемую вещь [buyItem] из списка покупок [list], или уменьшить покупаемое количество в бд [realm]
      */
@@ -61,14 +64,15 @@ object ListItemInteractor {
     }
 
     /**
-     * Удалить элемент списка покупок [buyListItemId] асинхнонно в бд [realm]
+     * Удалить выделенные элементы списка покупок [listId] асинхнонно в бд [realm]
      */
-    fun deleteAsync(realm: Realm, buyListItemId: Long) {
+    fun deleteSelectedAsync(realm: Realm, listId: Long) {
         realm.executeTransactionAsync {
-            val item = it.getById<BuyListItem>(buyListItemId)
-            item?.deleteFromRealm()
+            val listItems = BuyListItem.getAllSelectedByList(it, listId)
+            listItems.deleteAllFromRealm()
         }
     }
+
 
     /**
      * Развыделить все предметы из списка [listId] (перед первым лонгкликом на ячейке) в бд [realm]
@@ -122,32 +126,37 @@ object ListItemInteractor {
     /**
      * Выделить элемент списка покупок (в экшенмоде) [listItemId] в бд [realm]
      */
-    fun toggleActionAsync(realm: Realm, listItemId: Long) = realm.updateListItemField(listItemId){
-        isSelected = !isSelected
+    fun toggleActionAsync(realm: Realm, listItemId: Long, onSuccess: Realm.Transaction.OnSuccess){
+        realm.executeTransactionAsync ({
+            it.getById<BuyListItem>(listItemId)?.apply {
+                isSelected = !isSelected
+                update(it)
+            }
+        }, onSuccess)
     }
 
     /**
      * Выделить несколько элементов списка покупок (в экшенмоде) [listItemId] в бд [realm]
      */
-    fun selectRangeAsync(realm: Realm, listItemId: Long) {
-        realm.executeTransactionAsync {
+    fun selectRangeAsync(realm: Realm, listItemId: Long, onSuccess: Realm.Transaction.OnSuccess) {
+        realm.executeTransactionAsync({
             val user = UserInteractor.getUser(it)
             val allOrdered = BuyListItem.getAllOrdered(it, user)
-            val first = allOrdered.indexOfFirst { listItem -> listItem.isSelected || listItem.id == listItemId}
+            val first = allOrdered.indexOfFirst { listItem -> listItem.isSelected || listItem.id == listItemId }
             val last = allOrdered.indexOfLast { listItem -> listItem.isSelected || listItem.id == listItemId }
-            for(i in first..last){
+            for (i in first..last) {
                 allOrdered[i]?.apply {
-                    if(!isSelected){
+                    if (!isSelected) {
                         isSelected = true
                         update(it)
                     }
                 }
             }
-        }
+        }, onSuccess)
     }
 
     /**
-     * Выделить несколько элементов списка покупок (в экшенмоде) [listItemId] в бд [realm]
+     * Прочекать несколько элементов списка покупок [listItemId] в бд [realm]
      */
     fun doneSelectedAsync(realm: Realm, listItemId: Long) {
         realm.executeTransactionAsync {

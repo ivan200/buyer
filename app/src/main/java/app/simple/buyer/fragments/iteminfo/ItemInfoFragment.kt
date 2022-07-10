@@ -200,9 +200,8 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
         return true
     }
 
-    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+    override fun reApplyInsets(insets: WindowInsetsCompat?) {
         setRecyclerPaddings(mActivity, null, appBarLayout, binding.fab, insets, navBarBg = navbarBg)
-        return super.onApplyWindowInsets(v, insets)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

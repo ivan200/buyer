@@ -14,6 +14,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.Keep
 import app.simple.buyer.R
+import app.simple.buyer.util.ColorUtils
 import app.simple.buyer.util.dpToPx
 import app.simple.buyer.util.dpToPxInt
 import app.simple.buyer.util.getColorResCompat
@@ -41,7 +42,7 @@ class CheckBoxSquare : View {
     private var checkboxSquareUnchecked = context.getColorResCompat(R.attr.colorToolbarIcon)
 
     @ColorInt
-    private var checkboxSquareBackground = context.getColorResCompat(R.attr.colorPrimary)
+    private var checkboxSquareBackground = ColorUtils.getThemeAccentColor(context)
 
     @ColorInt
     private var checkboxSquareCheck = context.getColorResCompat(R.attr.colorBackground)

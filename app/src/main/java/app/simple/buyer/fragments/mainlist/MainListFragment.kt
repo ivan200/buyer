@@ -3,6 +3,7 @@ package app.simple.buyer.fragments.mainlist
 import android.animation.ValueAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
@@ -191,6 +193,9 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         model.showEditIconInActionMode.observe(viewLifecycleOwner){
             actionMode?.menu?.findItem(R.id.action_item_edit)?.isVisible = it
         }
+        model.selectedCount.observe(viewLifecycleOwner){
+            actionMode?.title = it.toString()
+        }
     }
 
     override fun onResume() {
@@ -248,7 +253,7 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         }
     }
 
-    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat?): WindowInsetsCompat? {
+    override fun reApplyInsets(insets: WindowInsetsCompat?) {
         setRecyclerPaddings(
             mActivity,
             binding.contentMain.mainRecycler,
@@ -261,10 +266,9 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         //так что рассылать изменения инсетов не нужно
         if (Build.VERSION.SDK_INT >= 21) {
             childFragmentManager.fragments.forEach {
-                (it as? BaseFragment)?.onApplyWindowInsets(v, insets)
+                (it as? BaseFragment)?.reApplyInsets(insets)
             }
         }
-        return super.onApplyWindowInsets(v, insets)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -318,17 +322,16 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
                     val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
                     val clip = ClipData.newPlainText(model.getTitle(), model.getSelected())
                     clipboard?.setPrimaryClip(clip)
-
-//                    ShareCompat.IntentBuilder(requireContext())
-//                        .setText(model.getSelected())
-//                        .setType(Intent.normalizeMimeType("text/plain"))
-//                        .setChooserTitle(model.getTitle())
-//                        .startChooser()
-
-//                    Toast.makeText(requireContext(), "Скопировано", Toast.LENGTH_SHORT).show()
                     return true
                 }
-
+                R.id.action_item_share -> {
+                    ShareCompat.IntentBuilder(requireContext())
+                        .setText(model.getSelected())
+                        .setType(Intent.normalizeMimeType("text/plain"))
+                        .setChooserTitle(model.getTitle())
+                        .startChooser()
+                    return true
+                }
 
                 //TODO Добавить экспорт и импорт списков
 

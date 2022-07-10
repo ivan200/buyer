@@ -10,9 +10,6 @@ import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.VectorDrawable
 import android.os.Build
 import android.util.TypedValue
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import android.widget.ImageView
 import androidx.annotation.AnyRes
 import androidx.annotation.AttrRes
@@ -22,7 +19,6 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import app.simple.buyer.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.shape.MaterialShapeDrawable
 
@@ -50,22 +46,33 @@ fun Context.getDrawableResCompat(@AttrRes id: Int): Drawable? {
 }
 
 
-fun Menu.tintAllIcons(@ColorInt color: Int) = ColorUtils.tintAllIcons(this, color)
+//fun Menu.tintAllIcons(@ColorInt color: Int) = ColorUtils.tintAllIcons(this, color)
 
 object ColorUtils {
-    fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? = when {
-        drawable == null -> null
-        drawable is VectorDrawableCompat -> {
-            drawable.apply { setTintList(ColorStateList.valueOf(color)) }
+    fun Drawable.tinted(@ColorInt color: Int): Drawable = when {
+        this is VectorDrawableCompat -> {
+            this.apply { setTintList(ColorStateList.valueOf(color)) }
         }
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && drawable is VectorDrawable -> {
-            drawable.apply { setTintList(ColorStateList.valueOf(color)) }
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && this is VectorDrawable -> {
+            this.apply { setTintList(ColorStateList.valueOf(color)) }
         }
         else -> {
-            DrawableCompat.wrap(drawable)
+            DrawableCompat.wrap(this)
                 .also { DrawableCompat.setTint(it, color) }
                 .let { DrawableCompat.unwrap(it) }
         }
+    }
+
+    fun getThemeAccentColor(context: Context): Int {
+        val colorAttr: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            android.R.attr.colorAccent
+        } else {
+            //Get colorAccent defined for AppCompat
+            context.resources.getIdentifier("colorAccent", "attr", context.packageName)
+        }
+        val outValue = TypedValue()
+        context.theme.resolveAttribute(colorAttr, outValue, true)
+        return outValue.data
     }
 
     /**
@@ -124,27 +131,27 @@ object ColorUtils {
         return ContextCompat.getColor(context, colorRes)
     }
 
-    fun tintAllIcons(menu: Menu, @ColorInt color: Int) {
-        for (i in 0 until menu.size()) {
-            val item = menu.getItem(i)
-            tintMenuItemIcon(item, color)
-            tintShareIconIfPresent(color, item)
-            if(item.hasSubMenu()){
-                tintAllIcons(item.subMenu, color)
-            }
-        }
-    }
-
-    fun tintMenuItemIcon(item: MenuItem, @ColorInt color: Int) {
-        item.icon = tintDrawable(item.icon, color)
-    }
-
-    private fun tintShareIconIfPresent(@ColorInt color: Int, item: MenuItem) {
-        item.actionView
-            ?.findViewById<View>(R.id.expand_activities_button)
-            ?.findViewById<ImageView>(R.id.image)
-            ?.apply {
-                setImageDrawable(tintDrawable(drawable, color))
-            }
-    }
+//    fun tintAllIcons(menu: Menu, @ColorInt color: Int) {
+//        for (i in 0 until menu.size()) {
+//            val item = menu.getItem(i)
+//            tintMenuItemIcon(item, color)
+//            tintShareIconIfPresent(color, item)
+//            if(item.hasSubMenu()){
+//                tintAllIcons(item.subMenu, color)
+//            }
+//        }
+//    }
+//
+//    fun tintMenuItemIcon(item: MenuItem, @ColorInt color: Int) {
+//        item.icon = item.icon.tinted(color)
+//    }
+//
+//    private fun tintShareIconIfPresent(@ColorInt color: Int, item: MenuItem) {
+//        item.actionView
+//            ?.findViewById<View>(R.id.expand_activities_button)
+//            ?.findViewById<ImageView>(R.id.image)
+//            ?.apply {
+//                setImageDrawable(drawable.tinted(color))
+//            }
+//    }
 }

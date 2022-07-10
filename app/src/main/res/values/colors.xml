@@ -3,7 +3,7 @@
     <color name="colorPrimary">#4caf50</color>
     <color name="colorPrimaryDark">#148328</color>
     <color name="colorPrimaryVeryDark">#006202</color>
-    <color name="colorAccent">#7cb342</color>
+    <color name="colorAccent">#4caf50</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorTransparent">#00000000</color>
 
@@ -20,7 +20,8 @@
     <color name="colorTextWhiteSecondary">#b3ffffff</color> <!--white 70%-->
     <color name="colorTextWhiteSecondaryDisabled">#36ffffff</color> <!--white 21%-->
     <color name="colorTextWhiteHint">#80ffffff</color> <!--white 50%-->
-    <color name="colorTextWhiteDivider">#1fffffff</color> <!--white 12%-->
+    <color name="colorTextWhiteDivider">#0Dffffff</color> <!--white 5%-->
+<!--    <color name="colorTextWhiteDivider">#1fffffff</color> &lt;!&ndash;white 12%&ndash;&gt;-->
 
     <!--Получено путём сверки цветов с дефолтными на draw'ере-->
     <color name="background_pressed_light_theme">#0f000000</color>    <!--black 6%-->
