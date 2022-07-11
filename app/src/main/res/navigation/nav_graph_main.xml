@@ -25,7 +25,7 @@
             />
 
     </fragment>
-    <fragment
+    <addfragment
         android:id="@+id/fragmentEditLists"
         android:name="app.simple.buyer.fragments.editlists.EditListsFragment"
         android:label="FragmentEditLists"

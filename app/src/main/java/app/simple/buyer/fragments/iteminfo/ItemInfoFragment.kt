@@ -24,6 +24,7 @@ import app.simple.buyer.base.BaseFragment
 import app.simple.buyer.base.OnBackPressedListener
 import app.simple.buyer.databinding.FragmentItemInfoBinding
 import app.simple.buyer.util.Utils
+import app.simple.buyer.util.getColorResCompat
 import app.simple.buyer.util.showIf
 import app.simple.buyer.util.views.viewBinding
 import kotlin.math.max
@@ -51,6 +52,7 @@ class ItemInfoFragment : BaseFragment(R.layout.fragment_item_info), Toolbar.OnMe
 
         setHasOptionsMenu(true)
         toolbar.setOnMenuItemClickListener(this)
+        toolbar.setBackgroundColor(toolbar.context.getColorResCompat(R.attr.colorBackground))
 
         updateTitle(model.getTitle())
 
