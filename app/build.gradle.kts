@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdk = 32
-    buildToolsVersion = "32.0.0"
+    compileSdk = rootProject.extra.get("compileSdkVersion") as Int
+    buildToolsVersion = rootProject.extra.get("buildToolsVersion") as String
     defaultConfig {
         applicationId = "app.simple.buyer"
-        minSdk = 16
-        targetSdk = 32
+        minSdk = rootProject.extra.get("minSdkVersion") as Int
+        targetSdk = rootProject.extra.get("targetSdkVersion") as Int
         versionCode = 1
         versionName = "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -32,8 +32,11 @@ android {
         viewBinding = true
     }
     compileOptions {
-        targetCompatibility(1.8)
-        sourceCompatibility(1.8)
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
@@ -43,6 +46,7 @@ dependencies {
     //appcompat
     implementation ("androidx.appcompat:appcompat:1.4.2")
     implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation ("androidx.activity:activity-ktx:1.5.0")
 
     //Material 3
     implementation ("com.google.android.material:material:1.6.1")

@@ -182,8 +182,6 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
             }
         }
 
-        android.R.anim.slide_in_left
-
         model.currentItemIdChanged.observe(viewLifecycleOwner) {
             model.onCurrentItemIdChanged()
         }

@@ -20,3 +20,8 @@ buildscript {
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
 }
+
+val minSdkVersion by rootProject.extra { 16 }
+val targetSdkVersion by rootProject.extra { 32 }
+val compileSdkVersion by rootProject.extra { 32 }
+val buildToolsVersion by rootProject.extra { "32.0.0" }
