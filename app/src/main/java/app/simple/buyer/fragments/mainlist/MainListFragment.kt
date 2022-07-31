@@ -45,11 +45,13 @@ import app.simple.buyer.util.views.drawer.ActionBarDrawerToggle
 import app.simple.buyer.util.views.drawer.DrawerLayout
 import app.simple.buyer.util.views.viewBinding
 
-
 /**
  * Основной фрагмент с текущим списком покупок
  */
-class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMenuItemClickListener, DrawerStateSupplier,
+class MainListFragment :
+    BaseFragment(R.layout.fragment_main_list),
+    Toolbar.OnMenuItemClickListener,
+    DrawerStateSupplier,
     ManualResumeListener {
     override val title: Int
         get() = R.string.app_name
@@ -134,12 +136,16 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         }
         layoutManager.onRestoreInstanceState(model.scrollState.asScrollState)
 
-        adapter = MainListAdapter(model.getItems(), model::onItemClick, model::onItemLongClick, ActionModeType.NO)
+        adapter = MainListAdapter(requireContext(), model.getItems(), model::onItemClick, model::onItemLongClick, ActionModeType.NO)
+        // так как я ручками устанавливаю позицию скролла при загрузке, эта строка очень важна, чтоб ресайклер сам не пытался скроллиться
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
 
         binding.contentMain.mainRecycler.let {
             it.layoutManager = layoutManager
             it.adapter = adapter
+            // дефолтный viewType = 0, на экране примерно 15 ячеек
+            it.recycledViewPool.setMaxRecycledViews(0, 17)
+
             (it.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
             setRecyclerMargin(model.getShowCheckedItems(), false)
 
@@ -171,9 +177,9 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
 
         ColorUtils.changeFabShadowColor(binding.contentMain.fab, requireContext().getColorResCompat(R.attr.colorFabShadow))
 
-        model.actionModeChange.observe(viewLifecycleOwner){
+        model.actionModeChange.observe(viewLifecycleOwner) {
             adapter.actionModeType = it!!
-            when(it){
+            when (it) {
                 ActionModeType.SINGLE -> actionMode = mActivity.startSupportActionMode(callback)
                 ActionModeType.MULTI -> Unit
                 ActionModeType.NO -> {
@@ -185,13 +191,13 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
         model.currentItemIdChanged.observe(viewLifecycleOwner) {
             model.onCurrentItemIdChanged()
         }
-        model.openItemInfo.observe(viewLifecycleOwner){
+        model.openItemInfo.observe(viewLifecycleOwner) {
             navigateItemInfo.onClick(requireView())
         }
-        model.showEditIconInActionMode.observe(viewLifecycleOwner){
+        model.showEditIconInActionMode.observe(viewLifecycleOwner) {
             actionMode?.menu?.findItem(R.id.action_item_edit)?.isVisible = it
         }
-        model.selectedCount.observe(viewLifecycleOwner){
+        model.selectedCount.observe(viewLifecycleOwner) {
             actionMode?.title = it.toString()
         }
     }
@@ -202,8 +208,8 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
     }
 
     override fun onManualResume() {
-        //Если мы возвращаемся с любого экрана и правый дравер спрятан (а клавиатура открыта), то убираем клаву
-        if(!isDrawerOpen(GravityCompat.END)){
+        // Если мы возвращаемся с любого экрана и правый дравер спрятан (а клавиатура открыта), то убираем клаву
+        if (!isDrawerOpen(GravityCompat.END)) {
             Utils.hideKeyboardFrom(requireView())
         }
     }
@@ -260,8 +266,8 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
             insets,
             navBarBg = binding.navbar.navBarLayoutBg
         )
-        //На телефонах со старыми апи этот метод вызовется сам из BaseFragment в onViewCreated,
-        //так что рассылать изменения инсетов не нужно
+        // На телефонах со старыми апи этот метод вызовется сам из BaseFragment в onViewCreated,
+        // так что рассылать изменения инсетов не нужно
         if (Build.VERSION.SDK_INT >= 21) {
             childFragmentManager.fragments.forEach {
                 (it as? BaseFragment)?.reApplyInsets(insets)
@@ -331,13 +337,13 @@ class MainListFragment : BaseFragment(R.layout.fragment_main_list), Toolbar.OnMe
                     return true
                 }
 
-                //TODO Добавить экспорт и импорт списков
+                // TODO Добавить экспорт и импорт списков
 
-                //Экшен действия:
-                //переместить выбранное в новый список
-                //экспортировать
-                //Архивировать
-                //Удалить насовсем??
+                // Экшен действия:
+                // переместить выбранное в новый список
+                // экспортировать
+                // Архивировать
+                // Удалить насовсем??
             }
             return false
         }

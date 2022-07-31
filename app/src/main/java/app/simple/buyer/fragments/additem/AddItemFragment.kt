@@ -43,17 +43,21 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
         super.onViewCreated(view, savedInstanceState)
 
         adapter = AddItemAdapter(model.getItems(), this::onItemClicked)
+
         binding.apply {
             recyclerList.setHasFixedSize(true)
             recyclerList.itemAnimator = null
             recyclerList.layoutManager = LinearLayoutManager(mActivity)
             recyclerList.adapter = adapter
-            editText.doAfterTextChanged { this@AddItemFragment.onTextChanged(it?.toString().orEmpty())}
+            // дефолтный viewType = 0, на экране примерно 15 ячеек
+            recyclerList.recycledViewPool.setMaxRecycledViews(0, 17)
+
+            editText.doAfterTextChanged { this@AddItemFragment.onTextChanged(it?.toString().orEmpty()) }
             editText.setOnEditorActionListener(this@AddItemFragment::onEditorAction)
             shadowSwitcher = ShadowRecyclerSwitcher(recyclerList, shadowView)
         }
 
-        model.ltemsLiveData.observe(viewLifecycleOwner){
+        model.ltemsLiveData.observe(viewLifecycleOwner) {
             adapter.itemsUpdated(it)
         }
     }
@@ -70,13 +74,21 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
     }
 
     override fun reApplyInsets(insets: WindowInsetsCompat?) {
-        setRecyclerPaddings(mActivity, binding.recyclerList, binding.addAppbar, null, insets, usePaddingLeft = false, usePaddingRight = true)
+        setRecyclerPaddings(
+            mActivity,
+            binding.recyclerList,
+            binding.addAppbar,
+            null,
+            insets,
+            usePaddingLeft = false,
+            usePaddingRight = true
+        )
     }
 
     var blockItemUpdateOnce = false
 
-    fun onItemClicked(action: ItemAction, itemId: Long){
-        when(action){
+    fun onItemClicked(action: ItemAction, itemId: Long) {
+        when (action) {
             ItemAction.CLICK -> {
                 blockItemUpdateOnce = true
                 binding.editText.text?.clear()
@@ -99,19 +111,19 @@ class AddItemFragment : BaseFragment(R.layout.fragment_add_item), DrawerStateCon
         return false
     }
 
-    fun onTextChanged(text: String){
-        if(blockItemUpdateOnce){
+    fun onTextChanged(text: String) {
+        if (blockItemUpdateOnce) {
             blockItemUpdateOnce = false
             return
         }
-        if(binding.recyclerList.canScrollVertically(-1)){
+        if (binding.recyclerList.canScrollVertically(-1)) {
             binding.recyclerList.scrollToPosition(0)
         }
         adapter.updateDataNoClear(model.getItems(text))
     }
 
-    override fun onDrawerPositionChanged(pos: DrawerState){
-        when(pos){
+    override fun onDrawerPositionChanged(pos: DrawerState) {
+        when (pos) {
             START_OPENING -> Utils.showKeyBoard2(binding.editText)
             FINISH_OPENING -> Utils.showKeyBoard2(binding.editText)
             START_CLOSING -> Utils.hideKeyboardFrom(requireView())

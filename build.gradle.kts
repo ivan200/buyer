@@ -9,8 +9,8 @@ buildscript {
         classpath("com.android.tools.build:gradle:7.2.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
 
-        //https://mvnrepository.com/artifact/io.realm/realm-gradle-plugin
-        classpath("io.realm:realm-gradle-plugin:10.11.0")
+        // https://mvnrepository.com/artifact/io.realm/realm-gradle-plugin
+        classpath("io.realm:realm-gradle-plugin:10.11.1")
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

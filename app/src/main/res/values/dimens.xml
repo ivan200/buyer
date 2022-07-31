@@ -18,6 +18,7 @@
     <dimen name="height_toolbar">56dp</dimen>
     <dimen name="height_toolbar_landscape">48dp</dimen>
 
+    <dimen name="size_checkbox">19dp</dimen>
     <dimen name="size_icon">24dp</dimen>
     <dimen name="size_avatar">40dp</dimen>
     <dimen name="size_icon_big">64dp</dimen>
